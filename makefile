@@ -1,7 +1,9 @@
+.PHONY: all stow-% delete delete-%
+
 all:
 	stow --verbose --target=$$HOME --restow */
 
-%:
+stow-%:
 	stow --verbose --target=$$HOME --restow $*
 
 delete:
