@@ -1,0 +1,10 @@
+{
+	"optInTeamsV2": true,
+	"followSystemTheme": true,
+	"closeAppOnCross": true,
+	"electronCLIFlags": [
+		["ozone-platform-hint","wayland"],
+		["enable-features","WaylandWindowDecorations"]
+	]
+}
+

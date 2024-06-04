@@ -1,0 +1,11 @@
+max-visible=10
+layer=top
+font=ShureTechMono Nerd Font 12
+background-color=#434c5e
+text-color=#eceff4
+border-color=#4c566a
+icons=0
+progress-color=over #5e81ac
+default-timeout=10000
+anchor=top-right
+margin=20

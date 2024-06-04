@@ -1,0 +1,120 @@
+
+bar:
+  height: 45
+  location: top
+
+  background: 2e344000
+  foreground: eceff4ff
+
+  #font: Roboto Mono Nerd Font:pixelsize=30:weight=bold
+  font: ShureTechMono Nerd Font:pixelsize=32
+    
+  left:
+     - i3:
+         sort: native
+         content:
+           "":
+             map:
+               default:
+                 string:
+                   text: "{name}"
+                   margin: 8
+                   foreground: eceff44d
+                   on-click: "swaymsg --quiet workspace {name}"
+               conditions:
+                 state == focused: 
+                   string:
+                     text: "{name}"
+                     margin: 8
+
+  center:
+    - cpu:
+        poll-interval: 2000
+        content:
+          map:
+            conditions:
+              id < 0:
+                string: {text: "CPU {cpu:03}", on-click: "foot htop"}
+
+    - label:
+        content:
+          string: {text: "┃", margin: 8}
+
+    - mem:
+        poll-interval: 2000
+        content:
+          string: {text: "MEM {percent_used:03}", on-click: "foot htop"}
+
+    - label:
+        content:
+          string: {text: "┃", margin: 8}
+
+    - pipewire:
+        anchors:
+          volume: &volume 
+            conditions:
+               muted: {string: {text: "---", on-click: "pavucontrol"}}
+               ~muted: {string: {text: "{cubic_volume:03}", on-click: "pavucontrol"}}
+        content: 
+          list:
+            items:
+              - map:
+                  conditions:
+                    type == "sink":
+                    
+                      string: {text: "VOL "}
+                    type == "source":
+                      string: {text: "MIC "}
+              - map:
+                  <<: *volume
+
+              - string: {text: "┃", margin: 8}
+
+    - battery:
+        name: BAT0
+        poll-interval: 30000
+        content:
+          list:
+            items:
+              - map:
+                  default:
+                    string:
+                      text: "BAT {capacity:03}"
+                      on-click: "auto-cpufreq-gtk"   
+                  conditions:
+                    capacity <= 10 && state != charging && state != full:
+                      string:
+                        text: "BAT {capacity:03}"
+                        on-click: "auto-cpufreq-gtk"   
+                        foreground: bf616aff                      
+              - map:
+                  conditions:
+                    state == "charging":
+                      string: {text: "+"}
+                    state == "discharging":
+                      string: {text: "-"}
+                    state == "full":
+                      string: {text: "="}
+                    state == "not charging":
+                      string: {text: "!"}
+                    state == "unknown":
+                      string: {text: "?"}
+    - label:
+        content:
+          string: {text: "┃", margin: 8}
+
+    - network:
+        poll-interval: 30000
+        content:
+          map:
+            conditions:
+              name == "wlp0s20f3":
+                string:
+                  text: "NET {ssid} ({quality:03})"
+                  on-click: "/home/struan/Development/Utilities/networkmanager-dmenu/networkmanager_dmenu"
+
+  right:
+    - clock:
+        date-format: "%d-%m-%Y"
+        content:
+          string: {text: "{date} {time}", margin: 8}
