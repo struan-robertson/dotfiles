@@ -6272,6 +6272,11 @@ window.thunar paned > scrolledwindow treeview.view:hover, window.thunar paned > 
     background: #3f4758;
     color: #d8dee9; }
 
+decoration, headerbar.titlebar {
+border-radius: 0;
+box-shadow: none;
+}
+   
 /*# sourceMappingURL=gtk.css.map */
 
 /* Hide dashed lines at end of scrolling. */

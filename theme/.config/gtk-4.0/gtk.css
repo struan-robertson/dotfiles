@@ -6189,4 +6189,9 @@ window.thunar paned > scrolledwindow treeview.view:hover, window.thunar paned > 
     background: #4c566a;
     color: #d8dee9; }
 
+decoration, headerbar.titlebar {
+  border-radius: 0;
+  box-shadow: none;
+}
+
 /*# sourceMappingURL=gtk.css.map */
