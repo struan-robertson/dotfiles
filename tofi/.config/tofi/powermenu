@@ -8,8 +8,8 @@ CHOSEN=$(printf "Lock\nSuspend\nReboot\nPower Off\nLog Out" | tofi)
 case "$CHOSEN" in
 	"Lock") swaylock -f -c 000000 ;;
 	"Suspend") swaylock -f -c 000000 && systemctl suspend ;;
-	"Reboot") reboot ;;
-	"Power Off") poweroff ;;
+	"Reboot") systemctl reboot ;;
+	"Power Off") systemctl poweroff ;;
 	"Log Out") swaymsg exit ;;
 	*) exit 1 ;;
 esac
