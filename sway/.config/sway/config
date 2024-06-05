@@ -40,6 +40,9 @@ exec tail -f $XDG_RUNTIME_DIR/wobpipe | wob
 # SSH_AUTH_SOCK is set in environment
 exec ssh-agent -D -a $XDG_RUNTIME_DIR/ssh-agent.socket
 
+# Exec KeePassXC as it will need to be unlocked for most things
+exec keepassxc
+
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
 #  - /etc/sway/config.d
