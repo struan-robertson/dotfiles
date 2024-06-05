@@ -19,5 +19,9 @@
 # Application compatibility
 _JAVA_AWT_WM_NONREPARENTING=1
 
+# QT Theming
 QT_QPA_PLATFORMTHEME=qt5ct
+
 XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
+
+SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
