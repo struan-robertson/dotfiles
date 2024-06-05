@@ -36,6 +36,10 @@ exec wlsunset -l 56.5 -L -3.0
 exec mkfifo $XDG_RUNTIME_DIR/wobpipe
 exec tail -f $XDG_RUNTIME_DIR/wobpipe | wob
 
+# Start SSH agent
+# SSH_AUTH_SOCK is set in environment
+exec ssh-agent -D -a $XDG_RUNTIME_DIR/ssh-agent.socket
+
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
 #  - /etc/sway/config.d
