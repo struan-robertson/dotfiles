@@ -21,7 +21,7 @@ set $menu tofi-drun | xargs swaymsg exec --
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # Requires: desktop-backgrounds-compat, swaybg
-output * bg /home/struan/Pictures/Wallpapers/ign_Desert2.jpg fill
+output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
 #
 # Example configuration:
 #
