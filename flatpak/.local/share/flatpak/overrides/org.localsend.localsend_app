@@ -1,0 +1,3 @@
+[Context]
+sockets=!fallback-x11;!x11
+filesystems=!home;xdg-pictures;xdg-documents;xdg-data/themes:ro;xdg-data/icons:ro

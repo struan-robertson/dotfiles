@@ -1,0 +1,8 @@
+[Context]
+sockets=!x11
+devices=dri
+filesystems=~/Sync:rw;~/Development:rw;~/Pictures:rw;~/Documents:rw;!home
+
+[Environment]
+ELECTRON_OZONE_PLATFORM_HINT=auto
+XCURSOR_PATH=
