@@ -1,0 +1,25 @@
+anchor = top
+width = 100% 
+horizontal = true
+border-width = 0
+outline-width = 0
+font = /home/struan/.local/share/fonts/ShareTechMono/ShureTechMonoNerdFont-Regular.ttf
+background-color = #2e3440
+text-color = #eceff4
+selection-color = #5e81ac
+prompt-text ="󰑮 "
+padding-top = 2
+padding-left = 5
+padding-bottom = 0
+padding-right = 0
+result-spacing = 20
+min-input-width = 120
+
+<% if [ $(hostname) = "fedora" ]; then %>
+height = 26
+font-size = 15
+<% elif [ $(hostname) = "fedoralaptop" ]; then %>
+height = 22
+font-size = 13
+<% fi -%>
+
