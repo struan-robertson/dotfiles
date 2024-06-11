@@ -1,0 +1,14 @@
+# Status Bar: yambar
+
+#bar {
+#  swaybar_command yambar
+#}
+
+# Use git version to handle display powering off and on
+# Replace at next release
+
+<% if [ $(hostname) = "fedora" ]; then %>
+exec_always sh -c "killall yambar; /home/struan/Development/Utilities/yambar/bld/release/yambar &"
+<% elif [ $(hostname) = "fedoralaptop" ]; then %>
+exec_always sh -c "killall yambar; yambar &"
+<% fi -%>
