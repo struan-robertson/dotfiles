@@ -1,13 +1,24 @@
 
 bar:
+  
+  <% if [ $(hostname) = "fedora" ]; then %>
+  height: 25
+  <% elif [ $(hostname) = "fedoralaptop" ]; then %>
   height: 45
+  <% fi -%>
+
   location: top
 
   background: 2e344000
   foreground: eceff4ff
 
   #font: Roboto Mono Nerd Font:pixelsize=30:weight=bold
+
+  <% if [ $(hostname) = "fedora" ]; then %>
+  font: ShureTechMono Nerd Font:pixelsize=20
+  <% elif [ $(hostname) = "fedoralaptop" ]; then %>
   font: ShureTechMono Nerd Font:pixelsize=32
+  <% fi -%>
     
   left:
      - i3:
@@ -18,14 +29,25 @@ bar:
                default:
                  string:
                    text: "{name}"
+
+                   <% if [ $(hostname) = "fedora" ]; then %>
+                   margin: 5
+                   <% elif [ $(hostname) = "fedoralaptop" ]; then %>
                    margin: 8
+                   <% fi -%>
+
                    foreground: eceff44d
                    on-click: "swaymsg --quiet workspace {name}"
                conditions:
                  state == focused: 
                    string:
                      text: "{name}"
+                     
+                     <% if [ $(hostname) = "fedora" ]; then %>
+                     margin: 5
+                     <% elif [ $(hostname) = "fedoralaptop" ]; then %>
                      margin: 8
+                     <% fi -%>
 
   center:
     - cpu:
@@ -38,7 +60,7 @@ bar:
 
     - label:
         content:
-          string: {text: "┃", margin: 8}
+          string: {text: "┃", margin: 16}
 
     - mem:
         poll-interval: 2000
@@ -47,7 +69,7 @@ bar:
 
     - label:
         content:
-          string: {text: "┃", margin: 8}
+          string: {text: "┃", margin: 16}
 
     - pipewire:
         anchors:
@@ -68,8 +90,10 @@ bar:
               - map:
                   <<: *volume
 
-              - string: {text: "┃", margin: 8}
+              - string: {text: "┃", margin: 16}
 
+
+    <% if [ $(hostname) = "fedoralaptop" ]; then %>
     - battery:
         name: BAT0
         poll-interval: 30000
@@ -99,16 +123,19 @@ bar:
                       string: {text: "!"}
                     state == "unknown":
                       string: {text: "?"}
+                      
     - label:
         content:
           string: {text: "┃", margin: 8}
+
+    <% fi -%>
 
     - network:
         poll-interval: 30000
         content:
           map:
             conditions:
-              name == "wlp0s20f3":
+              name == "wlp6s0":
                 string:
                   text: "NET {ssid} ({quality:03})"
                   on-click: "/home/struan/Development/Utilities/networkmanager-dmenu/networkmanager_dmenu"
