@@ -22,6 +22,10 @@ set $menu tofi-drun | xargs swaymsg exec --
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # Requires: desktop-backgrounds-compat, swaybg
 output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
+
+# Use VRR on desktop widescreen 
+output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
+
 #
 # Example configuration:
 #
