@@ -1,4 +1,4 @@
-# Requires GNU Make, GNU Stow and Ash
+# Requires GNU Make, GNU Stow and esh
 .PHONY: all stow-% delete delete-% process_packages
 
 OUTPUT_DIR := .out
