@@ -1,15 +1,19 @@
-.PHONY: all stow-% delete delete-%
+# Requires GNU Make, GNU Stow and Ash
+.PHONY: all stow-% delete delete-% process_packages
 
 OUTPUT_DIR := .out
 
 PACKAGES := $(shell find . -maxdepth 1 -type d ! -name '.*')
 
-all: copy_files
+all: process_packages
+	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --restow */
 
-copy_files: $(PACKAGES) 
+# Process `.ash` template files and store in corresponding dir in OUTPUT_DIR
+# All other files are symlinked using stow
+process_packages: $(PACKAGES) 
 	@mkdir -p $(OUTPUT_DIR)
-	@rm -rf .out/*
 	@for package in $(PACKAGES); do \
+		rm -rf .out/$$package; \
 		ash_files=$$(find $$package -type f -name '*.ash' -print); \
 		if [ -n "$$ash_files" ]; then \
 			for file in $$ash_files; do \
@@ -19,7 +23,6 @@ copy_files: $(PACKAGES)
 				esh -o $(OUTPUT_DIR)/$$new_name $$file; \
 			done; \
 			package=$$(basename $$package); \
-			echo $$package; \
 			stow --ignore=.ash --target=$(OUTPUT_DIR)/$$package $$package; \
 		else \
 			package=$$(basename $$package); \
@@ -27,12 +30,15 @@ copy_files: $(PACKAGES)
 		fi \
 	done
 
-stow-%:
-	stow --verbose --target=$$HOME --restow $*
+stow-%: 
+	@$(MAKE) --silent process_packages PACKAGES=$*
+	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --restow $*
 
 delete:
-	stow --verbose --target=$$HOME --delete */
+	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --delete */
+	rm -rf .out
 
 delete-%:
-	stow --verbose --target=$$HOME --delete $*
+	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --delete $*
+	rm -rf .out/$*
 
