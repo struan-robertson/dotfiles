@@ -8,22 +8,22 @@ PACKAGES := $(shell find . -maxdepth 1 -type d ! -name '.*')
 all: process_packages
 	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --restow */
 
-# Process `.ash` template files and store in corresponding dir in OUTPUT_DIR
+# Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
 # All other files are symlinked using stow
 process_packages: $(PACKAGES) 
 	@mkdir -p $(OUTPUT_DIR)
 	@for package in $(PACKAGES); do \
 		rm -rf .out/$$package; \
-		ash_files=$$(find $$package -type f -name '*.ash' -print); \
-		if [ -n "$$ash_files" ]; then \
-			for file in $$ash_files; do \
+		esh_files=$$(find $$package -type f -name '*.esh' -print); \
+		if [ -n "$$esh_files" ]; then \
+			for file in $$esh_files; do \
 				echo "Processing template $$file"; \
 				mkdir -p $(OUTPUT_DIR)/$$(dirname $$file); \
-				new_name=$$(echo $$file | sed 's|\.ash$$||'); \
+				new_name=$$(echo $$file | sed 's|\.esh$$||'); \
 				esh -o $(OUTPUT_DIR)/$$new_name $$file; \
 			done; \
 			package=$$(basename $$package); \
-			stow --ignore=.ash --target=$(OUTPUT_DIR)/$$package $$package; \
+			stow --ignore=.esh --target=$(OUTPUT_DIR)/$$package $$package; \
 		else \
 			package=$$(basename $$package); \
 			ln -s $$(pwd)/$$package $(OUTPUT_DIR)/; \
