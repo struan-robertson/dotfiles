@@ -5,8 +5,15 @@ OUTPUT_DIR := .out
 
 PACKAGES := $(shell find . -maxdepth 1 -type d ! -name '.*')
 
-all: process_packages
+all: process_packages system_dirs
 	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --restow */
+
+# Directories I do not want to be symlinked as they will be populated with other data which I do not wish to share
+system_dirs:
+	@mkdir -p $$HOME/.local/bin
+	@mkdir -p $$HOME/.local/share
+	@mkdir -p $$HOME/.var/
+
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
 # All other files are symlinked using stow
@@ -30,7 +37,7 @@ process_packages: $(PACKAGES)
 		fi \
 	done
 
-stow-%: 
+stow-%: system_dirs
 	@$(MAKE) --silent process_packages PACKAGES=$*
 	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --restow $*
 
