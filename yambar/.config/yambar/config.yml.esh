@@ -1,11 +1,11 @@
 
 bar:
   
-  <% if [ $(hostname) = "fedora" ]; then %>
+<% if [ $(hostname) = "fedora" ]; then -%>
   height: 25
-  <% elif [ $(hostname) = "archlaptop" ]; then %>
+<% elif [ $(hostname) = "archlaptop" ]; then -%>
   height: 45
-  <% fi -%>
+<% fi -%>
 
   location: top
 
@@ -14,11 +14,11 @@ bar:
 
   #font: Roboto Mono Nerd Font:pixelsize=30:weight=bold
 
-  <% if [ $(hostname) = "fedora" ]; then %>
+<% if [ $(hostname) = "fedora" ]; then -%>
   font: ShureTechMono Nerd Font:pixelsize=20
-  <% elif [ $(hostname) = "archlaptop" ]; then %>
+<% elif [ $(hostname) = "archlaptop" ]; then -%>
   font: ShureTechMono Nerd Font:pixelsize=32
-  <% fi -%>
+<% fi -%>
     
   left:
      - i3:
@@ -29,12 +29,11 @@ bar:
                default:
                  string:
                    text: "{name}"
-
-                   <% if [ $(hostname) = "fedora" ]; then %>
+<% if [ $(hostname) = "fedora" ]; then -%>
                    margin: 5
-                   <% elif [ $(hostname) = "archlaptop" ]; then %>
+<% elif [ $(hostname) = "archlaptop" ]; then -%>
                    margin: 8
-                   <% fi -%>
+<% fi -%>
 
                    foreground: eceff44d
                    on-click: "swaymsg --quiet workspace {name}"
@@ -42,12 +41,11 @@ bar:
                  state == focused: 
                    string:
                      text: "{name}"
-                     
-                     <% if [ $(hostname) = "fedora" ]; then %>
+<% if [ $(hostname) = "fedora" ]; then -%>
                      margin: 5
-                     <% elif [ $(hostname) = "archlaptop" ]; then %>
+<% elif [ $(hostname) = "archlaptop" ]; then -%>
                      margin: 8
-                     <% fi -%>
+<% fi -%>
 
   center:
     - cpu:
@@ -92,8 +90,7 @@ bar:
 
               - string: {text: "┃", margin: 16}
 
-
-    <% if [ $(hostname) = "archlaptop" ]; then %>
+<% if [ $(hostname) = "archlaptop" ]; then -%>
     - battery:
         name: BAT0
         poll-interval: 30000
@@ -127,15 +124,18 @@ bar:
     - label:
         content:
           string: {text: "┃", margin: 8}
-
-    <% fi -%>
+<% fi -%>
 
     - network:
         poll-interval: 30000
         content:
           map:
             conditions:
+<% if [ $(hostname) = "archlaptop" ]; then -%>
+              name == "wlan0":
+<% elif [ $(hostname) = "arch" ]; then -%>
               name == "wlp6s0":
+<% fi -%>
                 string:
                   text: "NET {ssid} ({quality:03})"
                   on-click: "/home/struan/Development/Utilities/networkmanager-dmenu/networkmanager_dmenu"
