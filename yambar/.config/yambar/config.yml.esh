@@ -3,7 +3,7 @@ bar:
   
   <% if [ $(hostname) = "fedora" ]; then %>
   height: 25
-  <% elif [ $(hostname) = "fedoralaptop" ]; then %>
+  <% elif [ $(hostname) = "archlaptop" ]; then %>
   height: 45
   <% fi -%>
 
@@ -16,7 +16,7 @@ bar:
 
   <% if [ $(hostname) = "fedora" ]; then %>
   font: ShureTechMono Nerd Font:pixelsize=20
-  <% elif [ $(hostname) = "fedoralaptop" ]; then %>
+  <% elif [ $(hostname) = "archlaptop" ]; then %>
   font: ShureTechMono Nerd Font:pixelsize=32
   <% fi -%>
     
@@ -32,7 +32,7 @@ bar:
 
                    <% if [ $(hostname) = "fedora" ]; then %>
                    margin: 5
-                   <% elif [ $(hostname) = "fedoralaptop" ]; then %>
+                   <% elif [ $(hostname) = "archlaptop" ]; then %>
                    margin: 8
                    <% fi -%>
 
@@ -45,7 +45,7 @@ bar:
                      
                      <% if [ $(hostname) = "fedora" ]; then %>
                      margin: 5
-                     <% elif [ $(hostname) = "fedoralaptop" ]; then %>
+                     <% elif [ $(hostname) = "archlaptop" ]; then %>
                      margin: 8
                      <% fi -%>
 
@@ -93,7 +93,7 @@ bar:
               - string: {text: "┃", margin: 16}
 
 
-    <% if [ $(hostname) = "fedoralaptop" ]; then %>
+    <% if [ $(hostname) = "archlaptop" ]; then %>
     - battery:
         name: BAT0
         poll-interval: 30000

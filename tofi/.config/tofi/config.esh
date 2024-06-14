@@ -18,7 +18,7 @@ min-input-width = 120
 <% if [ $(hostname) = "fedora" ]; then %>
 height = 26
 font-size = 15
-<% elif [ $(hostname) = "fedoralaptop" ]; then %>
+<% elif [ $(hostname) = "archlaptop" ]; then %>
 height = 22
 font-size = 13
 <% fi -%>
