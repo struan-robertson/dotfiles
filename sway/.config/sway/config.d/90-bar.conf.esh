@@ -9,6 +9,6 @@
 
 <% if [ $(hostname) = "fedora" ]; then %>
 exec_always sh -c "killall yambar; /home/struan/Development/Utilities/yambar/bld/release/yambar &"
-<% elif [ $(hostname) = "fedoralaptop" ]; then %>
+<% elif [ $(hostname) = "archlaptop" ]; then %>
 exec_always sh -c "killall yambar; yambar &"
 <% fi -%>
