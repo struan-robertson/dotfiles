@@ -1,0 +1,7 @@
+whitelist ${RUNUSER}/org.keepassxc.KeePassXC.BrowserServer
+noblacklist ${RUNUSER}/app
+
+dbus-user.talk org.freedesktop.Notifications
+dbus-user.talk org.freedesktop.ScreenSaver
+dbus-user.talk org.freedesktop.portal.Desktop
+
