@@ -1,0 +1,15 @@
+[common]
+executable_name = "/usr/bin/sioyek"
+share_local_time = false
+filter_disk_sync = false
+dbus_name = ""
+
+[wayland]
+
+[home_share]
+home_paths = [
+    "Downloads",
+    "Documents",
+    ".config/sioyek",
+]
+
