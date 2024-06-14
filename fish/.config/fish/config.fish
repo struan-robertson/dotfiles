@@ -6,4 +6,6 @@ if status is-interactive
     set -x BAT_THEME Nord
 
     zoxide init fish | source
+
+    alias lla='ll -a'
 end
