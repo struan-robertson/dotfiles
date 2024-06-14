@@ -138,7 +138,7 @@ bar:
 <% fi -%>
                 string:
                   text: "NET {ssid} ({quality:03})"
-                  on-click: "/home/struan/Development/Utilities/networkmanager-dmenu/networkmanager_dmenu"
+                  on-click: "iwgtk"
 
   right:
     - clock:
