@@ -1,5 +1,7 @@
-whitelist ${RUNUSER}/org.keepassxc.KeePassXC.BrowserServer
 noblacklist ${RUNUSER}/app
+mkdir ${RUNUSER}/app/org.keepassxc.KeePassXC
+whitelist ${RUNUSER}/app/org.keepassxc.KeePassXC
+whitelist ${RUNUSER}/org.keepassxc.KeePassXC.BrowserServer
 
 dbus-user.talk org.freedesktop.Notifications
 dbus-user.talk org.freedesktop.ScreenSaver
