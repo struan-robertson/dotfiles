@@ -1,0 +1,32 @@
+#!/usr/bin/sh
+
+## Adapted from start-sway script present in Fedora Sway spin
+
+## Internal variables
+readonly _SWAY_COMMAND="/usr/bin/sway"
+
+## General exports
+export XDG_CURRENT_DESKTOP=sway
+export XDG_SESSION_DESKTOP=sway
+export XDG_SESSION_TYPE=wayland
+
+## Apply `environment.d(5)` customizations
+# This can be used to share the custom environment configs with systemd --user.
+# Importing `systemd --user show-environment` here may have unexpected
+# consequences, such as getting a leftover `WAYLAND_DISPLAY` or `DISPLAY`
+# and breaking Sway startup. Thus, the direct call to a systemd generator.
+set -o allexport
+eval "$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)"
+set +o allexport
+
+## Load Sway-specific user environment customizations
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/sway/environment" ]; then
+    set -o allexport
+    # shellcheck source=/dev/null
+    . "${XDG_CONFIG_HOME:-$HOME/.config}/sway/environment"
+    set +o allexport
+fi
+
+# Start sway with extra arguments and send output to the journal
+# shellcheck disable=SC2086 # quoted expansion of EXTRA_ARGS can produce empty field
+exec systemd-cat -- $_SWAY_COMMAND "$@"
