@@ -15,5 +15,4 @@ XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
 # SSH agent auth socket
 SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
-# Change when I switch back to emacs
-EDITOR=vim
+EDITOR=nvim
