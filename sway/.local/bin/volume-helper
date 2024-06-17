@@ -78,4 +78,4 @@ case $(pactl get-sink-mute "$SINK") in
         ;;
 esac
 
-echo $VOLUME > $XDG_RUNTIME_DIR/wobpipe
+echo $VOLUME > $XDG_RUNTIME_DIR/wob.sock

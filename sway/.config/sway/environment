@@ -1,20 +1,4 @@
-# This file is a part of Fedora configuration for Sway and will be sourced
-# from /usr/bin/start-sway script for all users of the system.
-# User-specific variables should be placed in $XDG_CONFIG_HOME/sway/environment
-#
 # vim: set ft=sh:
-
-## Pass extra arguments to the /usr/bin/sway executable
-
-#SWAY_EXTRA_ARGS="$SWAY_EXTRA_ARGS --unsupported-gpu"
-#SWAY_EXTRA_ARGS="$SWAY_EXTRA_ARGS --debug"
-
-## Set environment variables
-
-# Useful variables for wlroots:
-# https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/master/docs/env_vars.md
-#
-#WLR_NO_HARDWARE_CURSORS=1
 
 # Application compatibility
 _JAVA_AWT_WM_NONREPARENTING=1
@@ -22,6 +6,14 @@ _JAVA_AWT_WM_NONREPARENTING=1
 # QT Theming
 QT_QPA_PLATFORMTHEME=qt5ct
 
+# GTK Theming
+GTK_THEME=NovaOS-nord
+ICON_THEME=NovaOS-nord
+
 XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
 
+# SSH agent auth socket
 SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
+
+# Change when I switch back to emacs
+EDITOR=vim

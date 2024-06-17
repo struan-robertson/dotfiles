@@ -1,73 +1,35 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Variables
-#
-# Logo key. Use Mod1 for Alt.
 set $mod Mod4
 # Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
-# Your preferred terminal emulator
-# Recommends: foot
+# Terminal emulator
 set $term foot
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
+# Menu (use swaymsg to exec for applications to launch in correct workspaced)
 set $menu tofi-drun | xargs swaymsg exec --
 
 ### Output configuration
-#
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-# Requires: desktop-backgrounds-compat, swaybg
 output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
-
 # Use VRR on desktop widescreen 
 output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
-
-#
-# Example configuration:
-#
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
-#
-# You can get the names of your outputs by running: swaymsg -t get_outputs
-
 # Dim blue light at night
 exec wlsunset -l 56.5 -L -3.0
-
-# Create WOB fifo and set WOB to listen
-exec mkfifo $XDG_RUNTIME_DIR/wobpipe
-exec tail -f $XDG_RUNTIME_DIR/wobpipe | wob
-
-# Start SSH agent
 # SSH_AUTH_SOCK is set in environment
+# Would like to run this as a SystemD service but currently crashes KeePassXC if not run like this
 exec ssh-agent -D -a $XDG_RUNTIME_DIR/ssh-agent.socket
+
+### Includes
+# Provided sway includes for setting environment variables
+include /etc/sway/config.d/*
+# Extra configuration
+include ~/.config/sway/config.d/*
 
 # Exec KeePassXC as it will need to be unlocked for most things
 exec keepassxc
 
-# Include configs from 3 locations:
-#  - /usr/share/sway/config.d
-#  - /etc/sway/config.d
-#  - $XDG_CONFIG_HOME/sway/config.d ($HOME/.config/sway/config.d)
-#
-# If multiple directories contain the files with the same name, the later
-# directory takes precedence; `$XDG_CONFIG_HOME/sway/config.d/20-swayidle.conf`
-# will always be loaded instead of `/usr/share/sway/config.d/20-swayidle.conf`
-# or `/etc/sway/config.d/20-swayidle.conf`
-#
-# This mechanism permits overriding our default configuration per-system
-# (/etc) or per-user ($XDG_CONFIG_HOME) basis. Just create the file you
-# want to modify/override in the higher-level directory.
-#
-# For example, to disable the default bar from Fedora configs, you'll need to
-#     $ echo -n > "$HOME/.config/sway/config.d/90-bar.conf"
-#
-# Note the quoting, the $() and the arguments quoting. All the parts are equally
-# important to make the magic work. And if you want to learn the secret behind
-# the trick, it's all in the `wordexp(3)`.
-#
-#include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
-include /etc/sway/config.d/*
-include ~/.config/sway/config.d/*
+# Start sway-session SystemD target
+exec_always systemctl --user start sway-session.target
