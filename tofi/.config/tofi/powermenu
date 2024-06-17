@@ -10,6 +10,6 @@ case "$CHOSEN" in
 	"Suspend") swaylock -f -c 000000 && systemctl suspend ;;
 	"Reboot") systemctl reboot ;;
 	"Power Off") systemctl poweroff ;;
-	"Log Out") swaymsg exit ;;
+	"Log Out") systemctl --user stop sway-session.target && swaymsg exit ;;
 	*) exit 1 ;;
 esac
