@@ -19,3 +19,9 @@ ignore no3d
 ignore private-bin
 #noblacklist /usr/bin/keepassxc-proxy 
 private-bin keepassxc-cli,keepassxc-proxy
+
+# Secret service integration
+dbus-user.own org.freedesktop.secrets
+dbus-user.talk org.freedesktop.Notifications
+
+include whitelist-common.inc
