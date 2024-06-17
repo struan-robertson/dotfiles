@@ -1,0 +1,12 @@
+[Unit]
+Description=PolicyKit Handler
+Documentation=man:lxqt-policykit-agent
+BindsTo=sway-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/lxqt-policykit-agent
+Restart=always
+
+[Install]
+WantedBy=sway-session.target

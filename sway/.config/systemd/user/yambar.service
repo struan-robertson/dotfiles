@@ -1,0 +1,12 @@
+[Unit]
+Description=Yambar Status Bar
+Documentation=man:yambar
+BindsTo=sway-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/yambar
+Restart=always
+
+[Install]
+WantedBy=sway-session.target
