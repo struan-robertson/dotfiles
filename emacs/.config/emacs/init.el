@@ -22,4 +22,35 @@
  ;; If there is more than one, they won't work right.
  )
 
+;; Set modeline to top of screen
+;;(setq-default header-line-format mode-line-format)
+;; (setq-default mode-line-format nil)	
+
+(setq-default mode-line-format '("%e" mode-line-front-space
+ (:propertize
+  ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
+  display (min-width (6.0)))
+ mode-line-frame-identification mode-line-buffer-identification mode-line-position
+ mode-line-format-right-align mode-line-modes (project-mode-line project-mode-line-format) (vc-mode vc-mode) mode-line-misc-info "  " mode-line-end-spaces))
+
 (message "init.el loaded successfully")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
