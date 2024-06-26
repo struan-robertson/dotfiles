@@ -3,18 +3,19 @@
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure t
+      use-package-vc-prefer-newest t)
 
 ;; Dont litter folders with autosave filesp
 (use-package no-littering
-  :ensure t
   :init
   (setq user-emacs-directory "~/.config/emacs")
   :config
@@ -23,11 +24,9 @@
 
 ;; C-= to expand selection intelligently
 (use-package expand-region
-  :ensure t
   :bind ("C-=" . 'er/expand-region))
 
 (use-package nano-theme
-  :ensure t
   :vc (:url "https://github.com/rougier/nano-theme"
 	    :branch "master")
   :config
@@ -61,10 +60,14 @@
       (setq my:theme-terminal-loaded t)))
   )
 
-(use-package magit
-  :ensure t)
+(use-package magit)
 
 (use-package which-key
-  :ensure t
   :config
   (which-key-mode))
+
+;; Is it worth switching to zsh for eat integration? Probably not but idk
+(use-package eat
+  :config
+  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+  (eshell-visual-commands nil))
