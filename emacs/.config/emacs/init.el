@@ -37,6 +37,9 @@
 (setenv "SSH_AUTH_SOCK" (concat (getenv "XDG_RUNTIME_DIR")
 				"/ssh-agent.socket"))
 
+;; Pair specific chars
+(electric-pair-mode 1)
+
 (message "init.el loaded successfully")
 
 
