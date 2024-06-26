@@ -1,5 +1,3 @@
-# vim: set ft=sh:
-
 # Application compatibility
 _JAVA_AWT_WM_NONREPARENTING=1
 
@@ -15,5 +13,5 @@ XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
 # SSH agent auth socket
 SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
-EDITOR=emacsclient -t
-VISUAL=emacsclient -c
+EDITOR="emacsclient -t"
+VISUAL="emacsclient -c"
