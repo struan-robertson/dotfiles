@@ -72,5 +72,10 @@
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
   (setq eshell-visual-commands nil))
 
-(use-package auctex)
+(use-package auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-view-program-selection '((output-pdf "Sioyek")
+				    (output-html "xdg-open"))))
 

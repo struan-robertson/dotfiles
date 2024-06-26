@@ -6,6 +6,10 @@
 ;; === Keybindings ===
 (load "keybindings")
 
+;; === Faces ===
+(set-face-attribute 'variable-pitch nil :family "ShureTechMono Nerd Font Propo")
+(set-face-attribute 'default nil :font "ShureTechMono Nerd Font Propo")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -24,7 +28,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(font-latex-bold-face ((t (:inherit bold))))
+ '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#a3be8c" :weight bold))))
+ '(font-latex-string-face ((t (:foreground "#d8dee9"))))
+ '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a")))))
 
 ;; ;; Set modeline to top of screen
 ;; ;;(setq-default header-line-format mode-line-format)
