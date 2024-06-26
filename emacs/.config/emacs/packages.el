@@ -71,3 +71,6 @@
   :config
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
   (setq eshell-visual-commands nil))
+
+(use-package auctex)
+
