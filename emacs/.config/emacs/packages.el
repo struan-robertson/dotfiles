@@ -58,7 +58,7 @@
     (if (display-graphic-p)
         (setq my:theme-window-loaded t)
       (setq my:theme-terminal-loaded t)))
-  )
+)
 
 (use-package magit)
 
@@ -70,4 +70,4 @@
 (use-package eat
   :config
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
-  (eshell-visual-commands nil))
+  (setq eshell-visual-commands nil))
