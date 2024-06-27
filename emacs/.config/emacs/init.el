@@ -19,7 +19,9 @@
    '("de8f2d8b64627535871495d6fe65b7d0070c4a1eb51550ce258cd240ff9394b0"
      "1781e8bccbd8869472c09b744899ff4174d23e4f7517b8a6c721100288311fa5"
      default))
- '(package-selected-packages '(auctex eat expand-region magit nano-theme no-littering))
+ '(package-selected-packages
+   '(auctex eat expand-region magit multiple-cursors nano-theme
+	    no-littering))
  '(package-vc-selected-packages
    '((nano-theme :url "https://github.com/rougier/nano-theme" :branch
 		 "master"))))

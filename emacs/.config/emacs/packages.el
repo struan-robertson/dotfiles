@@ -79,3 +79,4 @@
   (setq TeX-view-program-selection '((output-pdf "Sioyek")
 				    (output-html "xdg-open"))))
 
+(use-package multiple-cursors)
