@@ -1,3 +1,5 @@
 [user]
 	email = struanrobertson@pm.me
 	name = Struan Robertson
+[pull]
+	rebase = false
