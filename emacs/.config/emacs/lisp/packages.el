@@ -99,7 +99,8 @@
       (if (display-graphic-p)
           (setq my:theme-window-loaded t)
 	(setq my:theme-terminal-loaded t)))
-    ))
+    )
+  )
 
 (use-package magit
   :ensure t)
