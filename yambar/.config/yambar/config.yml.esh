@@ -1,7 +1,7 @@
 
 bar:
   
-<% if [ $(hostname) = "fedora" ]; then -%>
+<% if [ $(hostname) = "arch" ]; then -%>
   height: 25
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
   height: 45
@@ -14,7 +14,7 @@ bar:
 
   #font: Roboto Mono Nerd Font:pixelsize=30:weight=bold
 
-<% if [ $(hostname) = "fedora" ]; then -%>
+<% if [ $(hostname) = "arch" ]; then -%>
   font: ShureTechMono Nerd Font:pixelsize=20
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
   font: ShureTechMono Nerd Font:pixelsize=32
@@ -29,7 +29,7 @@ bar:
                default:
                  string:
                    text: "{name}"
-<% if [ $(hostname) = "fedora" ]; then -%>
+<% if [ $(hostname) = "arch" ]; then -%>
                    margin: 5
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
                    margin: 8
@@ -41,7 +41,7 @@ bar:
                  state == focused: 
                    string:
                      text: "{name}"
-<% if [ $(hostname) = "fedora" ]; then -%>
+<% if [ $(hostname) = "arch" ]; then -%>
                      margin: 5
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
                      margin: 8
@@ -131,11 +131,7 @@ bar:
         content:
           map:
             conditions:
-<% if [ $(hostname) = "archlaptop" ]; then -%>
               name == "wlan0":
-<% elif [ $(hostname) = "arch" ]; then -%>
-              name == "wlp6s0":
-<% fi -%>
                 string:
                   text: "NET {ssid} ({quality:03})"
                   on-click: "iwgtk"

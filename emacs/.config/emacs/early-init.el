@@ -1,4 +1,4 @@
-;; early-init.el
+;; early-init.el -*- lexical-binding: t; -*-
 
 ;; Disable the toolbar
 (tool-bar-mode -1)
@@ -13,5 +13,7 @@
 (pixel-scroll-precision-mode 1)
 
 (column-number-mode)
+
+(setq package-enable-at-startup nil)
 
 (message "early-init.el loaded successfully")

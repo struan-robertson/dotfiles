@@ -15,7 +15,7 @@ padding-right = 0
 result-spacing = 20
 min-input-width = 120
 
-<% if [ $(hostname) = "fedora" ]; then %>
+<% if [ $(hostname) = "arch" ]; then %>
 height = 26
 font-size = 15
 <% elif [ $(hostname) = "archlaptop" ]; then %>
