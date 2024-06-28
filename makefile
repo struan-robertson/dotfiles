@@ -13,6 +13,7 @@ system_dirs:
 	@mkdir -p $$HOME/.local/bin
 	@mkdir -p $$HOME/.local/share
 	@mkdir -p $$HOME/.var/
+	@mkdir -p $$HOME/.config/emacs
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
