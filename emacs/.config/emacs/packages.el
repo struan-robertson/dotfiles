@@ -27,38 +27,40 @@
   :bind ("C-=" . 'er/expand-region))
 
 (use-package nano-theme
-  :vc (:url "https://github.com/rougier/nano-theme"
-	    :branch "master")
+  :vc
+  (:url "https://github.com/rougier/nano-theme"
+	:branch "master"
+	:rev :newest)
   :config
-  (load-theme 'nano-dark t))
-;; Fix theme not being set on terminal clients
-(defvar my:theme 'nano-dark)
-(defvar my:theme-window-loaded nil)
-(defvar my:theme-terminal-loaded nil)
-(if (daemonp)
-    (add-hook 'after-make-frame-functions(lambda (frame)
-                                          (select-frame frame)
-                                          (if (window-system frame)
-                                              (unless my:theme-window-loaded
-                                                (if my:theme-terminal-loaded
-                                                    (enable-theme my:theme)
-                                                  (load-theme my:theme t))
-                                                (setq my:theme-window-loaded t)
-                                                )
-                                            (unless my:theme-terminal-loaded
-                                              (if my:theme-window-loaded
-                                                  (enable-theme my:theme)
-                                                (load-theme my:theme t))
-                                              (setq my:theme-terminal-loaded t)
-                                              )
-                                            )))
+  (load-theme 'nano-dark t)
+  ;; Fix theme not being set on terminal clients
+  (defvar my:theme 'nano-dark)
+  (defvar my:theme-window-loaded nil)
+  (defvar my:theme-terminal-loaded nil)
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions(lambda (frame)
+                                             (select-frame frame)
+                                             (if (window-system frame)
+						 (unless my:theme-window-loaded
+                                                   (if my:theme-terminal-loaded
+                                                       (enable-theme my:theme)
+                                                     (load-theme my:theme t))
+                                                   (setq my:theme-window-loaded t)
+                                                   )
+                                               (unless my:theme-terminal-loaded
+						 (if my:theme-window-loaded
+                                                     (enable-theme my:theme)
+                                                   (load-theme my:theme t))
+						 (setq my:theme-terminal-loaded t)
+						 )
+                                               )))
 
-  (progn
-    (load-theme my:theme t)
-    (if (display-graphic-p)
-        (setq my:theme-window-loaded t)
-      (setq my:theme-terminal-loaded t)))
-)
+    (progn
+      (load-theme my:theme t)
+      (if (display-graphic-p)
+          (setq my:theme-window-loaded t)
+	(setq my:theme-terminal-loaded t)))
+    ))
 
 (use-package magit)
 
