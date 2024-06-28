@@ -77,6 +77,8 @@
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-view-program-selection '((output-pdf "Sioyek")
-				    (output-html "xdg-open"))))
+				     (output-html "xdg-open")))
+  :hook
+  (LaTeX-mode . reftex-mode))
 
 (use-package multiple-cursors)
