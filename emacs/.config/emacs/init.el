@@ -34,7 +34,8 @@
  '(font-latex-bold-face ((t (:inherit bold))))
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#a3be8c" :weight bold))))
  '(font-latex-string-face ((t (:foreground "#d8dee9"))))
- '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a")))))
+ '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a"))))
+ '(font-lock-string-face ((t (:inherit nano-default :foreground "#d8dee9")))))
 
 ;; ;; Set modeline to top of screen
 ;; ;;(setq-default header-line-format mode-line-format)
