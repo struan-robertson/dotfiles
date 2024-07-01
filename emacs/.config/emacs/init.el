@@ -15,7 +15,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auth-source-save-behavior nil))
+ '(auth-source-save-behavior nil)
+ '(package-selected-packages
+   '(vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+ '(package-vc-selected-packages
+   '((nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
+     (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package"))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

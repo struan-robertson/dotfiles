@@ -14,6 +14,4 @@
 
 (column-number-mode)
 
-(setq package-enable-at-startup nil)
-
 (message "early-init.el loaded successfully")

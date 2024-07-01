@@ -1,58 +1,17 @@
-;; === Elpaca setup  === -*- lexical-binding: t; -*-
-;; Maybe consider getting rid of this at Emacs 30
-(defvar elpaca-installer-version 0.7)
-(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (< emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                 ,@(when-let ((depth (plist-get order :depth)))
-                                                     (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                 ,(plist-get order :repo) ,repo))))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (load "./elpaca-autoloads")))
-(add-hook 'after-init-hook #'elpaca-process-queues)
-(elpaca `(,@elpaca-order))
-
+;; -*- lexical-binding: t; -*-
+;; Replace with built in at emacs 30
+(unless (package-installed-p 'vc-use-package)
+  (package-vc-install "https://github.com/slotThe/vc-use-package"))
+(setopt use-package-always-ensure t)
+(require 'vc-use-package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
-;; Install use-package support
-(elpaca elpaca-use-package
-  ;; Enable use-package :ensure support for Elpaca.
-  (elpaca-use-package-mode))
-
 ;; Dont litter folders with autosave filesp
 (use-package no-littering
-  :ensure t
   :init
   (setq user-emacs-directory "~/.config/emacs")
   :config
@@ -62,14 +21,12 @@
 
 ;; C-= to expand selection intelligently
 (use-package expand-region
-  :ensure t
   :bind ("C-=" . 'er/expand-region))
 
 (use-package nano-theme
-  :ensure
-  (:host github
-	 :repo "rougier/nano-theme"
-	 :branch "master")
+  :vc
+  (nano-theme :url "https://github.com/rougier/nano-theme"
+	      :branch "master") ;; Remember that when switching to emacs 30, need to specify ":rev newest"
   :config
   (load-theme 'nano-dark t)
   ;; Fix theme not being set on terminal clients
@@ -102,35 +59,20 @@
     )
   )
 
-(use-package transient
-  :ensure t)
-
-(use-package magit
-  :ensure t
-  :requires transient)
+(use-package magit)
 
 (use-package which-key
-  :ensure t
   :config
   (which-key-mode))
 
 ;; Is it worth switching to zsh for eat integration? Probably not but idk
 (use-package eat
-  :ensure
-  (:host codeberg
-	 :repo "akib/emacs-eat"
-	 :files ("*.el" ("term" "term/*.el") "*.texi"
-               "*.ti" ("terminfo/e" "terminfo/e/*")
-               ("terminfo/65" "terminfo/65/*")
-               ("integration" "integration/*")
-               (:exclude ".dir-locals.el" "*-tests.el")))
   :hook
   (eshell-load . eat-eshell-mode)
   :config
   (setq eshell-visual-commands nil))
 
 (use-package auctex
-  :ensure t
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
@@ -140,7 +82,6 @@
   (LaTeX-mode . reftex-mode))
 
 (use-package multiple-cursors
-  :ensure t
   :bind
   (("C-S-c C-S-c" . 'mc/edit-lines)
    ("C->" . 'mc/mark-next-like-this)
@@ -151,7 +92,6 @@
 ;; ==== Monad Stack ====
 ;; Use M-SPC to add corfu seperator for orderless searching
 (use-package corfu
-  :ensure t
   ;; Recommended: Enable Corfu globally. This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
@@ -160,14 +100,57 @@
 
 ;; Orderless completion style
 (use-package orderless
-  :ensure t
   :init
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles partial-completion)))
+	;; Initialism alows `eif' to find elp-instrument-function
+	orderless-matching-styles '(orderless-literal orderless-regexp orderless-initialism)))
+
+(use-package vertico
+  :init
+  (vertico-mode)
+  ;; Use different vertico displays for different modes
+  (setq vertico-multiform-categories
+	'((file reverse)
+	  (consult-location buffer)
+	  (consult-grep buffer)
+	  (minor-mode reverse)
+	  (imenu buffer)
+	  ;; (t unobtrusive)
+	  ))
+  (vertico-multiform-mode))
+
+(use-package savehist
+  :init
+  (savehist-mode))
 
 (use-package emacs
   :init
+
+  ;; ========= Vertico =========
+
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (setq enable-recursive-minibuffers t)
+
+  ;; ========= Corfu =========
+  
   ;; TAB cycle if there are only few candidates
   ;; (setq completion-cycle-threshold 3)
 
