@@ -14,6 +14,7 @@ system_dirs:
 	@mkdir -p $$HOME/.local/share
 	@mkdir -p $$HOME/.var/
 	@mkdir -p $$HOME/.config/emacs
+	@mkdir -p $$HOME/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux # Stop trying to stow all flatpak stuff
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
