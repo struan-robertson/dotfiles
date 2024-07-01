@@ -91,6 +91,13 @@
    ("C-<" . 'mc/mark-previous-like-this)
    ("C-c C-<" . 'mc/mark-all-like-this)))
 
+;; TODO add citar embark
+(use-package citar
+  :custom
+  (citar-bibliography '("~/Sync/Roam/biblio.bib"))
+  :hook
+  (LaTeX-mode . citar-capf-setup)
+  (org-mode . citar-capf-setup))
 
 ;; ==== Monad Stack ====
 ;; Use M-SPC to add corfu seperator for orderless searching
