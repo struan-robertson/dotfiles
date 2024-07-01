@@ -15,7 +15,7 @@ set $menu tofi-drun | xargs swaymsg exec --
 ### Output configuration
 output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
 # Use VRR on desktop widescreen 
-output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
+#output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
 
 # SSH_AUTH_SOCK is set in environment
 # Would like to run this as a SystemD service but currently crashes KeePassXC if not run like this
