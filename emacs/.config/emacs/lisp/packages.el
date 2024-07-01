@@ -128,6 +128,14 @@
   :init
   (savehist-mode))
 
+(use-package recentf
+  :bind
+  ("C-x C-r" . recentf-open)
+  :config
+  (setq recentf-max-menu-items 15
+	recentf-max-saved-items 100)
+  (recentf-mode))
+
 (use-package emacs
   :init
 
