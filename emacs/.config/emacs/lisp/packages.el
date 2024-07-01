@@ -21,7 +21,8 @@
 
 ;; C-= to expand selection intelligently
 (use-package expand-region
-  :bind ("C-=" . 'er/expand-region))
+  :bind
+  ("C-=" . 'er/expand-region))
 
 (use-package nano-theme
   :vc
@@ -72,15 +73,17 @@
   :config
   (setq eshell-visual-commands nil))
 
-(use-package auctex
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-view-program-selection '((output-pdf "Sioyek")
-				     (output-html "xdg-open")))
+(use-package tex
+  :ensure
+  auctex
   :hook
-  (LaTeX-mode . reftex-mode))
-
+  (LaTeX-mode . reftex-mode)
+  :config
+  (setq TeX-view-program-selection '((output-pdf "Sioyek")
+				     (output-html "xdg-open"))
+	TeX-auto-save t
+	TeX-parse-self t))
+ 
 (use-package multiple-cursors
   :bind
   (("C-S-c C-S-c" . 'mc/edit-lines)
