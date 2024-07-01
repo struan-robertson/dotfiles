@@ -118,7 +118,7 @@
 	orderless-matching-styles '(orderless-literal orderless-regexp orderless-initialism)))
 
 (use-package vertico
-  :init
+  :config
   (vertico-mode)
   ;; Use different vertico displays for different modes
   (setq vertico-multiform-categories
@@ -138,10 +138,11 @@
 (use-package recentf
   :bind
   ("C-x C-r" . recentf-open)
-  :config
+  :init
   (setq recentf-max-menu-items 15
 	recentf-max-saved-items 100)
-  (recentf-mode))
+  :hook
+  (after-init . recentf-mode))
 
 (use-package emacs
   :init
