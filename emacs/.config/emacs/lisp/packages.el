@@ -102,8 +102,12 @@
     )
   )
 
-(use-package magit
+(use-package transient
   :ensure t)
+
+(use-package magit
+  :ensure t
+  :requires transient)
 
 (use-package which-key
   :ensure t
