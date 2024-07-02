@@ -30,6 +30,10 @@ process_packages: $(PACKAGES)
 				mkdir -p $(OUTPUT_DIR)/$$(dirname $$file); \
 				new_name=$$(echo $$file | sed 's|\.esh$$||'); \
 				esh -o $(OUTPUT_DIR)/$$new_name $$file; \
+				if [ "$$(head -n 1 $(OUTPUT_DIR)/$$new_name | cut -c 1-2)" = "#!" ]; then \
+					echo "Making $(OUTPUT_DIR)/$$new_name executable"; \
+					chmod +x $(OUTPUT_DIR)/$$new_name; \
+				fi \
 			done; \
 			package=$$(basename $$package); \
 			stow --ignore=.esh --target=$(OUTPUT_DIR)/$$package $$package; \

@@ -5,7 +5,9 @@ swayidle -w \
 <% fi -%>
 	timeout 360  'swaymsg "output * power off"' \
 	     resume  'swaymsg "output * power on"'  \
-	before-sleep 'playerctl pause; swaylock'    \
 <% if [ $(hostname) = "archlaptop" ]; then -%>       
+	before-sleep 'playerctl pause; swaylock'    \
 	lock 'swaylock -f' 
+<% else -%>
+	before-sleep 'playerctl pause'
 <% fi -%>
