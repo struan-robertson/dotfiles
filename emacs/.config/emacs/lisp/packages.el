@@ -121,7 +121,10 @@
   (conf-mode . jinx-mode)
   :bind
   (("M-$" . jinx-correct)
-   ("C-M-$" . jinx-languages)))
+   ("C-M-$" . jinx-languages))
+  :config
+  (add-to-list 'jinx-exclude-faces
+	       '(LaTeX-mode font-lock-constant-face)))
 
 (defun my/toggle-writing-zen ()
   "Disable language improvement tools to allow for dumping text on the page."
@@ -165,6 +168,7 @@
 	  (consult-grep buffer)
 	  (minor-mode reverse)
 	  (imenu buffer)
+	  (jinx grid (vertico-grid-annotate . 20))
 	  ;; (t unobtrusive)
 	  ))
   (vertico-multiform-mode))
