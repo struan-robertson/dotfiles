@@ -91,6 +91,8 @@
    ("C-<" . 'mc/mark-previous-like-this)
    ("C-c C-<" . 'mc/mark-all-like-this)))
 
+;; ========= Academic =========
+
 ;; TODO add citar embark
 (use-package citar
   :custom
@@ -98,6 +100,42 @@
   :hook
   (LaTeX-mode . citar-capf-setup)
   (org-mode . citar-capf-setup))
+
+(use-package writegood-mode
+  :hook
+  (LaTeX-mode . writegood-mode)
+  (org-mode . writegood-mode))
+
+(use-package flymake-proselint
+  :hook
+  (LaTeX-mode . (lambda ()
+		  (flymake-mode)
+		  (flymake-proselint-setup))))
+
+(use-package jinx
+  :hook
+  (text-mode . jinx-mode)
+  (LaTeX-mode . jinx-mode)
+  (org-mode . jinx-mode)
+  (prog-mode-hook . jinx-mode)
+  (conf-mode . jinx-mode)
+  :bind
+  (("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)))
+
+(defun my/toggle-writing-zen ()
+  "Disable language improvement tools to allow for dumping text on the page."
+  (interactive)
+  (if (bound-and-true-p jinx-mode)
+      (progn
+	(jinx-mode -1)
+	(flymake-mode -1)
+	(writegood-mode -1))
+    (progn
+      (jinx-mode 1)
+      (flymake-mode 1)
+      (writegood-mode 1)))
+  )
 
 ;; ==== Monad Stack ====
 ;; Use M-SPC to add corfu seperator for orderless searching
