@@ -101,16 +101,29 @@
   (LaTeX-mode . citar-capf-setup)
   (org-mode . citar-capf-setup))
 
-(use-package writegood-mode
-  :hook
-  (LaTeX-mode . writegood-mode)
-  (org-mode . writegood-mode))
+(use-package nano-theme
+  :vc
+  (nano-theme :url "https://github.com/rougier/nano-theme"
+	      :branch "master") )
 
-(use-package flymake-proselint
+(use-package flymake-vale
+  :vc
+  (flymake-vale :url "https://github.com/tpeacock19/flymake-vale"
+		:branch "main")
   :hook
-  (LaTeX-mode . (lambda ()
-		  (flymake-mode)
-		  (flymake-proselint-setup))))
+  (LaTeX-mode . flymake-vale-load)
+  (text-mode . flymake-vale-load)
+  (org-mode . flymake-vale-load)
+  (markdown-mode . flymake-vale-load)
+  (message-mode . flymake-vale-load))
+
+(use-package flymake
+  :hook
+  (LaTeX-mode . flymake-mode)
+  (text-mode . flymake-mode)
+  (org-mode . flymake-mode)
+  (markdown-mode . flymake-mode)
+  (message-mode . flymake-mode))
 
 (use-package jinx
   :hook

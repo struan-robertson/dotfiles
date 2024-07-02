@@ -1,7 +1,0 @@
-{
-    "checks": {
-	"weasel_words.very": false,
-	"weasel_words.misc": false,
-	"spelling.misc": false
-    }
-}
