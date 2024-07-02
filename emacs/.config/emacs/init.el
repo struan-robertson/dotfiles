@@ -17,7 +17,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package"))))

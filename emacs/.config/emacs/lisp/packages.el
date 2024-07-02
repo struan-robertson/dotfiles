@@ -5,6 +5,8 @@
 (setopt use-package-always-ensure t)
 (require 'vc-use-package)
 
+(use-package use-package-ensure-system-package)
+
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
@@ -110,6 +112,8 @@
   :vc
   (flymake-vale :url "https://github.com/tpeacock19/flymake-vale"
 		:branch "main")
+  :ensure-system-package
+  vale
   :hook
   (LaTeX-mode . flymake-vale-load)
   (text-mode . flymake-vale-load)
