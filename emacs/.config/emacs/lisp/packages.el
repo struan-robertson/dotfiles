@@ -150,11 +150,9 @@
       (progn
 	(jinx-mode -1)
 	(flymake-mode -1)
-	(writegood-mode -1))
     (progn
       (jinx-mode 1)
       (flymake-mode 1)
-      (writegood-mode 1)))
   )
 
 ;; ==== Monad Stack ====
