@@ -143,11 +143,14 @@
   (prog-mode-hook . jinx-mode)
   (conf-mode . jinx-mode)
   :bind
-  (("M-$" . jinx-correct)
-   ("C-M-$" . jinx-languages))
+  ("M-$" . jinx-correct)
   :config
   (add-to-list 'jinx-exclude-faces
 	       '(LaTeX-mode font-lock-constant-face)))
+
+(use-package powerthesaurus
+  :bind
+  ("C-$" . powerthesaurus-transient))
 
 (defun my/toggle-writing-zen ()
   "Disable language improvement tools to allow for dumping text on the page."
@@ -155,10 +158,10 @@
   (if (bound-and-true-p jinx-mode)
       (progn
 	(jinx-mode -1)
-	(flymake-mode -1)
+	(flymake-mode -1))
     (progn
       (jinx-mode 1)
-      (flymake-mode 1)
+      (flymake-mode 1)))
   )
 
 ;; ==== Monad Stack ====
