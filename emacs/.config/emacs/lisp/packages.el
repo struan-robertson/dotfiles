@@ -128,6 +128,9 @@
   (message-mode . flymake-vale-load))
 
 (use-package flymake
+  :bind
+  ("M-n" . flymake-goto-next-error)
+  ("M-p" . flymake-goto-prev-error)
   :hook
   (LaTeX-mode . flymake-mode)
   (text-mode . flymake-mode)
