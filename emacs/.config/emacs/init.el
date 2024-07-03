@@ -57,9 +57,11 @@
 ;;  mode-line-frame-identification mode-line-buffer-identification mode-line-position
 ;;  mode-line-format-right-align mode-line-modes (project-mode-line project-mode-line-format) (vc-mode vc-mode) mode-line-misc-info "  " mode-line-end-spaces))
 
-;; Set SSH_AUTH_SOCK
+;; Environment variables
 (setenv "SSH_AUTH_SOCK" (concat (getenv "XDG_RUNTIME_DIR")
 				"/ssh-agent.socket"))
+(setenv "QT_QPA_PLATFORM" "wayland")
+(setenv "XCURSOR_SIZE=24")
 
 ;; Pair specific chars
 (electric-pair-mode 1)

@@ -12,6 +12,12 @@
                          ("gnu" . "https://elpa.gnu.org/packages/")
 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
+;; Load PATH
+(use-package exec-path-from-shell
+  :config
+  (when (daemonp)
+    (exec-path-from-shell-initialize)))
+
 ;; Dont litter folders with autosave filesp
 (use-package no-littering
   :init
