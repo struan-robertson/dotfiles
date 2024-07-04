@@ -47,22 +47,6 @@
  '(writegood-passive-voice-face ((t (:underline (:color "#88c0d0" :style wave :position nil)))))
  '(writegood-weasels-face ((t (:underline (:color "#d08770" :style wave :position nil))))))
 
-;; ;; Set modeline to top of screen
-;; ;;(setq-default header-line-format mode-line-format)
-;; ;; (setq-default mode-line-format nil)	
-;; (setq-default mode-line-format '("%e" mode-line-front-space
-;;  (:propertize
-;;   ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-window-dedicated)
-;;   display (min-width (6.0)))
-;;  mode-line-frame-identification mode-line-buffer-identification mode-line-position
-;;  mode-line-format-right-align mode-line-modes (project-mode-line project-mode-line-format) (vc-mode vc-mode) mode-line-misc-info "  " mode-line-end-spaces))
-
-;; Environment variables
-(setenv "SSH_AUTH_SOCK" (concat (getenv "XDG_RUNTIME_DIR")
-				"/ssh-agent.socket"))
-(setenv "QT_QPA_PLATFORM" "wayland")
-(setenv "XCURSOR_SIZE=24")
-
 ;; Pair specific chars
 (electric-pair-mode 1)
 
