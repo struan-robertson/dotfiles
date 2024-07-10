@@ -7,8 +7,8 @@
 (load "keybindings")
 
 ;; === Faces ===
-(set-face-attribute 'variable-pitch nil :family "ShureTechMono Nerd Font Propo")
-(set-face-attribute 'default nil :font "ShureTechMono Nerd Font Propo")
+(set-face-attribute 'variable-pitch nil :family "ShureTechMono Nerd Font Propo" :height 130)
+(set-face-attribute 'default nil :font "ShureTechMono Nerd Font" :height 130)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
