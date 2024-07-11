@@ -109,13 +109,26 @@
       (load-theme my:theme t)
       (if (display-graphic-p)
           (setq my:theme-window-loaded t)
-	(setq my:theme-terminal-
+	(setq my:theme-terminal-loaded t)))))
 
+	      
 ;;; Help
 
+;; Which-key shows the available keybindings after a key press	      
 (use-package which-key
   :config
   (which-key-mode))
+
+;; More helpful help buffers
+(use-package helpful
+  :bind
+  (("C-h f" . helpful-callable)
+   ("C-h v" . helpful-variable)
+   ("C-h k" . helpful-key)
+   ("C-h x" . helpful-command)
+   ("C-h F" . helpful-function)
+   :map emacs-lisp-mode-map
+   ("C-c C-d" . helpful-at-point)))
 
 ;;; Editing
 
