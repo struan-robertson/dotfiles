@@ -1,15 +1,16 @@
 (add-to-list 'load-path "~/.config/emacs/lisp")
 
-;; === Packages ===
-(load "packages")
+;;; Packages
 
-;; === Keybindings ===
+(load "packages")
+;;; Keybindings
 (load "keybindings")
 
-;; === Faces ===
+;;; Faces
 (set-face-attribute 'variable-pitch nil :family "ShureTechMono Nerd Font Propo" :height 130)
 (set-face-attribute 'default nil :font "ShureTechMono Nerd Font" :height 130)
 
+;;; Custom Variables 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -46,9 +47,6 @@
  '(writegood-duplicates-face ((t (:underline (:color "#b48ead" :style wave :position nil)))))
  '(writegood-passive-voice-face ((t (:underline (:color "#88c0d0" :style wave :position nil)))))
  '(writegood-weasels-face ((t (:underline (:color "#d08770" :style wave :position nil))))))
-
-;; Pair specific chars
-(electric-pair-mode 1)
 
 (message "init.el loaded successfully")
 
