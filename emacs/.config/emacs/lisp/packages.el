@@ -43,7 +43,10 @@
   (electric-pair-mode 1)
 
   ;; Dired DWIM path selection
-  (setq dired-dwim-target t))
+  (setq dired-dwim-target t)
+
+  ;; Minimum warning level
+  (setq warning-minimum-level :error))
 
 ;; Load PATH
 (use-package exec-path-from-shell
