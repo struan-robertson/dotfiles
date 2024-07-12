@@ -212,6 +212,19 @@
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
+;;; Languages
+
+;; Automatically install treesitter languages if available
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+;; CSV mode
+(use-package csv-mode)
+
 ;;; External Tools
 
 ;;;; Git
