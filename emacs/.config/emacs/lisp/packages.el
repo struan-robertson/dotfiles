@@ -222,6 +222,28 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
+;; Expand to other modes when required
+(defun my/conditional-toggle (arg)
+  (interactive "P")
+  "Change the function called from M-<tab> depending on the active minor modes.
+   M-<tab> to toggle large folding (e.g. outline mode) and C-u M-<tab> to fold code"
+  (cond
+   ;; Code folding
+   ((and (bound-and-true-p treesit-fold-mode) (equal arg '(4))) (treesit-fold-toggle))
+   ;; Larger folding
+   ((bound-and-true-p outline-minor-mode) (outline-cycle))
+   (t (backward-button 1))))
+(global-set-key (kbd "M-<tab>") 'my/conditional-toggle)
+
+;; Code-folding using treesitter
+(use-package treesit-fold
+  
+  :vc
+  (treesit-fold :url "https://github.com/emacs-tree-sitter/treesit-fold"
+		:branch "master")
+  :config
+  (global-treesit-fold-mode))
+
 ;; CSV mode
 (use-package csv-mode)
 
@@ -304,26 +326,5 @@
 
 ;; Local Variables:
 ;; jinx-local-words: "Dabbrev Powerthesaurus"
+;; eval: (outline-hide-sublevels 2)
 ;; End:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
