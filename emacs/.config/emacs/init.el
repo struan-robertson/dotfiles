@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package"))))
@@ -37,6 +37,7 @@
  '(eat-term-color-5 ((t (:inherit ansi-color-magenta :foreground "#b48ead"))))
  '(eat-term-color-6 ((t (:inherit ansi-color-cyan :foreground "#88c0d0"))))
  '(eat-term-color-8 ((t (:inherit nano-faded))))
+ '(escape-glyph ((t (:foreground "#5e81ac"))))
  '(flymake-error ((t (:underline (:color "#bf616a" :style wave :position nil)))))
  '(flymake-warning ((t (:underline (:color "#b48ead" :style wave :position nil)))))
  '(font-latex-bold-face ((t (:inherit bold))))
