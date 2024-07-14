@@ -230,6 +230,8 @@
 
 ;;; Languages
 
+;;;; Meta
+
 ;; Automatically install treesitter languages if available
 (use-package treesit-auto
   :custom
@@ -260,8 +262,21 @@
   :config
   (global-treesit-fold-mode))
 
+;;;; CSV
+
 ;; CSV mode
 (use-package csv-mode)
+
+;;;; Python
+
+(use-package virtualenvwrapper
+  :ensure-system-package
+  (virtualenv . python-virtualenv)
+  :config
+  (venv-initialize-interactive-shells)
+  (venv-initialize-eshell)
+  :custom
+  (venv-location "~/.local/share/virtualenvs/"))
 
 ;;; External Tools
 
@@ -270,13 +285,46 @@
 
 ;;;; Terminal
 
-;; Is it worth switching to zsh for eat integration? Probably not but idk
+;; Eat is a full terminal emulator written in elisp
 (use-package eat
   :hook
   (eshell-load . eat-eshell-mode)
-  :config
-  (setq eshell-visual-commands nil))
+  :custom
+  (eshell-visual-commands nil))
 
+;; Toggle eshell at current buffer/project directory
+(use-package eshell-toggle
+  :vc
+  (eshell-toggle :url "https://github.com/4DA/eshell-toggle"
+		 :branch "master")
+  :custom
+  (eshell-toggle-size-fraction 3)
+  (eshell-toggle-find-project-root-package 'project)
+  (eshell-toggle-run-command nil)
+  :bind
+  ("M-`" . eshell-toggle))
+
+;; Allow eshell to use any fish completions
+(use-package fish-completion
+  :vc
+  (fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion"
+		   :branch "master")
+  :ensure-system-package
+  fish
+  :config
+  (global-fish-completion-mode))
+
+(use-package eshell-prompt-extras
+  :requires
+  virtualenvwrapper
+  :config
+  (with-eval-after-load "esh-opt"
+    (require 'virtualenvwrapper)
+    (venv-initialize-eshell)
+    (autoload 'epe-theme-lambda "eshell-prompt-extras")
+    (setq eshell-highlight-prompt nil
+          eshell-prompt-function 'epe-theme-lambda))
+  )
 
 ;;; Academic
 

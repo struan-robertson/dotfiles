@@ -18,12 +18,16 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
-   '((ts-fold :url "https://github.com/emacs-tree-sitter/ts-fold" :branch "master")
+   '((fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion" :branch "master")
+     (eshell-toggle :url "https://github.com/4DA/eshell-toggle" :branch "master")
+     (ts-fold :url "https://github.com/emacs-tree-sitter/ts-fold" :branch "master")
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
- '(safe-local-variable-values '((eval outline-hide-sublevels 2))))
+ '(safe-local-variable-values
+   '((eshell-toggle-use-git-root . t)
+     (eval outline-hide-sublevels 2))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
