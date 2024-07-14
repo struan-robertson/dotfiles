@@ -297,10 +297,28 @@
   :vc
   (eshell-toggle :url "https://github.com/4DA/eshell-toggle"
 		 :branch "master")
+  :config
+  (defun eshell-toggle--make-buffer-name ()
+    "Generate toggle buffer name."
+    (let ((project
+	   (cond ((eq eshell-toggle-find-project-root-package 'project)
+		  (cond ((project-current)
+			 (project-name (project-current)))
+			(t "")))
+	         ((eq eshell-toggle-find-project-root-package 'projectile)
+		  (projectile-project-name))
+	         (t ""))))
+      (if (not eshell-toggle-find-project-root-package)
+	  (let* ((dir (eshell-toggle--get-directory))
+		 (name (string-join (split-string dir "/") eshell-toggle-name-separator))
+		 (buf-name (concat "*et" name "*")))
+	    buf-name)
+	(concat "*et" eshell-toggle-name-separator project "*"))))
   :custom
   (eshell-toggle-size-fraction 3)
   (eshell-toggle-find-project-root-package 'project)
   (eshell-toggle-run-command nil)
+  (eshell-toggle-default-directory "/home/struan/")
   :bind
   ("M-`" . eshell-toggle))
 
