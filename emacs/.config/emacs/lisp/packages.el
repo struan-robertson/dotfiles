@@ -293,6 +293,7 @@
   (eshell-visual-commands nil))
 
 ;; Toggle eshell at current buffer/project directory
+;; TODO add "C-`" to a custom eshell toggle which opens ielm with the current buffer set as active 
 (use-package eshell-toggle
   :vc
   (eshell-toggle :url "https://github.com/4DA/eshell-toggle"
@@ -316,7 +317,6 @@
   (eshell-toggle-size-fraction 3)
   (eshell-toggle-find-project-root-package 'project)
   (eshell-toggle-run-command nil)
-  (eshell-toggle-default-directory "/home/struan/")
   :bind
   ("M-`" . eshell-toggle))
 
