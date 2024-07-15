@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion" :branch "master")
      (eshell-toggle :url "https://github.com/4DA/eshell-toggle" :branch "master")
@@ -51,6 +51,8 @@
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#a3be8c" :weight bold))))
  '(font-latex-string-face ((t (:foreground "#d8dee9"))))
  '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a"))))
+ '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
+ '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
  '(writegood-duplicates-face ((t (:underline (:color "#b48ead" :style wave :position nil)))))
  '(writegood-passive-voice-face ((t (:underline (:color "#88c0d0" :style wave :position nil)))))
  '(writegood-weasels-face ((t (:underline (:color "#d08770" :style wave :position nil))))))

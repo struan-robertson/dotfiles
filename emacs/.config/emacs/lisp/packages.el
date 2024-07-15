@@ -167,6 +167,9 @@
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
+;; TODO learn better
+(use-package vundo)
+
 ;;;; Monad Stack
 
 ;; Use M-SPC to add Corfu separator for orderless searching
