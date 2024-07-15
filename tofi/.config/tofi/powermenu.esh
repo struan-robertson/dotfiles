@@ -6,8 +6,12 @@
 CHOSEN=$(printf "Lock\nSuspend\nReboot\nPower Off\nLog Out" | tofi)
 
 case "$CHOSEN" in
+<% if [ $(hostname) = "arch" ]; then -%>
+	"Suspend") systemctl suspend ;;
+<% else -%>
 	"Lock") swaylock -f -c 000000 ;;
 	"Suspend") swaylock -f -c 000000 && systemctl suspend ;;
+<% fi -%>
 	"Reboot") systemctl reboot ;;
 	"Power Off") systemctl poweroff ;;
 	"Log Out") systemctl --user stop sway-session.target && swaymsg exit ;;
