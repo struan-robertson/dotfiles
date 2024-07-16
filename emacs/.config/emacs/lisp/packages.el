@@ -264,6 +264,29 @@
   :config
   (global-treesit-fold-mode))
 
+(use-package eglot
+  :bind
+  (:map eglot-mode-map
+	("C-c C-d" . eldoc)
+	("C-c C-e" . eglot-rename))
+  :hook
+  ((python-base-mode . eglot-ensure))
+  :config
+    (setq-default eglot-workspace-configuration
+                '((:pylsp . (:configurationSources ["flake8"]
+                             :plugins (
+                                       :mccabe (:enabled :json-false)
+                                       :pyflakes (:enabled :json-false)
+                                       :pydocstyle (:enabled t
+                                                    :convention "numpy")
+                                       :yapf (:enabled :json-false)
+                                       :black (:enabled t
+                                               :line_length 88
+                                               :cache_config t)
+				       :ruff (:enabled t
+					      :line_length 88))))))
+  )
+
 ;;;; CSV
 
 ;; CSV mode
