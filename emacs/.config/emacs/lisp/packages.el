@@ -51,8 +51,7 @@
 ;; Load PATH
 (use-package exec-path-from-shell
   :config
-  (when (daemonp)
-    (exec-path-from-shell-initialize)))
+  (exec-path-from-shell-initialize))
 
 ;; Dont litter folders with autosave or backup files
 (use-package no-littering
