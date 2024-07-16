@@ -306,7 +306,8 @@
 
 
 (defun my/eshell-activate-venv ()
-  ())
+  "Activate python venv in eshell"
+  )
 
 (defun my/eshell-pet ()
   "eshell pet venv integration"
