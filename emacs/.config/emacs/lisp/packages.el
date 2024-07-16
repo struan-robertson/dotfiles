@@ -294,14 +294,58 @@
 
 ;;;; Python
 
-(use-package virtualenvwrapper
+(defun my/remove-from-PATH (dir)
+  "Safely remove a directory from PATH environment variable"
+  (let
+      ((current-path (getenv "PATH")))
+    (let
+	((parts (split-string current-path ":")))
+      (let
+	  ((dirs-fixed (remove dir parts)))
+	(eshell-set-path (mapconcat #'identity dirs-fixed ":"))))))
+
+
+(defun my/eshell-activate-venv ()
+  ())
+
+(defun my/eshell-pet ()
+  "eshell pet venv integration"
+  (let ((venv (pet-virtualenv-root)))
+    (if venv
+	(if (not (bound-and-true-p active-venv))
+	    (progn
+	      (let
+		  ((parts (file-name-split venv)))
+		(setq-local active-venv (nth (- (length parts) 3) parts))
+		)
+	      (setq-local venv-bin-dir (expand-file-name "bin" venv))
+	      (let
+		  ((current-path (getenv "PATH")))
+			(eshell-set-path (concat venv-bin-dir ":" current-path))
+		)
+	      (message "Activated venv %s" active-venv)))
+	    
+      (if (bound-and-true-p active-venv)
+	  (progn
+	    (my/remove-from-PATH active-venv)
+	    (message "Deactivated venv %s" active-venv)
+	    (setq-local active-venv nil))
+       )))
+  )
+
+(use-package pet
   :ensure-system-package
-  (virtualenv . python-virtualenv)
+  dasel
   :config
-  (venv-initialize-interactive-shells)
-  (venv-initialize-eshell)
-  :custom
-  (venv-location "~/.local/share/virtualenvs/"))
+  (add-hook 'python-base-mode-hook 'pet-mode -10)
+  )
+
+(use-package eshell
+  :after
+  (pet eat)
+  :hook
+  (eshell-directory-change . my/eshell-pet)
+)
 
 ;;; External Tools
 
@@ -317,33 +361,26 @@
   :custom
   (eshell-visual-commands nil))
 
-;; Toggle eshell at current buffer/project directory
-;; TODO add "C-`" to a custom eshell toggle which opens ielm with the current buffer set as active 
-(use-package eshell-toggle
-  :vc
-  (eshell-toggle :url "https://github.com/4DA/eshell-toggle"
-		 :branch "master")
-  :config
-  (defun eshell-toggle--make-buffer-name ()
-    "Generate toggle buffer name."
-    (let ((project
-	   (cond ((eq eshell-toggle-find-project-root-package 'project)
-		  (cond ((project-current)
-			 (project-name (project-current)))
-			(t nil)))
-	         ((eq eshell-toggle-find-project-root-package 'projectile)
-		  (projectile-project-name))
-	         (t nil))))
-      (if (or (not eshell-toggle-find-project-root-package) (not project))
-	  (let ((buf-name (concat "*et:" (buffer-name) "*")))
-	    buf-name)
-	(concat "*et" eshell-toggle-name-separator project "*"))))
-  :custom
-  (eshell-toggle-size-fraction 3)
-  (eshell-toggle-find-project-root-package 'project)
-  (eshell-toggle-run-command nil)
+;; Make specific buffers pop up
+(use-package popper
   :bind
-  ("M-`" . eshell-toggle))
+  (("M-`"	.	popper-toggle)
+   ("C-`"	.	popper-cycle)
+   ("C-M-`"	.	popper-toggle-type))
+  :init
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "\\*Async Shell Command\\*"
+          help-mode
+          compilation-mode
+	  "^\\*eshell.*\\*$" eshell-mode
+          "^\\*eat\\*" eat-mode
+	  "^\\*ielm\\*" ielm-mode)
+	;; popper-group-function #'popper-group-by-directory
+	)
+  (popper-mode)
+  (popper-echo-mode))
 
 ;; Allow eshell to use any fish completions
 (use-package fish-completion
@@ -355,13 +392,13 @@
   :config
   (global-fish-completion-mode))
 
-(use-package eshell-prompt-extras
-  :requires
-  virtualenvwrapper
-  :config
-  (with-eval-after-load "esh-opt"
-    (autoload 'epe-theme-lambda "eshell-prompt-extras")
-    (setq eshell-prompt-function 'epe-theme-lambda)))
+;; (use-package eshell-prompt-extras
+;;   :requires
+;;   virtualenvwrapper
+;;   :config
+;;   (with-eval-after-load "esh-opt"
+;;     (autoload 'epe-theme-lambda "eshell-prompt-extras")
+;;     (setq eshell-prompt-function 'epe-theme-lambda)))
 
 
 ;;; Academic
