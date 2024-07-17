@@ -8,6 +8,7 @@
 (setopt use-package-always-ensure t)
 (require 'vc-use-package)
 
+;; Allows for ensuring a system package is present and installing if not
 (use-package use-package-ensure-system-package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -18,6 +19,7 @@
 ;;; Emacs
 
 ;; Emacs configuration
+
 (use-package emacs
   :init
 
@@ -132,13 +134,15 @@
    :map emacs-lisp-mode-map
    ("C-c C-d" . helpful-at-point)))
 
-;;; Editing
+;;; Editor
 
 ;; C-= to expand selection intelligently
 (use-package expand-region
   :bind
   ("C-=" . 'er/expand-region))
 
+;; Multiple cursors
+;; TODO do I really use this very often?
 (use-package multiple-cursors
   :bind
   (("C-S-c C-S-c" . 'mc/edit-lines)
@@ -146,6 +150,7 @@
    ("C-<" . 'mc/mark-previous-like-this)
    ("C-c C-<" . 'mc/mark-all-like-this)))
 
+;; Better keybindings for outline-minor-mode
 ;; ? for speed command help
 (use-package outli
   :vc
@@ -159,6 +164,7 @@
   :config
   (setq outli-blend nil))
 
+;; Flymake error checking
 (use-package flymake
   :bind
   ("M-n" . flymake-goto-next-error)
@@ -188,6 +194,7 @@
 	;; Initialism alows `eif' to find elp-instrument-function
 	orderless-matching-styles '(orderless-literal orderless-regexp orderless-initialism)))
 
+;; Vertico minibuffer 
 (use-package vertico
   :config
   (vertico-mode)
@@ -293,25 +300,19 @@
 
 ;;;; Python
 
+;; Custom package to allow Eshell venv activation
 (use-package eshell-pet
   :ensure
   nil
   :hook
   (eshell-mode . eshell-pet-mode))
-  
+
+;; Emacs package to cover a range of python venv tools
 (use-package pet
   :ensure-system-package
   dasel
   :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10)
-  )
-
-;; (use-package eshell
-;;   :after
-;;   (pet vc-git)
-;;   :hook
-;;   (eshell-mode . eshell-pet-mode)
-;; )
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
 
 ;;; External Tools
 
