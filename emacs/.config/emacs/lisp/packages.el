@@ -346,6 +346,11 @@
 	  "^\\*ielm\\*" ielm-mode)
 	;; popper-group-function #'popper-group-by-directory
 	)
+  (setq popper-window-height (lambda (win)
+                               (fit-window-to-buffer
+                                win
+                                (floor (frame-height) 3)
+				(floor (frame-height) 3))))
   (popper-mode)
   (popper-echo-mode))
 
