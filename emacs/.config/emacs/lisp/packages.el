@@ -276,8 +276,10 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; Expand to other modes when required
-(defun my/conditional-toggle ()
+;; Conditional toggling
+;; The idea is that M-<tab> folds big things like headings and S-<tab> folds smaller things like code blocks
+
+(defun my/conditional-big-toggle ()
   (interactive)
   "Change the function called from M-<tab> depending on the active minor modes."
   (cond
@@ -285,7 +287,20 @@
    ((bound-and-true-p outline-minor-mode) (outline-cycle))
    (t (backward-button 1))))
 
-(global-set-key (kbd "M-<tab>") 'my/conditional-toggle)
+(defun my/conditional-small-toggle ()
+  (interactive)
+  "Change the function called from S-<tab> depending on the active minor modes"
+  (cond
+   ((bound-and-true-p treesit-fold-mode) (treesit-fold-toggle))
+   ((bound-and-true-p hs-minor-mode) (hs-toggle-hiding))
+   (t (message "No minor modes match for C-<tab>"))))
+
+(global-set-key (kbd "M-<tab>") 'my/conditional-big-toggle)
+(global-set-key (kbd "C-<tab>") 'my/conditional-small-toggle)
+
+(use-package hideshow
+  :hook
+  (emacs-lisp-mode . hs-minor-mode))
 
 ;; Code-folding using treesitter
 (use-package treesit-fold
@@ -293,9 +308,7 @@
   (treesit-fold :url "https://github.com/emacs-tree-sitter/treesit-fold"
 		:branch "master")
   :config
-  (global-treesit-fold-mode)
-  :bind
-  ("C-<tab>" . treesit-fold-toggle))
+  (global-treesit-fold-mode))
 
 (use-package eglot
   :bind
