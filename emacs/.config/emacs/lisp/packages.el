@@ -294,46 +294,12 @@
 
 ;;;; Python
 
-(defun my/remove-from-PATH (dir)
-  "Safely remove a directory from PATH environment variable"
-  (let
-      ((current-path (getenv "PATH")))
-    (let
-	((parts (split-string current-path ":")))
-      (let
-	  ((dirs-fixed (remove dir parts)))
-	(eshell-set-path (mapconcat #'identity dirs-fixed ":"))))))
-
-
-(defun my/eshell-activate-venv ()
-  "Activate python venv in eshell"
-  )
-
-(defun my/eshell-pet ()
-  "eshell pet venv integration"
-  (let ((venv (pet-virtualenv-root)))
-    (if venv
-	(if (not (bound-and-true-p active-venv))
-	    (progn
-	      (let
-		  ((parts (file-name-split venv)))
-		(setq-local active-venv (nth (- (length parts) 3) parts))
-		)
-	      (setq-local venv-bin-dir (expand-file-name "bin" venv))
-	      (let
-		  ((current-path (getenv "PATH")))
-			(eshell-set-path (concat venv-bin-dir ":" current-path))
-		)
-	      (message "Activated venv %s" active-venv)))
-	    
-      (if (bound-and-true-p active-venv)
-	  (progn
-	    (my/remove-from-PATH active-venv)
-	    (message "Deactivated venv %s" active-venv)
-	    (setq-local active-venv nil))
-       )))
-  )
-
+(use-package eshell-pet
+  :ensure
+  nil
+  :hook
+  (eshell-mode . eshell-pet-mode))
+  
 (use-package pet
   :ensure-system-package
   dasel
@@ -341,12 +307,12 @@
   (add-hook 'python-base-mode-hook 'pet-mode -10)
   )
 
-(use-package eshell
-  :after
-  (pet eat)
-  :hook
-  (eshell-directory-change . my/eshell-pet)
-)
+;; (use-package eshell
+;;   :after
+;;   (pet vc-git)
+;;   :hook
+;;   (eshell-mode . eshell-pet-mode)
+;; )
 
 ;;; External Tools
 
