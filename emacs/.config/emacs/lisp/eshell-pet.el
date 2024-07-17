@@ -51,7 +51,7 @@
   (interactive)
   (if (bound-and-true-p active-venv)
 	  (progn
-	    (my/remove-from-PATH venv-bin-dir)
+	    (eshell-pet--remove-from-PATH venv-bin-dir)
 	    (message "Deactivated venv %s" active-venv)
 	    (setq-local active-venv nil
 			venv-bin-dir nil))
