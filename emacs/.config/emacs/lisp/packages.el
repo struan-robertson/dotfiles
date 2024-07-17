@@ -404,13 +404,50 @@
   :config
   (global-fish-completion-mode))
 
-;; (use-package eshell-prompt-extras
-;;   :requires
-;;   virtualenvwrapper
-;;   :config
-;;   (with-eval-after-load "esh-opt"
-;;     (autoload 'epe-theme-lambda "eshell-prompt-extras")
-;;     (setq eshell-prompt-function 'epe-theme-lambda)))
+
+;; Need to demand vc-git and magit so that the custom eshell prompt works
+;; Somewhat expensive but not the end of the word since I use daemon mode
+
+(use-package vc-git
+  :demand t
+  :ensure nil)
+
+(use-package magit
+  :demand t)
+
+(use-package eshell
+  :requires
+  (vc-git magit)
+  :demand t
+  :config
+  (defun my/eshell-prompt-function ()
+    (concat
+     "\n"
+     (propertize (replace-regexp-in-string
+		  (getenv "HOME")
+		  "~"
+		  (eshell/pwd))
+		 'face `(:foreground "#5e81ac"))
+     " "
+     (propertize (concat (let
+			     ((git-tag (magit-get-current-tag))
+			      (git-branch (magit-get-current-branch)))
+			   (if git-tag
+			       git-tag
+			     (if git-branch
+				 git-branch)))
+			 (if (string= (vc-git-state (eshell/pwd)) "edited")
+			     "*"))
+		 'face 'default)	    
+     "\n"
+     (propertize (if (bound-and-true-p active-venv)
+		     active-venv
+		   "")
+		 'face 'default)
+     (propertize " λ " 'face 'default)))
+  
+  (setq eshell-prompt-function #'my/eshell-prompt-function
+	eshell-prompt-regexp ".* λ "))
 
 
 ;;; Academic
