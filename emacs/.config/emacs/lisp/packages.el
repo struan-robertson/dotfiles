@@ -417,7 +417,7 @@
      (propertize (if (bound-and-true-p active-venv)
 		     active-venv
 		   "")
-		 'face 'default)
+		 'face `(:foreground "#b48ead"))
      (propertize " λ " 'face 'default)))
   
   (setq eshell-prompt-function #'my/eshell-prompt-function
