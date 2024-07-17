@@ -172,8 +172,35 @@
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
-;; TODO learn better
+;; Visualise undo tree and step between
 (use-package vundo)
+
+;; Make specific buffers pop up
+(use-package popper
+  :bind
+  (("M-`"	.	popper-toggle)
+   ("C-`"	.	popper-cycle)
+   ("C-M-`"	.	popper-toggle-type))
+  :init
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "\\*Async Shell Command\\*"
+          help-mode
+          compilation-mode
+	  "^\\*eshell.*\\*$" eshell-mode
+          "^\\*eat\\*" eat-mode
+	  "^\\*ielm\\*" ielm-mode)
+	;; popper-group-function #'popper-group-by-directory
+	)
+  ;; Set min popup height to 1/3 of frame height
+  (setq popper-window-height (lambda (win)
+                               (fit-window-to-buffer
+                                win
+                                (floor (frame-height) 3)
+				(floor (frame-height) 3))))
+  (popper-mode)
+  (popper-echo-mode))
 
 ;;;; Monad Stack
 
