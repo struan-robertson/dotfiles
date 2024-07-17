@@ -368,32 +368,6 @@
   :custom
   (eshell-visual-commands nil))
 
-;; Make specific buffers pop up
-(use-package popper
-  :bind
-  (("M-`"	.	popper-toggle)
-   ("C-`"	.	popper-cycle)
-   ("C-M-`"	.	popper-toggle-type))
-  :init
-  (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "Output\\*$"
-          "\\*Async Shell Command\\*"
-          help-mode
-          compilation-mode
-	  "^\\*eshell.*\\*$" eshell-mode
-          "^\\*eat\\*" eat-mode
-	  "^\\*ielm\\*" ielm-mode)
-	;; popper-group-function #'popper-group-by-directory
-	)
-  (setq popper-window-height (lambda (win)
-                               (fit-window-to-buffer
-                                win
-                                (floor (frame-height) 3)
-				(floor (frame-height) 3))))
-  (popper-mode)
-  (popper-echo-mode))
-
 ;; Allow eshell to use any fish completions
 (use-package fish-completion
   :vc
