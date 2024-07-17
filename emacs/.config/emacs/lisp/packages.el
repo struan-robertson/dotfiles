@@ -394,6 +394,27 @@
   (vc-git magit)
   :demand t
   :config
+  (defun my/vc-git-state (file)
+    "`vc-state' which does not include ignored files."
+    (let* ((args
+            `("status" "--porcelain" "-z"
+              ;; Just to be explicit, it's the default anyway.
+              "--untracked-files"
+              "--"))
+           (status (apply #'vc-git--run-command-string file args)))
+      (if (null status)
+          ;; If status is nil, there was an error calling git, likely because
+          ;; the file is not in a git repo.
+          'unregistered
+	;; If this code is adapted to parse 'git status' for a directory,
+	;; note that a renamed file takes up two null values and needs to be
+	;; treated slightly more carefully.
+	(vc-git--git-status-to-vc-state
+	 (mapcar (lambda (s)
+                   (substring s 0 2))
+		 (split-string status "\0" t))))))
+  
+  
   (defun my/eshell-prompt-function ()
     (concat
      "\n"
@@ -410,7 +431,7 @@
 			       git-tag
 			     (if git-branch
 				 git-branch)))
-			 (if (string= (vc-git-state (eshell/pwd)) "edited")
+			 (if (eq (my/vc-git-state (eshell/pwd)) 'edited)
 			     "*"))
 		 'face 'default)	    
      "\n"
