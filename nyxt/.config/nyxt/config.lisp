@@ -1,35 +1,48 @@
+(in-package #:nyxt-user)
+
+;; Commands
+(nyxt::load-lisp "~/.config/nyxt/commands.lisp")
+
+;; KeepassXC
+(nyxt::load-lisp "~/.config/nyxt/password.lisp")
+
+;; Emacs config
 (define-configuration buffer
   ((default-modes
        (pushnew 'nyxt/mode/emacs:emacs-mode %slot-value%))
    (override-map (let ((map (make-keymap "override-map")))
-		   (define-key map "M-i" 'nyxt/mode/hint:follow-hint)))))
+		   (define-key map "M-i" 'nyxt/mode/hint:follow-hint)
+		   (define-key map "C-h m" 'describe-mode)
+		   (define-key map "C-c p" 'copy-password)
+		   (define-key map "C-c u" 'copy-username)
+		   (define-key map "C-c y" 'autofill)
+		   (define-key map "C-i" :input-edit-mode)
+		   (define-key map "M-:" 'eval-expression)
+		   (define-key map "C-s" :search-buffer)
+		   (define-key map "C-M-s" :remove-search-marks)))))
+
+;; Privacy config
+(define-configuration web-buffer
+    ((default-modes
+	 (append (list 'nyxt/mode/no-webgl:no-webgl-mode
+		       'nyxt/mode/no-script:no-script-mode
+		       'nyxt/mode/reduce-tracking:reduce-tracking-mode
+		       'nyxt/mode/force-https:force-https-mode
+		       'nyxt/mode/blocker:blocker-mode)
+		 %slot-value%))))
 
 ;; Use en_GB by default
 (defclass SPELL_CHECK_MODE ()
   ((spell-check-language :initform "en_GB")))
 
-(define-configuration web-buffer
-  ((default-modes
-    (pushnew 'nyxt/mode/blocker:blocker-mode %slot-value%))))
+;; Search
+(nyxt::load-lisp "~/.config/nyxt/search.lisp")
 
-(defun make-kagi-completion (&key request-args)
-  "Helper that generates Kagi search completion functions."
-  (make-search-completion-function
-   :base-url "https://kagi.com/api/autosuggest?q=~a"
-   :processing-function
-   #'(lambda (results)
-       (when results
-	 (second (json:decode-json-from-string results))))
-   :request-args request-args))
+;; Theme
+(nyxt::load-lisp "~/.config/nyxt/stylesheet.lisp")
 
-(define-configuration context-buffer
-  "Add Kagi search engine."
-  ((search-engines
-    (append
-     %slot-value%
-     (list
-      (make-instance 'search-engine :name "Kagi" :shortcut "k"
-                     :search-url "https://kagi.com/search?q=~a"
-                     :fallback-url "https://kagi.com"
-                     :completion-function (make-kagi-completion)
-                     ))))))
+;; Extensions
+(nyxt::load-lisp "~/.config/nyxt/extensions.lisp")
+
+;; Status line
+(nyxt::load-lisp "~/.config/nyxt/status.lisp")
