@@ -1,11 +1,11 @@
 #!/usr/bin/sh
 swayidle -w \
-<% if [ $(hostname) = "archlaptop" ]; then -%>       
-	timeout 300  'swaylock -f' \
+<% if [ $(hostname) = "archlaptop" ]; then -%>
+        timeout 300  'swaylock -f' \
 <% fi -%>
 	timeout 360  'swaymsg "output * power off"' \
 	     resume  'swaymsg "output * power on"'  \
-<% if [ $(hostname) = "archlaptop" ]; then -%>       
+<% if [ $(hostname) = "archlaptop" ]; then -%>
 	before-sleep 'playerctl pause; swaylock'    \
 	lock 'swaylock -f' 
 <% else -%>
