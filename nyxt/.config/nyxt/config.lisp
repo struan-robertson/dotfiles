@@ -12,6 +12,7 @@
        (pushnew 'nyxt/mode/emacs:emacs-mode %slot-value%))
    (override-map (let ((map (make-keymap "override-map")))
 		   (define-key map "M-i" 'nyxt/mode/hint:follow-hint)
+		   (define-key map "M-g M-g" 'nyxt/mode/hint:follow-hint-new-buffer)
 		   (define-key map "C-h m" 'describe-mode)
 		   (define-key map "C-c p" 'copy-password)
 		   (define-key map "C-c u" 'copy-username)
