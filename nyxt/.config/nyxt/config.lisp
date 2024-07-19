@@ -35,6 +35,15 @@
 (defclass SPELL_CHECK_MODE ()
   ((spell-check-language :initform "en_GB")))
 
+;; allow remote control over nyxt
+(define-configuration browser
+(
+;; Whether code sent to the socket gets executed. You must understand the
+;; risks before enabling this: a privileged user with access to your system
+;; can then take control of the browser and execute arbitrary code under your
+;; user profile.
+(remote-execution-p t)))
+
 ;; Search
 (nyxt::load-lisp "~/.config/nyxt/search.lisp")
 

@@ -3,7 +3,7 @@ Name=Nyxt
 Comment=Be Productive
 GenericName=Web Browser
 Keywords=Internet;WWW;Browser;Web;Explorer
-Exec=env WEBKIT_DISABLE_COMPOSITING_MODE=1 GDK_SYNCHRONIZE=1 nyxt %u
+Exec=env WEBKIT_DISABLE_COMPOSITING_MODE=1 GDK_SYNCHRONIZE=1 ~/.local/bin/run-nyxt.sh %u
 Terminal=false
 X-MultipleArgs=false
 Type=Application
