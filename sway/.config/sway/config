@@ -10,7 +10,7 @@ set $right l
 # Terminal emulator
 set $term foot
 # Menu (use swaymsg to exec for applications to launch in correct workspaced)
-set $menu tofi-drun | xargs swaymsg exec --
+set $menu tofi-drun --terminal foot | xargs swaymsg exec --
 
 ### Output configuration
 output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
