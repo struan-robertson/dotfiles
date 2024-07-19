@@ -1,4 +1,6 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "M-i") 'imenu)
+
 
 ;; From https://www.masteringemacs.org/article/evaluating-elisp-emacs
 (defun mp-elisp-mode-eval-buffer ()
