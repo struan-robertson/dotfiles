@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion" :branch "master")
      (eshell-toggle :url "https://github.com/4DA/eshell-toggle" :branch "master")
@@ -45,7 +45,7 @@
  '(eat-term-color-8 ((t (:inherit nano-faded))))
  '(escape-glyph ((t (:foreground "#5e81ac"))))
  '(flymake-error ((t (:underline (:color "#bf616a" :style wave :position nil)))))
- '(flymake-warning ((t (:underline (:color "#b48ead" :style wave :position nil)))))
+ '(flymake-warning ((t (:underline (:color "#d08770" :style wave :position nil)))))
  '(font-latex-bold-face ((t (:inherit bold))))
  '(font-latex-italic-face ((t (:inherit italic :foreground "#a3be8c"))))
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#a3be8c" :weight bold))))

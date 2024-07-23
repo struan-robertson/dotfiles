@@ -16,10 +16,9 @@
                          ("gnu" . "https://elpa.gnu.org/packages/")
 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
-;;; Emacs
+;;; Emacs Configuration
 
-;; Emacs configuration
-
+;;;;; emacs
 (use-package emacs
   :init
 
@@ -50,11 +49,14 @@
   ;; Minimum warning level
   (setq warning-minimum-level :error))
 
-;; Load PATH
+
+;;;;; exec-path-from-shell
+;; Load PATH from fish config
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
 
+;;;;; no-littering
 ;; Dont litter folders with autosave or backup files
 (use-package no-littering
   :init
@@ -65,10 +67,12 @@
 	backup-directory-alist
 	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
 
+;;;;; savehist
 (use-package savehist
   :init
   (savehist-mode))
 
+;;;;; recentf
 (use-package recentf
   ;; :bind
   ;; ("C-x C-r" . recentf-open)
@@ -78,7 +82,7 @@
   :hook
   (after-init . recentf-mode))
 
-;;;; Theming
+;;;;; nano-theme
 
 ;; Nano theme 
 (use-package nano-theme
@@ -118,11 +122,13 @@
 	      
 ;;; Help
 
+;;;; which-key
 ;; Which-key shows the available keybindings after a key press	      
 (use-package which-key
   :config
   (which-key-mode))
 
+;;;; helpful
 ;; More helpful help buffers
 (use-package helpful
   :bind
@@ -136,11 +142,13 @@
 
 ;;; Editor
 
+;;;; expand-region
 ;; C-= to expand selection intelligently
 (use-package expand-region
   :bind
   ("C-=" . 'er/expand-region))
 
+;;;; outli
 ;; Better keybindings for outline-minor-mode
 ;; ? for speed command help
 (use-package outli
@@ -155,14 +163,17 @@
   :config
   (setq outli-blend nil))
 
+;;;; flymake 
 ;; Flymake error checking
 (use-package flymake
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
+;;;; vundo
 ;; Visualise undo tree and step between
 (use-package vundo)
 
+;;;; popper
 ;; Make specific buffers pop up
 (use-package popper
   :bind
@@ -190,8 +201,18 @@
   (popper-mode)
   (popper-echo-mode))
 
+;;;; ibuffer-vc
+;; Group buffers in ibuffer by project
+(use-package ibuffer-vc
+  :hook
+  (ibuffer . (lambda ()
+	       (ibuffer-vc-set-filter-groups-by-vc-root)
+	       (unless (eq ibuffer-sorting-mode 'alphabetic)
+		 (ibuffer-do-sort-by-alphabetic)))))
+
 ;;;; Monad Stack
 
+;;;;; corfu
 ;; Use M-SPC to add Corfu separator for orderless searching
 (use-package corfu
   ;; Recommended: Enable Corfu globally. This is recommended since Dabbrev can
@@ -200,6 +221,7 @@
   :init
   (global-corfu-mode))
 
+;;;;; cape
 ;; Extra completion functions for corfu
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
@@ -222,6 +244,7 @@
   (add-hook 'completion-at-point-functions #'cape-tex)
 )
 
+;;;;; orderless
 ;; Orderless completion style
 (use-package orderless
   :init
@@ -231,6 +254,7 @@
 	;; Initialism alows `eif' to find elp-instrument-function
 	orderless-matching-styles '(orderless-literal orderless-regexp orderless-initialism)))
 
+;;;;; vertico
 ;; Vertico minibuffer 
 (use-package vertico
   :config
@@ -259,6 +283,7 @@
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
+;;;;; marginalia
 ;; Rich annotations in minibuffer
 (use-package marginalia
   ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
@@ -275,6 +300,8 @@
   ;; package.
   (marginalia-mode))
 
+
+;;;;; consult
 ;; Stupid powerful completion package
 (use-package consult
   ;; Replace bindings. Lazily loaded by `use-package'.
@@ -383,10 +410,51 @@
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
 )
 
+;;;;; wgrep
+;; Allow editing grep buffers
+(use-package wgrep)
+
+;;;;; embark
+
+;; Super powered ability to act on anything the point is over
+;; https://karthinks.com/software/fifteen-ways-to-use-embark/
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  ;; Might actually replace which-key
+  ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none))))
+  :config
+  (setq embark-indicators ;; Hide embark keybindings until C-h pressed
+	'(embark-minimal-indicator
+	  embark-highlight-indicator
+	  embark-isearch-highlight-indicator)))
+
+;; Use grid minibuffer for embark keybindings
+(use-package vertico
+  :config
+  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+  (vertico-multiform-mode))
+  
+;; Support for embark-{collect|export} with consult buffers
+(use-package embark-consult
+  :hook
+  (embark-collect . consult-preview-at-point-mode))
+
 ;;; Languages
 
 ;;;; Meta
 
+;;;;; treesit-auto
 ;; Automatically install treesitter languages if available
 (use-package treesit-auto
   :custom
@@ -395,9 +463,26 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
+;;;;; hideshow
+;; Code folding for non treesitter languages (elisp)
+(use-package hideshow
+  :hook
+  (emacs-lisp-mode . hs-minor-mode))
+
+;;;;; treesit-fold
+
+;; Code-folding using treesitter
+(use-package treesit-fold
+  :vc
+  (treesit-fold :url "https://github.com/emacs-tree-sitter/treesit-fold"
+		:branch "master")
+  :config
+  (global-treesit-fold-mode))
+
+;;;;; Custom Functions
+
 ;; Conditional toggling
 ;; The idea is that M-<tab> folds big things like headings and S-<tab> folds smaller things like code blocks
-
 (defun my/conditional-big-toggle ()
   (interactive)
   "Change the function called from M-<tab> depending on the active minor modes."
@@ -417,18 +502,8 @@
 (global-set-key (kbd "M-<tab>") 'my/conditional-big-toggle)
 (global-set-key (kbd "C-<tab>") 'my/conditional-small-toggle)
 
-(use-package hideshow
-  :hook
-  (emacs-lisp-mode . hs-minor-mode))
 
-;; Code-folding using treesitter
-(use-package treesit-fold
-  :vc
-  (treesit-fold :url "https://github.com/emacs-tree-sitter/treesit-fold"
-		:branch "master")
-  :config
-  (global-treesit-fold-mode))
-
+;;;;; eglot
 (use-package eglot
   :bind
   (:map eglot-mode-map
@@ -437,7 +512,8 @@
   :hook
   ((python-base-mode . eglot-ensure))
   :config
-    (setq-default eglot-workspace-configuration
+  (setq-default eglot-workspace-configuration
+		;; Bit of an unholy abomination of config but seems to work
                 '((:pylsp . (:configurationSources ["flake8"]
                              :plugins (
                                        :mccabe (:enabled :json-false)
@@ -454,11 +530,12 @@
 
 ;;;; CSV
 
-;; CSV mode
+;;;;; csv-mode
 (use-package csv-mode)
 
 ;;;; Python
 
+;;;;; eshell-pet
 ;; Custom package to allow Eshell venv activation
 (use-package eshell-pet
   :ensure
@@ -466,6 +543,7 @@
   :hook
   (eshell-mode . eshell-pet-mode))
 
+;;;;; pet
 ;; Emacs package to cover a range of python venv tools
 (use-package pet
   :ensure-system-package
@@ -476,10 +554,14 @@
 ;;; External Tools
 
 ;;;; Git
+
+;;;;; magit
+;; The best git porcelain
 (use-package magit)
 
 ;;;; Terminal
 
+;;;;; eat
 ;; Eat is a full terminal emulator written in elisp
 (use-package eat
   :hook
@@ -487,6 +569,7 @@
   :custom
   (eshell-visual-commands nil))
 
+;;;;; fish-completion
 ;; Allow eshell to use any fish completions
 (use-package fish-completion
   :vc
@@ -497,10 +580,10 @@
   :config
   (global-fish-completion-mode))
 
+;;;;; eshell
 
 ;; Need to demand vc-git and magit so that the custom eshell prompt works
 ;; Somewhat expensive but not the end of the word since I use daemon mode
-
 (use-package vc-git
   :demand t
   :ensure nil)
@@ -566,6 +649,8 @@
 
 ;;; Academic
 
+;;;; auctex
+
 ;; AucTeX improved Tex experience
 (use-package tex
   :ensure
@@ -578,14 +663,25 @@
 	TeX-auto-save t
 	TeX-parse-self t))
  
-;; TODO add citar embark
-;; Reference management 
+;;;; citar
+
+;; reference management 
 (use-package citar
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
   ((LaTeX-mode org-mode) . citar-capf-setup)
-)
+  )
+
+;; embark actions
+(use-package citar-embark
+  :after
+  citar embark
+  :no-require
+  :config
+  (citar-embark-mode))
+
+;;;; flymake-vale
 
 ;; Use vale prose linter with Flymake
 (use-package flymake-vale
@@ -596,6 +692,8 @@
   vale
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-vale-load))
+
+;;;; jinx
 
 ;; Jinx spell checker
 (use-package jinx
@@ -609,10 +707,14 @@
   (add-to-list 'jinx-exclude-faces
 	       '(prog-mode font-lock-string-face)))
 
+;;;; powerthesaurus
+
 ;; Powerthesaurus integration
 (use-package powerthesaurus
   :bind
   ("C-$" . powerthesaurus-transient))
+
+;;;; Custom Functions
 
 (defun my/toggle-writing-zen ()
   "Disable language improvement tools to allow for dumping text on the page."
