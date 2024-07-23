@@ -1,6 +1,7 @@
 (in-package #:nyxt-user)
 
 ;; Kagi search setup
+;; Seems to cause more issues than it is worth currently
 (defun make-kagi-completion (&key request-args)
   "Helper that generates Kagi search completion functions."
   (make-search-completion-function
@@ -20,5 +21,5 @@
       (make-instance 'search-engine :name "Kagi" :shortcut "k"
                      :search-url "https://kagi.com/search?q=~a"
                      :fallback-url "https://kagi.com"
-                     :completion-function (make-kagi-completion)
+                     ;; :completion-function (make-kagi-completion)
                      ))))))
