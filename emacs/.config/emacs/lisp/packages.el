@@ -257,6 +257,9 @@
 ;;;;; vertico
 ;; Vertico minibuffer 
 (use-package vertico
+  :bind
+  (:map vertico-map
+	("C-'" . vertico-quick-exit))
   :config
   (vertico-mode)
   ;; Use different vertico displays for different modes
@@ -267,8 +270,9 @@
 	  (consult-flymake buffer)
 	  (minor-mode reverse)
 	  (imenu buffer)
-	  (jinx grid (vertico-grid-annotate . 20))
-	  ;; (t unobtrusive)
+	  (jinx grid)
+	  ;; (t reverse)
+	  (t unobtrusive)
 	  ))
   (vertico-multiform-mode)
   
@@ -418,11 +422,14 @@
 
 ;; Super powered ability to act on anything the point is over
 ;; https://karthinks.com/software/fifteen-ways-to-use-embark/
+;; TODO add karthinks code when I install avy
 (use-package embark
   :bind
   (("C-." . embark-act)
    ("C-;" . embark-dwim)
-   ("C-h B" . embark-bindings))
+   ("C-h B" . embark-bindings)
+   :map embark-file-map
+   ("S" . sudo-find-file))
   :init
   ;; Might actually replace which-key
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
@@ -437,7 +444,19 @@
   (setq embark-indicators ;; Hide embark keybindings until C-h pressed
 	'(embark-minimal-indicator
 	  embark-highlight-indicator
-	  embark-isearch-highlight-indicator)))
+	  embark-isearch-highlight-indicator))
+  (defun sudo-find-file (file)
+    "Open FILE as root."
+    (interactive "FOpen file as root: ")
+    (when (file-writable-p file)
+      (user-error "File is user writeable, aborting sudo"))
+    (find-file (if (file-remote-p file)
+		   (concat "/" (file-remote-p file 'method) ":"
+			   (file-remote-p file 'user) "@" (file-remote-p file 'host)
+			   "|sudo:root@"
+			   (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+		 (concat "/sudo:root@localhost:" file)))))
+
 
 ;; Use grid minibuffer for embark keybindings
 (use-package vertico
@@ -525,8 +544,13 @@
                                                :line_length 88
                                                :cache_config t)
 				       :ruff (:enabled t
-					      :line_length 88))))))
+						       :line_length 88))))))
+  (setq eldoc-echo-area-display-truncation-message nil
+	eldoc-echo-area-prefer-doc-buffer 'maybe
+	eldoc-echo-area-use-multiline-p nil)
   )
+
+
 
 ;;;; CSV
 
@@ -678,8 +702,8 @@
   :after
   citar embark
   :no-require
-  :config
-  (citar-embark-mode))
+  :hook
+  ((LaTeX-mode org-mode) . citar-embark-mode))
 
 ;;;; flymake-vale
 
