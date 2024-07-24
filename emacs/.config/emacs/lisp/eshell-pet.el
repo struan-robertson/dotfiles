@@ -42,6 +42,7 @@
 		  ((current-path (getenv "PATH")))
 		(eshell-set-path (concat venv-bin-dir ":" current-path))
 		)
+	      (pet-mode t)
 	      (message "Activated venv %s" active-venv)))
 	    
       (message "No venv found."))))
@@ -52,6 +53,7 @@
   (if (bound-and-true-p active-venv)
 	  (progn
 	    (eshell-pet--remove-from-PATH venv-bin-dir)
+	    (pet-mode -1)
 	    (message "Deactivated venv %s" active-venv)
 	    (setq-local active-venv nil
 			venv-bin-dir nil))
