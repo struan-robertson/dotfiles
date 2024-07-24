@@ -189,7 +189,8 @@
           compilation-mode
 	  "^\\*eshell.*\\*$" eshell-mode
           "^\\*eat\\*" eat-mode
-	  "^\\*ielm\\*" ielm-mode)
+	  "^\\*ielm\\*" ielm-mode
+	  "^\\*Python\\*" inferior-python-mode)
 	;; popper-group-function #'popper-group-by-directory
 	)
   ;; Set min popup height to 1/3 of frame height
@@ -566,6 +567,13 @@
 (use-package csv-mode)
 
 ;;;; Python
+
+;; TODO if I wanted to recreate some of python mode but with ipython in a eat buffer
+;; TODO first try emacs-jupyter which might be a better idea for the kind of interactive development I am thinking of
+;; python-mode detects (I imagine through regex) when debugging is happening and follows it.
+;; I could slightly alter this to work in an eat buffer
+;; Also I would have to stop M-` from passing to the terminal
+;; I would also need to rebind ipython commands so that they follow emacs convention
 
 ;;;;; eshell-pet
 ;; Custom package to allow Eshell venv activation
