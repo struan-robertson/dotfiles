@@ -579,7 +579,7 @@
 ;; Emacs package to cover a range of python venv tools
 (use-package pet
   :ensure-system-package
-  dasel
+  (dasel . "paru -S dasel") ;; AUR
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
 
