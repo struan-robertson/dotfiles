@@ -269,12 +269,12 @@
 	  (minor-mode reverse)
 	  (imenu buffer)
 	  (jinx grid)
+	  (consult-grep buffer)
 	  (t reverse)
 	  ))
   ;; Same but for commands
   (setq vertico-multiform-commands
 	'((consult-location buffer)
-	  (consult-grep buffer)
 	  (consult-flymake buffer)
 	  (consult-line buffer)
 	  (consult-buffer unobtrusive)
@@ -464,10 +464,10 @@
 
 
 ;; Use grid minibuffer for embark keybindings
-(use-package vertico
-  :config
-  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
-  (vertico-multiform-mode))
+;; (use-package vertico
+;;   :config
+;;   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+;;   (vertico-multiform-mode))
   
 ;; Support for embark-{collect|export} with consult buffers
 (use-package embark-consult
