@@ -262,18 +262,22 @@
 	("C-'" . vertico-quick-exit))
   :config
   (vertico-mode)
-  ;; Use different vertico displays for different modes
+  ;; Use different vertico displays for different completion categories
   (setq vertico-multiform-categories
 	'((file reverse)
-	  (consult-location buffer)
-	  (consult-grep buffer)
-	  (consult-flymake buffer)
 	  (minor-mode reverse)
 	  (imenu buffer)
 	  (jinx grid)
-	  ;; (t reverse)
-	  (t unobtrusive)
+	  (t reverse)
 	  ))
+  ;; Same but for commands
+  (setq vertico-multiform-commands
+	'((consult-location buffer)
+	  (consult-grep buffer)
+	  (consult-flymake buffer)
+	  (consult-line buffer)
+	  (consult-buffer unobtrusive)
+	  (consult-outline buffer)))
   (vertico-multiform-mode)
   
   ;; Add prompt indicator to `completing-read-multiple'.
