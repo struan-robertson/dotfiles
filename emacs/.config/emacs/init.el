@@ -57,6 +57,9 @@
  '(writegood-passive-voice-face ((t (:underline (:color "#88c0d0" :style wave :position nil)))))
  '(writegood-weasels-face ((t (:underline (:color "#d08770" :style wave :position nil))))))
 
+;; Allow for using ROCM with my GPU
+(setenv "HSA_OVERRIDE_GFX_VERSION" "10.3.0")
+
 (message "init.el loaded successfully")
 
 
