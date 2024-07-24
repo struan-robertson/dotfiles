@@ -523,32 +523,36 @@
 
 
 ;;;;; eglot
+;; :ensure-system-package doesn't work with python packages as they are not in the PATH
+;; Requires
+  ;; python-lsp-server
+  ;; python-lsp-ruff
+  ;; python-pylsp-mypy
+
 (use-package eglot
   :bind
   (:map eglot-mode-map
 	("C-c C-d" . eldoc)
-	("C-c C-e" . eglot-rename))
+	("C-c C-e" . eglot-rename)
+	("C-c C-f" . eglot-format-buffer))
   :hook
   ((python-base-mode . eglot-ensure))
   :config
+
   (setq-default eglot-workspace-configuration
-		;; Bit of an unholy abomination of config but seems to work
-                '((:pylsp . (:configurationSources ["flake8"]
-                             :plugins (
-                                       :mccabe (:enabled :json-false)
-                                       :pyflakes (:enabled :json-false)
-                                       :pydocstyle (:enabled t
-                                                    :convention "numpy")
-                                       :yapf (:enabled :json-false)
-                                       :black (:enabled t
-                                               :line_length 88
-                                               :cache_config t)
+		'((:pylsp . (:plugins (
 				       :ruff (:enabled t
-						       :line_length 88))))))
-  (setq eldoc-echo-area-display-truncation-message nil
+						       :line_length 88
+						       :extendSelect ["ALL"]
+						       :extendIgnore ["ANN" ;; Type hinting, leave for mypy
+								      "PGH003" ;; Allow for #type: ignore instead of specific types
+								      "FIX001" ;; FIXME should be handled by emacs not ruff
+								     ]))))))
+  (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
+	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
-	eldoc-echo-area-use-multiline-p nil)
-  )
+	eldoc-echo-area-use-multiline-p nil
+	eldoc-idle-delay 1.0))
 
 
 
@@ -662,7 +666,7 @@
 		 'face 'default)	    
      "\n"
      (propertize (if (bound-and-true-p active-venv)
-		     active-venv
+		     ".venv"
 		   "")
 		 'face `(:foreground "#b48ead"))
      (propertize " λ " 'face 'default)))
