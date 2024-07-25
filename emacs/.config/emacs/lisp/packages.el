@@ -258,9 +258,6 @@
 ;;;;; vertico
 ;; Vertico minibuffer 
 (use-package vertico
-  :bind
-  (:map vertico-map
-	("C-'" . vertico-quick-exit))
   :config
   (vertico-mode)
   ;; Use different vertico displays for different completion categories
@@ -278,7 +275,8 @@
 	  (consult-flymake buffer)
 	  (consult-line buffer)
 	  (consult-buffer unobtrusive)
-	  (consult-outline buffer)))
+	  (consult-outline buffer)
+	  ))
   (vertico-multiform-mode)
   
   ;; Add prompt indicator to `completing-read-multiple'.
@@ -291,6 +289,16 @@
                   (car args))
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
+
+(use-package vertico-multiform
+  :after
+  vertico
+  :ensure
+  nil
+  :bind
+  (:map vertico-map
+	("C-'" . vertico-quick-exit)))
+
 
 ;;;;; marginalia
 ;; Rich annotations in minibuffer
@@ -436,7 +444,6 @@
    :map embark-file-map
    ("S" . sudo-find-file))
   :init
-  ;; Might actually replace which-key
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
   (setq prefix-help-command #'embark-prefix-help-command)
 
@@ -462,13 +469,6 @@
 			   (file-remote-p file 'host) ":" (file-remote-p file 'localname))
 		 (concat "/sudo:root@localhost:" file)))))
 
-
-;; Use grid minibuffer for embark keybindings
-;; (use-package vertico
-;;   :config
-;;   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
-;;   (vertico-multiform-mode))
-  
 ;; Support for embark-{collect|export} with consult buffers
 (use-package embark-consult
   :hook
