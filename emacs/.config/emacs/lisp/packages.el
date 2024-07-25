@@ -453,10 +453,11 @@
                  nil
                  (window-parameters (mode-line-format . none))))
   :config
-  (setq embark-indicators ;; Hide embark keybindings until C-h pressed
-	'(embark-minimal-indicator
+  (setq embark-indicators 
+	'(embark-mixed-indicator
 	  embark-highlight-indicator
-	  embark-isearch-highlight-indicator))
+	  embark-isearch-highlight-indicator)
+	embark-mixed-indicator-delay 2)
   (defun sudo-find-file (file)
     "Open FILE as root."
     (interactive "FOpen file as root: ")
