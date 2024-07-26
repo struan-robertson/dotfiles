@@ -119,7 +119,43 @@
           (setq my:theme-window-loaded t)
 	(setq my:theme-terminal-loaded t)))))
 
-	      
+
+;;;;; eros
+;; Display eval result (including for debug) in popup instead of echo area.
+;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/
+(use-package eros
+  :config
+  (defun adviced:edebug-compute-previous-result (_ &rest r)
+    "Adviced `edebug-compute-previous-result'."
+    (let ((previous-value (nth 0 r)))
+      (if edebug-unwrap-results
+          (setq previous-value
+		(edebug-unwrap* previous-value)))
+      (setq edebug-previous-result
+            (edebug-safe-prin1-to-string previous-value))))
+
+  (advice-add #'edebug-compute-previous-result
+              :around
+              #'adviced:edebug-compute-previous-result)
+  
+  (defun adviced:edebug-previous-result (_ &rest r)
+    "Adviced `edebug-previous-result'."
+    (eros--make-result-overlay edebug-previous-result
+      :where (point)
+      :duration eros-eval-result-duration))
+    
+  (advice-add #'edebug-previous-result
+              :around
+              #'adviced:edebug-previous-result)
+
+  (setq eval-expression-print-length nil
+	eval-expression-print-level nil
+	edebug-print-length nil
+	edebug-print-level nil)
+  
+  (eros-mode))
+
+
 ;;; Help
 
 ;;;; which-key
@@ -590,7 +626,25 @@
   :ensure-system-package
   (dasel . "paru -S dasel") ;; AUR
   :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10))
+  (add-hook 'python-base-mode-hook 'pet-mode -10)
+
+  (defun pet--executable-find-tramp (command &optional remote)
+    "Re-implementation of `executable-find' which respects the `exec-path' variable"
+    (if (and remote (file-remote-p default-directory))
+	(let ((res (locate-file
+		    command
+		    exec-path
+		    exec-suffixes 'file-executable-p)))
+	  (when (stringp res) (file-local-name res)))))
+
+  (defun pet--executable-find (command &optional remote)
+    "Like Emacs 27's `executable-find', ignore REMOTE on Emacs 26.
+
+See `executable-find' for the meaning of COMMAND and REMOTE."
+    
+    (if (>= emacs-major-version 27)
+	(or (pet--executable-find-tramp command remote) (executable-find command remote))
+      (executable-find command))))
 
 ;;; External Tools
 
