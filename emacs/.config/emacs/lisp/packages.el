@@ -156,6 +156,12 @@
   (eros-mode))
 
 
+;;;;; persistent-scratch
+;; Auto save scratch buffer
+(use-package persistent-scratch
+  :demand t
+  :config
+  (persistent-scratch-setup-default))
 ;;; Help
 
 ;;;; which-key
