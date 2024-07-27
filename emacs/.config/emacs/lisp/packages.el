@@ -624,18 +624,23 @@
 ;; Emacs package to cover a range of python venv tools
 (use-package pet
   :ensure-system-package
-  (dasel . "paru -S dasel") ;; AUR
+  ;;(dasel . "paru -S dasel") ;; AUR
+  dasel
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10)
 
   (defun pet--executable-find-tramp (command &optional remote)
-    "Re-implementation of `executable-find' which respects the `exec-path' variable"
-    (if (and remote (file-remote-p default-directory))
-	(let ((res (locate-file
-		    command
-		    exec-path
-		    exec-suffixes 'file-executable-p)))
-	  (when (stringp res) (file-local-name res)))))
+    "Re-implementation of `executable-find' using `tramp-remote-path'."
+    (let ((res (locate-file
+		command
+		(mapcar (lambda (x)
+			  (when (stringp x)
+			    (if (file-remote-p x)
+				x
+			      (concat (file-remote-p default-directory) x))))
+			tramp-remote-path)
+		exec-suffixes 'file-executable-p)))
+      (when (stringp res) (file-local-name res))))
 
   (defun pet--executable-find (command &optional remote)
     "Like Emacs 27's `executable-find', ignore REMOTE on Emacs 26.
@@ -643,8 +648,27 @@
 See `executable-find' for the meaning of COMMAND and REMOTE."
     
     (if (>= emacs-major-version 27)
-	(or (pet--executable-find-tramp command remote) (executable-find command remote))
+	(if (and remote (file-remote-p default-directory))
+	    (pet--executable-find-tramp command remote)
+	  (executable-find command remote))
       (executable-find command))))
+
+;; Dont try and insert file contents over tramp if the file does not exist
+;; TODO: merge upstream if effective
+(use-package project
+  :ensure nil
+  :config
+  (defun project--git-submodules ()
+    ;; 'git submodule foreach' is much slower.
+    (if (file-exists-p ".gitmodules")
+	(with-temp-buffer
+          (insert-file-contents ".gitmodules")
+          (let (res)
+            (goto-char (point-min))
+            (while (re-search-forward "^[ \t]*path *= *\\(.+\\)" nil t)
+              (push (match-string 1) res))
+            (nreverse res)))
+      nil)))
 
 ;;; External Tools
 
