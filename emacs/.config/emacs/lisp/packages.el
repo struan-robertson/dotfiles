@@ -663,6 +663,15 @@
 ;; The best git porcelain
 (use-package magit)
 
+;;;;; diff-hl
+;; Show git gutter
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode)
+  (diff-hl-dired-mode)
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
 ;;;; Terminal
 
 ;;;;; eat
