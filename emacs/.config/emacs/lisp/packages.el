@@ -253,6 +253,14 @@
 	       (unless (eq ibuffer-sorting-mode 'alphabetic)
 		 (ibuffer-do-sort-by-alphabetic)))))
 
+;;;; hl-todo
+;; Highlight reminders
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode))
+
+(use-package consult-todo)
+
 ;;;; Monad Stack
 
 ;;;;; corfu
@@ -662,6 +670,13 @@
 ;;;;; magit
 ;; The best git porcelain
 (use-package magit)
+
+;; Highlight todos in magit status buffers
+(use-package magit-todos
+  :after
+  magit
+  :config
+  (magit-todos-mode 1))
 
 ;;;;; diff-hl
 ;; Show git gutter
