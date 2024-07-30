@@ -259,7 +259,9 @@
   :config
   (global-hl-todo-mode))
 
-(use-package consult-todo)
+(use-package consult-todo
+  :bind
+  ("M-g t" . consult-todo))
 
 ;;;; Monad Stack
 
@@ -647,7 +649,7 @@
   )
 
 ;; Dont try and insert file contents over tramp if the file does not exist
-;; TODO: merge upstream if effective
+;; TODO merge upstream if effective
 (use-package project
   :ensure nil
   :config
@@ -662,7 +664,7 @@
               (push (match-string 1) res))
             (nreverse res)))
       nil)))
-
+ 
 ;;; External Tools
 
 ;;;; Git
@@ -670,22 +672,6 @@
 ;;;;; magit
 ;; The best git porcelain
 (use-package magit)
-
-;; Highlight todos in magit status buffers
-(use-package magit-todos
-  :after
-  magit
-  :config
-  (magit-todos-mode 1))
-
-;;;;; diff-hl
-;; Show git gutter
-(use-package diff-hl
-  :config
-  (global-diff-hl-mode)
-  (diff-hl-dired-mode)
-  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 ;;;; Terminal
 
