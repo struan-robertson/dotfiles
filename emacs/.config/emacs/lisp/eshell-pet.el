@@ -10,8 +10,6 @@
 ;; A simple package providing functions for activating and deactivating Python virtual environments in Eshell.
 ;; The eshell-pet-mode automatically activates and deactivates virtual environments by checking if a ".venv" directory is present at either PWD or the root directory of the current git project.
 
-;; TODO: Use pet specific variables for system bin name and venv file names
-
 ;;; Code:
 
 (require 'vc-git)
@@ -39,14 +37,12 @@
 	      (let
 		  ((parts (file-name-split venv)))
 		(setq-local active-venv (nth (- (length parts) 2) parts)))
-	      (setq-local venv-bin-dir (expand-file-name "bin" venv))
+	      (setq-local venv-bin-dir (expand-file-name (pet-system-bin-dir) venv))
 	      (let
 		  ((current-path (getenv "PATH")))
-		(eshell-set-path (concat venv-bin-dir ":" current-path))
-		)
+		(eshell-set-path (concat venv-bin-dir ":" current-path)))
 	      (pet-mode t)
 	      (message "Activated venv %s" active-venv)))
-	    
       (message "No venv found."))))
 
 (defun eshell/deactivate-venv ()
