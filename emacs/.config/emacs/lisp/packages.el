@@ -585,8 +585,7 @@
 	("C-c C-f" . eglot-format-buffer))
   :hook
   ((python-base-mode . eglot-ensure))
-  :config
-
+  :init
   (setq-default eglot-workspace-configuration
 		'((:pylsp . (:plugins (
 				       :ruff (:enabled t
@@ -596,6 +595,7 @@
 								      "PGH003" ;; Allow for #type: ignore instead of specific types
 								      "FIX001" ;; FIXME should be handled by emacs not ruff
 								     ]))))))
+  :config
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
@@ -632,32 +632,11 @@
   :ensure-system-package
   ;;(dasel . "paru -S dasel") ;; AUR
   dasel
+  :load-path
+  "~/Development/Emacs/emacs-pet/"
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10)
-
-  (defun pet--executable-find-tramp (command &optional remote)
-    "Re-implementation of `executable-find' using `tramp-remote-path'."
-    (let ((res (locate-file
-		command
-		(mapcar (lambda (x)
-			  (when (stringp x)
-			    (if (file-remote-p x)
-				x
-			      (concat (file-remote-p default-directory) x))))
-			tramp-remote-path)
-		exec-suffixes 'file-executable-p)))
-      (when (stringp res) (file-local-name res))))
-
-  (defun pet--executable-find (command &optional remote)
-    "Like Emacs 27's `executable-find', ignore REMOTE on Emacs 26.
-
-See `executable-find' for the meaning of COMMAND and REMOTE."
-    
-    (if (>= emacs-major-version 27)
-	(if (and remote (file-remote-p default-directory))
-	    (pet--executable-find-tramp command remote)
-	  (executable-find command remote))
-      (executable-find command))))
+  )
 
 ;; Dont try and insert file contents over tramp if the file does not exist
 ;; TODO: merge upstream if effective
