@@ -50,6 +50,7 @@
  '(eat-term-color-8 ((t (:inherit nano-faded))))
  '(escape-glyph ((t (:foreground "#5e81ac"))))
  '(flymake-error ((t (:underline (:color "#bf616a" :style wave :position nil)))))
+ '(flymake-note ((t (:underline (:color "#a3be8c" :style wave :position nil)))))
  '(flymake-warning ((t (:underline (:color "#d08770" :style wave :position nil)))))
  '(font-latex-bold-face ((t (:inherit bold))))
  '(font-latex-italic-face ((t (:inherit italic :foreground "#a3be8c"))))
