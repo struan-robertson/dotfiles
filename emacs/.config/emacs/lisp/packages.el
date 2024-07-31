@@ -630,23 +630,23 @@
 
 ;;;;; eshell-pet
 ;; Custom package to allow Eshell venv activation
-(use-package eshell-pet
+(use-package eshell-venv
   :ensure
   nil
   :hook
-  (eshell-mode . eshell-pet-mode))
+  (eshell-mode . eshell-venv-mode))
 
 ;;;;; pet
 ;; Emacs package to cover a range of python venv tools
-(use-package pet
-  :ensure-system-package
-  ;;(dasel . "paru -S dasel") ;; AUR
-  dasel
-  :load-path
-  "~/Development/Emacs/emacs-pet/"
-  :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10)
-  )
+;; (use-package pet
+;;   :ensure-system-package
+;;   ;;(dasel . "paru -S dasel") ;; AUR
+;;   dasel
+;;   :load-path
+;;   "~/Development/Emacs/emacs-pet/"
+;;   :config
+;;   (add-hook 'python-base-mode-hook 'pet-mode -10)
+;;   )
 
 ;; Dont try and insert file contents over tramp if the file does not exist
 ;; TODO merge upstream if effective
