@@ -599,14 +599,21 @@
   ((python-base-mode . eglot-ensure))
   :init
   (setq-default eglot-workspace-configuration
-		'((:pylsp . (:plugins (
-				       :ruff (:enabled t
-						       :line_length 88
-						       :extendSelect ["ALL"]
-						       :extendIgnore ["ANN" ;; Type hinting, leave for mypy
-								      "PGH003" ;; Allow for #type: ignore instead of specific types
-								      "FIX001" ;; FIXME should be handled by emacs not ruff
-								     ]))))))
+		'(:pylsp (:plugins (
+				    :ruff (:enabled t
+						    :line_length 88
+						    :extendSelect ["ALL"]
+						    :extendIgnore ["ANN" ;; Type hinting, leave for mypy
+								   "PGH003" ;; Allow for #type: ignore instead of specific types
+								   "FIX" ;; fixme should be handled by emacs not ruff
+								   "TD" ;; same with todo
+								   ]
+						    :format ["I"]
+						    )
+				    :pylsp_mypy (:live_mode nil
+							    :dmypy t
+							    :strict nil)))))
+  (setq enable-remote-dir-locals t)
   :config
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
