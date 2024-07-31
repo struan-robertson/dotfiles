@@ -259,6 +259,8 @@
   :config
   (global-hl-todo-mode))
 
+;;;; consult-todo
+;; Show todos in consult
 (use-package consult-todo
   :bind
   ("M-g t" . consult-todo))
@@ -672,6 +674,16 @@
 ;;;;; magit
 ;; The best git porcelain
 (use-package magit)
+
+;;;;; diff-hl
+;; Highlight git diff in gutter
+(use-package diff-hl
+  :hook
+  ((magit-pre-refresh . diff-hl-magit-pre-refresh)
+   (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  (diff-hl-mode)
+  (global-diff-hl-mode))
 
 ;;;; Terminal
 
