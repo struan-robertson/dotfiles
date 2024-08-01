@@ -2,7 +2,7 @@
 
 ;; Author: Struan Robertson contact@struanrobertson.co.uk
 ;; Version: 1.0
-;; Package-Requires: ((emacs "28.0") (vc-git) (eshell))
+;; Package-Requires: ((emacs "28.0") (vc-git) (eshell) (cl-lib))
 
 ;;; Commentary:
 ;; A simple package providing functions for activating and deactivating Python virtual environments in Eshell.
@@ -12,19 +12,23 @@
 
 (require 'vc-git)
 (require 'eshell)
+(require 'cl-lib)
 
-(defvar active-venv)
-(defvar venv-bin-dir)
+(defvar python-shell-virtualenv-root)
+(defvar python-shell-virtualenv-bin)
 
 (defun eshell-venv--remove-from-PATH (dir)
-  "Safely remove DIR from the current PATH environment variable."
-  (let
-      ((current-path (getenv "PATH")))
-    (let
-	((parts (split-string current-path ":")))
-      (let
-	  ((dirs-fixed (remove dir parts)))
-	(eshell-set-path (mapconcat #'identity dirs-fixed ":"))))))
+  "Safely remove DIR from the current Eshell PATH."
+  (let ((current-path (eshell-get-path t)))
+    (if (member dir current-path)
+	;; Sometimes tramp persistence saves an old PATH so best to remove all occurrences.
+	(eshell-set-path (cl-remove dir current-path)))))
+
+(defun eshell-venv-get-local-file-path (path)
+  "Extract the local file path from PATH."
+  (if (file-remote-p path)
+      (tramp-file-name-localname (tramp-dissect-file-name path))
+    path))
 
 (defun eshell/activate-venv (&optional venv)
   "Activate a Python virtual environment in Eshell.
@@ -32,27 +36,23 @@ Optionally pass the venv root (VENV) or find using `eshell-venv--find-venv'
 at the `default-directory'."
   (interactive)
   (if-let ((venv (or venv (eshell-venv--find-venv default-directory))))
-      (if (not (bound-and-true-p active-venv))
+      (if (not (bound-and-true-p python-shell-virtualenv-root))
 	  (progn
-	    (let
-		((parts (file-name-split venv)))
-	      (setq-local active-venv (nth (- (length parts) 2) parts)))
-	    (setq-local venv-bin-dir (expand-file-name "bin" venv))
-	    (let
-		  ((current-path (getenv "PATH")))
-		(eshell-set-path (concat venv-bin-dir ":" current-path)))
-	    (message "Activated venv %s." active-venv)))
+	    (setq-local python-shell-virtualenv-root venv
+			python-shell-virtualenv-bin (expand-file-name "bin" venv))
+	    (eshell-set-path (cons (eshell-venv-get-local-file-path python-shell-virtualenv-bin) (eshell-get-path t)))
+	    (message "Activated venv %s." python-shell-virtualenv-root)))
     (message "No venv found.")))
 
 (defun eshell/deactivate-venv ()
   "Deactivate the currently active Python virtual environment in Eshell."
   (interactive)
-  (if (bound-and-true-p active-venv)
+  (if (bound-and-true-p python-shell-virtualenv-root)
 	  (progn
-	    (eshell-venv--remove-from-PATH venv-bin-dir)
-	    (message "Deactivated venv %s" active-venv)
-	    (setq-local active-venv nil
-			venv-bin-dir nil))
+	    (eshell-venv--remove-from-PATH (eshell-venv-get-local-file-path python-shell-virtualenv-bin))
+	    (message "Deactivated venv %s" python-shell-virtualenv-root)
+	    (setq-local python-shell-virtualenv-root nil
+			python-shell-virtualenv-bin nil))
     (message "No currently active venv")))
 
 (defun eshell-venv--find-venv (dir)
@@ -69,16 +69,16 @@ If so, return path to .venv."
   "Automatically detect and activate/deactivate Python venv based on Eshell PWD.
 Uses `eshell-venv--find-venv' to determine if venv exits."
   (let ((venv (eshell-venv--find-venv (eshell/pwd))))
-    (if (and venv (not (bound-and-true-p active-venv)))
+    (if (and venv (not (bound-and-true-p python-shell-virtualenv-root)))
 	(eshell/activate-venv venv)
-      (if (and (not venv) (bound-and-true-p active-venv))
+      (if (and (not venv) (bound-and-true-p python-shell-virtualenv-root))
 	  (eshell/deactivate-venv)))))
 
 (define-minor-mode eshell-venv-mode
   "Minor mode for automatic Python venv detection on Eshell directory change.
 Uses the `eshell-venv--auto-activate-venv' function."
   :init-value nil
-  :lighter " eshell-venv"
+  :lighter " Eshell-venv"
   (if eshell-venv-mode
       (progn
 	(add-hook 'eshell-directory-change-hook 'eshell-venv--auto-activate-venv)

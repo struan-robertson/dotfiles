@@ -637,13 +637,14 @@
 ;; Also I would have to stop M-` from passing to the terminal
 ;; I would also need to rebind ipython commands so that they follow emacs convention
 
-;;;;; eshell-pet
+;;;;; eshell-venv
 ;; Custom package to allow Eshell venv activation
 (use-package eshell-venv
   :ensure
   nil
   :hook
-  (eshell-mode . eshell-venv-mode))
+  (eshell-mode . eshell-venv-mode)
+  )
 
 ;;;;; pet
 ;; Emacs package to cover a range of python venv tools
@@ -770,7 +771,7 @@
 			     "*"))
 		 'face 'default)	    
      "\n"
-     (propertize (if (bound-and-true-p active-venv)
+     (propertize (if (bound-and-true-p python-shell-virtualenv-root)
 		     ".venv"
 		   "")
 		 'face `(:foreground "#b48ead"))
