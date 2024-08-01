@@ -619,8 +619,18 @@
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
 	eldoc-echo-area-use-multiline-p nil
-	eldoc-idle-delay 1.0))
+	eldoc-idle-delay 1.0)
+  
+  (defun my/eglot--executable-find-advice (fn &rest args)
+    "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
+FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
+    (pcase-let ((`(,command . ,_) args))
+      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
+          (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))
+      (apply fn args)))
 
+  (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
+  )
 
 
 ;;;; CSV
@@ -861,6 +871,19 @@
       (jinx-mode 1)
       (flymake-mode 1)))
   )
+
+(defun my/executable-find-dir (command dirs &optional remote)
+    "Implementation of `executable-find' which just searches DIRS."
+    (if (and remote (file-remote-p default-directory))
+	(let ((res (locate-file
+		    command
+		    (mapcar
+		     (lambda (x) (concat (file-remote-p default-directory) x))
+		     dirs)
+		    exec-suffixes 'file-executable-p)))
+	  (when (stringp res) (file-local-name res)))
+      (let ((default-directory (file-name-quote default-directory 'top)))
+	(locate-file command dirs exec-suffixes 1))))
 
 ;; Local Variables:
 ;; jinx-local-words: "Dabbrev Powerthesaurus"
