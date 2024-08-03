@@ -162,6 +162,13 @@
   :demand t
   :config
   (persistent-scratch-setup-default))
+;;;;; tramp
+(use-package tramp-sh
+  :ensure
+  nil
+  :init
+  (setq tramp-use-ssh-controlmaster-options nil
+	tramp-verbose 2))
 ;;; Help
 
 ;;;; which-key
@@ -587,7 +594,6 @@
 ;; Requires
   ;; python-lsp-server
   ;; python-lsp-ruff
-  ;; python-pylsp-mypy
 
 (use-package eglot
   :bind
@@ -602,6 +608,7 @@
 		'(:pylsp (:plugins (
 				    :ruff (:enabled t
 						    :line_length 88
+						    :target_version "py38"
 						    :extendSelect ["ALL"]
 						    :extendIgnore ["ANN" ;; Type hinting, leave for mypy
 								   "PGH003" ;; Allow for #type: ignore instead of specific types
@@ -609,10 +616,7 @@
 								   "TD" ;; same with todo
 								   ]
 						    :format ["I"]
-						    )
-				    :pylsp_mypy (:live_mode nil
-							    :dmypy t
-							    :strict nil)))))
+						    )))))
   (setq enable-remote-dir-locals t)
   :config
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
@@ -632,6 +636,16 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
   )
 
+
+;;;;; eglot-booster
+;; Boost emacs using emacs-lsp-booster
+;; Requires emacs-lsp-booster to be installed
+(use-package eglot-booster
+  :vc
+  (eglot-booster :url "https://github.com/jdtsmith/eglot-booster"
+		 :branch "main")
+  :after eglot
+  :config (eglot-booster-mode))
 
 ;;;; CSV
 
@@ -656,35 +670,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (eshell-mode . eshell-venv-mode)
   )
 
-;;;;; pet
-;; Emacs package to cover a range of python venv tools
-;; (use-package pet
-;;   :ensure-system-package
-;;   ;;(dasel . "paru -S dasel") ;; AUR
-;;   dasel
-;;   :load-path
-;;   "~/Development/Emacs/emacs-pet/"
-;;   :config
-;;   (add-hook 'python-base-mode-hook 'pet-mode -10)
-;;   )
 
-;; Dont try and insert file contents over tramp if the file does not exist
-;; TODO merge upstream if effective
-(use-package project
-  :ensure nil
-  :config
-  (defun project--git-submodules ()
-    ;; 'git submodule foreach' is much slower.
-    (if (file-exists-p ".gitmodules")
-	(with-temp-buffer
-          (insert-file-contents ".gitmodules")
-          (let (res)
-            (goto-char (point-min))
-            (while (re-search-forward "^[ \t]*path *= *\\(.+\\)" nil t)
-              (push (match-string 1) res))
-            (nreverse res)))
-      nil)))
- 
 ;;; External Tools
 
 ;;;; Git
