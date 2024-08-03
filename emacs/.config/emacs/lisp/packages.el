@@ -167,8 +167,10 @@
   :ensure
   nil
   :init
-  (setq tramp-use-ssh-controlmaster-options nil
-	tramp-verbose 2))
+  (setq tramp-use-ssh-controlmaster-options nil)
+  :config
+  (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
+
 ;;; Help
 
 ;;;; which-key
@@ -630,12 +632,10 @@
 FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
     (pcase-let ((`(,command . ,_) args))
       (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
-          (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))
-      (apply fn args)))
+          (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))))
 
   (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
   )
-
 
 ;;;;; eglot-booster
 ;; Boost emacs using emacs-lsp-booster

@@ -28,7 +28,8 @@
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
-   '((python-shell-process-environment quote
+   '((python-shell-virtualenv-root . "/home/srobertson/Template Matching/.venv/")
+     (python-shell-process-environment quote
 				       ("HSA_OVERRIDE_GFX_VERSION=10.3.0"))
      (python-shell-virtualenv-root . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/")
      (python-shell-interpreter . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/bin/python")
