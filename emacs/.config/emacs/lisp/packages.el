@@ -47,7 +47,14 @@
   (setq dired-dwim-target t)
 
   ;; Minimum warning level
-  (setq warning-minimum-level :error))
+  (setq warning-minimum-level :error)
+
+  ;; Dont resize echo area
+  (setq message-truncate-lines t)
+
+  ;; Remember location in file
+  (save-place-mode t)
+  )
 
 
 ;;;;; exec-path-from-shell
