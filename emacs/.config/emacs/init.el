@@ -18,15 +18,25 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(flymake-ruff citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
-   '((fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion" :branch "master")
+   '((eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
+     (ruff-flymake :url "https://github.com/cjfuller/ruff-flymake" :branch "main")
+     (fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion" :branch "master")
      (eshell-toggle :url "https://github.com/4DA/eshell-toggle" :branch "master")
      (ts-fold :url "https://github.com/emacs-tree-sitter/ts-fold" :branch "master")
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
-   '((eshell-toggle-use-git-root . t)
+   '((python-shell-interpreter . "/home/srobertson/Template Matching/.venv/bin/python")
+     (python-shell-virtualenv-root . "/home/srobertson/Template Matching/.venv/")
+     (python-shell-process-environment quote
+				       ("HSA_OVERRIDE_GFX_VERSION=10.3.0"))
+     (python-shell-virtualenv-root . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/")
+     (python-shell-interpreter . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/bin/python")
+     (python-shell-virtualenv-root . ".venv/")
+     (python-shell-interpreter . ".venv/bin/python")
+     (eshell-toggle-use-git-root . t)
      (eval outline-hide-sublevels 2))))
 
 (custom-set-faces
@@ -34,6 +44,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(diff-hl-delete ((t (:background "#BF616A"))))
  '(eat-term-color-10 ((t (:inherit ansi-color-bright-black :foreground "#a3be8c"))))
  '(eat-term-color-11 ((t (:inherit ansi-color-bright-black :foreground "#ebcb8b"))))
  '(eat-term-color-12 ((t (:inherit ansi-color-bright-black :foreground "#5e81ac"))))
@@ -43,8 +54,10 @@
  '(eat-term-color-5 ((t (:inherit ansi-color-magenta :foreground "#b48ead"))))
  '(eat-term-color-6 ((t (:inherit ansi-color-cyan :foreground "#88c0d0"))))
  '(eat-term-color-8 ((t (:inherit nano-faded))))
+ '(error ((t (:foreground "#bf616a"))))
  '(escape-glyph ((t (:foreground "#5e81ac"))))
  '(flymake-error ((t (:underline (:color "#bf616a" :style wave :position nil)))))
+ '(flymake-note ((t (:underline (:color "#a3be8c" :style wave :position nil)))))
  '(flymake-warning ((t (:underline (:color "#d08770" :style wave :position nil)))))
  '(font-latex-bold-face ((t (:inherit bold))))
  '(font-latex-italic-face ((t (:inherit italic :foreground "#a3be8c"))))

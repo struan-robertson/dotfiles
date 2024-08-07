@@ -47,7 +47,14 @@
   (setq dired-dwim-target t)
 
   ;; Minimum warning level
-  (setq warning-minimum-level :error))
+  (setq warning-minimum-level :error)
+
+  ;; Dont resize echo area
+  (setq message-truncate-lines t)
+
+  ;; Remember location in file
+  (save-place-mode t)
+  )
 
 
 ;;;;; exec-path-from-shell
@@ -119,7 +126,58 @@
           (setq my:theme-window-loaded t)
 	(setq my:theme-terminal-loaded t)))))
 
-	      
+
+;;;;; eros
+;; Display eval result (including for debug) in popup instead of echo area.
+;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/
+(use-package eros
+  :config
+  (defun adviced:edebug-compute-previous-result (_ &rest r)
+    "Adviced `edebug-compute-previous-result'."
+    (let ((previous-value (nth 0 r)))
+      (if edebug-unwrap-results
+          (setq previous-value
+		(edebug-unwrap* previous-value)))
+      (setq edebug-previous-result
+            (edebug-safe-prin1-to-string previous-value))))
+
+  (advice-add #'edebug-compute-previous-result
+              :around
+              #'adviced:edebug-compute-previous-result)
+  
+  (defun adviced:edebug-previous-result (_ &rest r)
+    "Adviced `edebug-previous-result'."
+    (eros--make-result-overlay edebug-previous-result
+      :where (point)
+      :duration eros-eval-result-duration))
+    
+  (advice-add #'edebug-previous-result
+              :around
+              #'adviced:edebug-previous-result)
+
+  (setq eval-expression-print-length nil
+	eval-expression-print-level nil
+	edebug-print-length nil
+	edebug-print-level nil)
+  
+  (eros-mode))
+
+
+;;;;; persistent-scratch
+;; Auto save scratch buffer
+(use-package persistent-scratch
+  :demand t
+  :config
+  (persistent-scratch-setup-default))
+;;;;; tramp
+(use-package tramp-sh
+  :ensure
+  nil
+  :init
+  (setq tramp-use-ssh-controlmaster-options nil)
+  :config
+  (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
+
 ;;; Help
 
 ;;;; which-key
@@ -211,6 +269,18 @@
 	       (unless (eq ibuffer-sorting-mode 'alphabetic)
 		 (ibuffer-do-sort-by-alphabetic)))))
 
+;;;; hl-todo
+;; Highlight reminders
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode))
+
+;;;; consult-todo
+;; Show todos in consult
+(use-package consult-todo
+  :bind
+  ("M-g t" . consult-todo))
+
 ;;;; Monad Stack
 
 ;;;;; corfu
@@ -258,9 +328,6 @@
 ;;;;; vertico
 ;; Vertico minibuffer 
 (use-package vertico
-  :bind
-  (:map vertico-map
-	("C-'" . vertico-quick-exit))
   :config
   (vertico-mode)
   ;; Use different vertico displays for different completion categories
@@ -278,7 +345,8 @@
 	  (consult-flymake buffer)
 	  (consult-line buffer)
 	  (consult-buffer unobtrusive)
-	  (consult-outline buffer)))
+	  (consult-outline buffer)
+	  ))
   (vertico-multiform-mode)
   
   ;; Add prompt indicator to `completing-read-multiple'.
@@ -291,6 +359,16 @@
                   (car args))
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
+
+(use-package vertico-multiform
+  :after
+  vertico
+  :ensure
+  nil
+  :bind
+  (:map vertico-map
+	("C-'" . vertico-quick-exit)))
+
 
 ;;;;; marginalia
 ;; Rich annotations in minibuffer
@@ -436,7 +514,6 @@
    :map embark-file-map
    ("S" . sudo-find-file))
   :init
-  ;; Might actually replace which-key
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
   (setq prefix-help-command #'embark-prefix-help-command)
 
@@ -446,10 +523,11 @@
                  nil
                  (window-parameters (mode-line-format . none))))
   :config
-  (setq embark-indicators ;; Hide embark keybindings until C-h pressed
-	'(embark-minimal-indicator
+  (setq embark-indicators 
+	'(embark-mixed-indicator
 	  embark-highlight-indicator
-	  embark-isearch-highlight-indicator))
+	  embark-isearch-highlight-indicator)
+	embark-mixed-indicator-delay 2)
   (defun sudo-find-file (file)
     "Open FILE as root."
     (interactive "FOpen file as root: ")
@@ -462,13 +540,6 @@
 			   (file-remote-p file 'host) ":" (file-remote-p file 'localname))
 		 (concat "/sudo:root@localhost:" file)))))
 
-
-;; Use grid minibuffer for embark keybindings
-;; (use-package vertico
-;;   :config
-;;   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
-;;   (vertico-multiform-mode))
-  
 ;; Support for embark-{collect|export} with consult buffers
 (use-package embark-consult
   :hook
@@ -532,7 +603,6 @@
 ;; Requires
   ;; python-lsp-server
   ;; python-lsp-ruff
-  ;; python-pylsp-mypy
 
 (use-package eglot
   :bind
@@ -542,24 +612,47 @@
 	("C-c C-f" . eglot-format-buffer))
   :hook
   ((python-base-mode . eglot-ensure))
-  :config
-
+  :init
   (setq-default eglot-workspace-configuration
-		'((:pylsp . (:plugins (
-				       :ruff (:enabled t
-						       :line_length 88
-						       :extendSelect ["ALL"]
-						       :extendIgnore ["ANN" ;; Type hinting, leave for mypy
-								      "PGH003" ;; Allow for #type: ignore instead of specific types
-								      "FIX001" ;; FIXME should be handled by emacs not ruff
-								     ]))))))
+		'(:pylsp (:plugins (
+				    :ruff (:enabled t
+						    :line_length 88
+						    :target_version "py38"
+						    :extendSelect ["ALL"]
+						    :extendIgnore ["ANN" ;; Type hinting, leave for mypy
+								   "PGH003" ;; Allow for #type: ignore instead of specific types
+								   "FIX" ;; fixme should be handled by emacs not ruff
+								   "TD" ;; same with todo
+								   ]
+						    :format ["I"]
+						    )))))
+  (setq enable-remote-dir-locals t)
+  :config
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
 	eldoc-echo-area-use-multiline-p nil
-	eldoc-idle-delay 1.0))
+	eldoc-idle-delay 1.0)
+  
+  (defun my/eglot--executable-find-advice (fn &rest args)
+    "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
+FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
+    (pcase-let ((`(,command . ,_) args))
+      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
+          (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))))
 
+  (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
+  )
 
+;;;;; eglot-booster
+;; Boost emacs using emacs-lsp-booster
+;; Requires emacs-lsp-booster to be installed
+(use-package eglot-booster
+  :vc
+  (eglot-booster :url "https://github.com/jdtsmith/eglot-booster"
+		 :branch "main")
+  :after eglot
+  :config (eglot-booster-mode))
 
 ;;;; CSV
 
@@ -575,21 +668,15 @@
 ;; Also I would have to stop M-` from passing to the terminal
 ;; I would also need to rebind ipython commands so that they follow emacs convention
 
-;;;;; eshell-pet
+;;;;; eshell-venv
 ;; Custom package to allow Eshell venv activation
-(use-package eshell-pet
+(use-package eshell-venv
   :ensure
   nil
   :hook
-  (eshell-mode . eshell-pet-mode))
+  (eshell-mode . eshell-venv-mode)
+  )
 
-;;;;; pet
-;; Emacs package to cover a range of python venv tools
-(use-package pet
-  :ensure-system-package
-  (dasel . "paru -S dasel") ;; AUR
-  :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10))
 
 ;;; External Tools
 
@@ -598,6 +685,16 @@
 ;;;;; magit
 ;; The best git porcelain
 (use-package magit)
+
+;;;;; diff-hl
+;; Highlight git diff in gutter
+(use-package diff-hl
+  :hook
+  ((magit-pre-refresh . diff-hl-magit-pre-refresh)
+   (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  (diff-hl-mode)
+  (global-diff-hl-mode))
 
 ;;;; Terminal
 
@@ -677,7 +774,7 @@
 			     "*"))
 		 'face 'default)	    
      "\n"
-     (propertize (if (bound-and-true-p active-venv)
+     (propertize (if (bound-and-true-p python-shell-virtualenv-root)
 		     ".venv"
 		   "")
 		 'face `(:foreground "#b48ead"))
@@ -767,6 +864,19 @@
       (jinx-mode 1)
       (flymake-mode 1)))
   )
+
+(defun my/executable-find-dir (command dirs &optional remote)
+    "Implementation of `executable-find' which just searches DIRS."
+    (if (and remote (file-remote-p default-directory))
+	(let ((res (locate-file
+		    command
+		    (mapcar
+		     (lambda (x) (concat (file-remote-p default-directory) x))
+		     dirs)
+		    exec-suffixes 'file-executable-p)))
+	  (when (stringp res) (file-local-name res)))
+      (let ((default-directory (file-name-quote default-directory 'top)))
+	(locate-file command dirs exec-suffixes 1))))
 
 ;; Local Variables:
 ;; jinx-local-words: "Dabbrev Powerthesaurus"

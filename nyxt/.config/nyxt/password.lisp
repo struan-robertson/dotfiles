@@ -1,13 +1,20 @@
 (in-package #:nyxt-user)
 
-(defmethod initialize-instance :after ((interface password:keepassxc-interface) &key &allow-other-keys)
-  "I use KeePassXC, and this simply sets the location of the password files."
-  (setf (password:password-file interface) "/home/struan/Documents/Keys/keepass.kdbx"))
+(defmethod initialize-instance :after
+           ((interface password:keepassxc-interface)
+            &key &allow-other-keys)
+  "It's obviously not recommended to set master password here,
+as your config is likely unencrypted and can reveal your password to someone
+peeking at the screen."
+  (setf (password:password-file interface)
+          "/home/struan/Documents/Keys/keepass.kdbx"
+        (password:key-file interface) ""
+        (password:yubikey-slot interface) ""))
 
-(define-configuration :password-mode
-  "This is to emphasize that I use KeePassXC.
-Nyxt is (was?) not always smart enough to guess that."
-  ((password-interface (make-instance 'password:keepassxc-interface))))
+(define-configuration nyxt/mode/password:password-mode
+  ((nyxt/mode/password:password-interface
+    (make-instance 'password:keepassxc-interface))))
 
-(define-configuration :buffer
-  ((default-modes (append `(:password-mode) %slot-value%))))
+(define-configuration buffer
+  ((default-modes
+    (append (list 'nyxt/mode/password:password-mode) %slot-value%))))
