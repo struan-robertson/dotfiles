@@ -7,5 +7,5 @@ if status is-interactive
 
     zoxide init fish | source
 
-    alias vim='nvim'
 end
+

@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(jupyter eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
      (ruff-flymake :url "https://github.com/cjfuller/ruff-flymake" :branch "main")
@@ -64,6 +64,10 @@
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#a3be8c" :weight bold))))
  '(font-latex-string-face ((t (:foreground "#d8dee9"))))
  '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a"))))
+ '(jupyter-eval-overlay ((t (:foreground "#5e81ac" :weight bold))))
+ '(jupyter-repl-input-prompt ((t (:foreground "#a3be8c"))))
+ '(jupyter-repl-output-prompt ((t (:foreground "#bf616a"))))
+ '(jupyter-repl-traceback ((t nil)))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
  '(writegood-duplicates-face ((t (:underline (:color "#b48ead" :style wave :position nil)))))

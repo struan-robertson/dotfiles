@@ -654,6 +654,20 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :after eglot
   :config (eglot-booster-mode))
 
+;;;;; jupyter
+(use-package jupyter
+  :ensure-system-package
+  jupyterlab
+  :bind
+  (:map jupyter-repl-interaction-mode-map
+	("C-c C-i" . jupyter-inspect-at-point)
+	("C-c I" . jupyter-repl-interrupt-kernel)
+	("M-i" . consult-imenu))
+  (:map jupyter-org-interaction-mode
+	("C-c C-i" . jupyter-inspect-at-point)
+	("C-c I" . jupyter-org-interrupt-kernel)
+	("M-i" . consult-imenu)))
+
 ;;;; CSV
 
 ;;;;; csv-mode
