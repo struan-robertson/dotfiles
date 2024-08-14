@@ -248,7 +248,8 @@
 	  "^\\*eshell.*\\*$" eshell-mode
           "^\\*eat\\*" eat-mode
 	  "^\\*ielm\\*" ielm-mode
-	  "^\\*Python\\*" inferior-python-mode)
+	  "^\\*Python\\*" inferior-python-mode
+	  "^\\*shell\\*" shell-mode)
 	;; popper-group-function #'popper-group-by-directory
 	)
   ;; Set min popup height to 1/3 of frame height
@@ -612,22 +613,26 @@
 	("C-c C-f" . eglot-format-buffer))
   :hook
   ((python-base-mode . eglot-ensure))
-  :init
-  (setq-default eglot-workspace-configuration
-		'(:pylsp (:plugins (
-				    :ruff (:enabled t
-						    :line_length 88
-						    :target_version "py38"
-						    :extendSelect ["ALL"]
-						    :extendIgnore ["ANN" ;; Type hinting, leave for mypy
-								   "PGH003" ;; Allow for #type: ignore instead of specific types
-								   "FIX" ;; fixme should be handled by emacs not ruff
-								   "TD" ;; same with todo
-								   ]
-						    :format ["I"]
-						    )))))
-  (setq enable-remote-dir-locals t)
   :config
+  (setq-default eglot-workspace-configuration
+		'(:basedpyright (:disableOrganizeImports t))
+		;; '(:pylsp (:plugins (
+		;; 		    :ruff (:enabled t
+		;; 				    :line_length 88
+		;; 				    :target_version "py38"
+		;; 				    :extendSelect ["ALL"]
+		;; 				    :extendIgnore ["ANN" ;; Type hinting, leave for mypy
+		;; 						   "PGH003" ;; Allow for #type: ignore instead of specific types
+		;; 						   "FIX" ;; fixme should be handled by emacs not ruff
+		;; 						   "TD" ;; same with todo
+		;; 						   ]
+		;; 				    :format ["I"]
+		;; 				    ))))
+		)
+  (setq enable-remote-dir-locals t)
+  (add-to-list 'eglot-server-programs
+	       '((python-mode python-ts-mode)
+		 "basedpyright-langserver" "--stdio"))
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
@@ -638,7 +643,7 @@
     "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
 FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
     (pcase-let ((`(,command . ,_) args))
-      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
+      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
           (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))))
 
   (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
@@ -668,19 +673,34 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	("C-c I" . jupyter-org-interrupt-kernel)
 	("M-i" . consult-imenu)))
 
+;;;;; apheleia
+(use-package apheleia
+  :config
+  (apheleia-global-mode 1)
+  (setf (alist-get 'python-mode apheleia-mode-alist)
+	'(ruff-isort ruff))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist)
+	'(ruff-isort ruff)))
+
 ;;;; CSV
 
 ;;;;; csv-mode
 (use-package csv-mode)
 
 ;;;; Python
+;; Use IPython as interpreter
 
-;; TODO if I wanted to recreate some of python mode but with ipython in a eat buffer
-;; TODO first try emacs-jupyter which might be a better idea for the kind of interactive development I am thinking of
-;; python-mode detects (I imagine through regex) when debugging is happening and follows it.
-;; I could slightly alter this to work in an eat buffer
-;; Also I would have to stop M-` from passing to the terminal
-;; I would also need to rebind ipython commands so that they follow emacs convention
+(use-package python
+  :config
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs")
+  (indent-tabs-mode nil))
+
+ 
+
+
+
+
 
 ;;;;; eshell-venv
 ;; Custom package to allow Eshell venv activation
@@ -691,6 +711,11 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (eshell-mode . eshell-venv-mode)
   )
 
+
+;;;;; flymake-ruff
+(use-package flymake-ruff
+  :hook
+  (eglot-managed-mode . flymake-ruff-load))
 
 ;;; External Tools
 

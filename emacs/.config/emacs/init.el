@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(jupyter eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
+   '(apheleia flymake-ruff jupyter eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful powerthesaurus use-package-ensure-system-package vertico orderless corfu multiple-cursors auctex eat which-key magit nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
      (ruff-flymake :url "https://github.com/cjfuller/ruff-flymake" :branch "main")
@@ -28,7 +28,9 @@
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
-   '((python-shell-interpreter . "/home/srobertson/Template Matching/.venv/bin/python")
+   '((python-shell-process-environment "HSA_OVERRIDE_GFX_VERSION=10.3.0")
+     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/shoeprint-image-retrieval/.venv/")
+     (python-shell-interpreter . "/home/srobertson/Template Matching/.venv/bin/python")
      (python-shell-virtualenv-root . "/home/srobertson/Template Matching/.venv/")
      (python-shell-process-environment quote
 				       ("HSA_OVERRIDE_GFX_VERSION=10.3.0"))
@@ -44,6 +46,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-red ((t (:foreground "#bf616a"))))
  '(diff-hl-delete ((t (:background "#BF616A"))))
  '(eat-term-color-10 ((t (:inherit ansi-color-bright-black :foreground "#a3be8c"))))
  '(eat-term-color-11 ((t (:inherit ansi-color-bright-black :foreground "#ebcb8b"))))
