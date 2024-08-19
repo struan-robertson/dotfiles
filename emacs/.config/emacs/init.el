@@ -28,7 +28,8 @@
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
-   '((python-shell-process-environment "HSA_OVERRIDE_GFX_VERSION=10.3.0")
+   '((python-shell-virtualenv-root . "/home/struan/Development/Doctorate/dataset-similarities/.venv/")
+     (python-shell-process-environment "HSA_OVERRIDE_GFX_VERSION=10.3.0")
      (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/shoeprint-image-retrieval/.venv/")
      (python-shell-interpreter . "/home/srobertson/Template Matching/.venv/bin/python")
      (python-shell-virtualenv-root . "/home/srobertson/Template Matching/.venv/")
@@ -57,6 +58,7 @@
  '(eat-term-color-5 ((t (:inherit ansi-color-magenta :foreground "#b48ead"))))
  '(eat-term-color-6 ((t (:inherit ansi-color-cyan :foreground "#88c0d0"))))
  '(eat-term-color-8 ((t (:inherit nano-faded))))
+ '(eglot-inlay-hint-face ((t (:inherit shadow))))
  '(error ((t (:foreground "#bf616a"))))
  '(escape-glyph ((t (:foreground "#5e81ac"))))
  '(flymake-error ((t (:underline (:color "#bf616a" :style wave :position nil)))))
