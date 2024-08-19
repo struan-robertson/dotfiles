@@ -676,11 +676,12 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 ;;;;; apheleia
 (use-package apheleia
   :config
-  (apheleia-global-mode 1)
   (setf (alist-get 'python-mode apheleia-mode-alist)
 	'(ruff-isort ruff))
   (setf (alist-get 'python-ts-mode apheleia-mode-alist)
-	'(ruff-isort ruff)))
+	'(ruff-isort ruff))
+  :hook
+  (python-base-mode emacs-lisp-mode lisp-mode))
 
 ;;;; CSV
 
