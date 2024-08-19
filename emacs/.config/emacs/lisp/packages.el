@@ -150,7 +150,7 @@
     (eros--make-result-overlay edebug-previous-result
       :where (point)
       :duration eros-eval-result-duration))
-    
+  
   (advice-add #'edebug-previous-result
               :around
               #'adviced:edebug-previous-result)
@@ -314,7 +314,7 @@
   (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
   (add-hook 'completion-at-point-functions #'cape-history)
   (add-hook 'completion-at-point-functions #'cape-tex)
-)
+  )
 
 ;;;;; orderless
 ;; Orderless completion style
@@ -378,7 +378,7 @@
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
+              ("M-A" . marginalia-cycle))
 
   ;; The :init section is always executed.
   :init
@@ -496,7 +496,7 @@
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
-)
+  )
 
 ;;;;; wgrep
 ;; Allow editing grep buffers
@@ -602,8 +602,8 @@
 ;;;;; eglot
 ;; :ensure-system-package doesn't work with python packages as they are not in the PATH
 ;; Requires
-  ;; python-lsp-server
-  ;; python-lsp-ruff
+;; python-lsp-server
+;; python-lsp-ruff
 
 (use-package eglot
   :bind
@@ -697,7 +697,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
         python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs")
   (indent-tabs-mode nil))
 
- 
+
 
 
 
@@ -839,7 +839,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 				     (output-html "xdg-open"))
 	TeX-auto-save t
 	TeX-parse-self t))
- 
+
 ;;;; citar
 
 ;; reference management 
@@ -906,17 +906,17 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   )
 
 (defun my/executable-find-dir (command dirs &optional remote)
-    "Implementation of `executable-find' which just searches DIRS."
-    (if (and remote (file-remote-p default-directory))
-	(let ((res (locate-file
-		    command
-		    (mapcar
-		     (lambda (x) (concat (file-remote-p default-directory) x))
-		     dirs)
-		    exec-suffixes 'file-executable-p)))
-	  (when (stringp res) (file-local-name res)))
-      (let ((default-directory (file-name-quote default-directory 'top)))
-	(locate-file command dirs exec-suffixes 1))))
+  "Implementation of `executable-find' which just searches DIRS."
+  (if (and remote (file-remote-p default-directory))
+      (let ((res (locate-file
+		  command
+		  (mapcar
+		   (lambda (x) (concat (file-remote-p default-directory) x))
+		   dirs)
+		  exec-suffixes 'file-executable-p)))
+	(when (stringp res) (file-local-name res)))
+    (let ((default-directory (file-name-quote default-directory 'top)))
+      (locate-file command dirs exec-suffixes 1))))
 
 ;; Local Variables:
 ;; jinx-local-words: "Dabbrev Powerthesaurus"
