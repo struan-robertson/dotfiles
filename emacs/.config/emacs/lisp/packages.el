@@ -663,6 +663,13 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 (use-package jupyter
   :ensure-system-package
   jupyterlab
+  :init
+  (setq org-babel-load-languages '((emacs-lisp . t)
+				   (python . t)
+				   (jupyter . t)))
+  (if (boundp 'recentf-exclude)
+      (add-to-list 'recentf-exclude "^/tmp/jupyter")
+    (setq recentf-exclude '("^/tmp/jupyter")))
   :bind
   (:map jupyter-repl-interaction-mode-map
 	("C-c C-i" . jupyter-inspect-at-point)
@@ -672,6 +679,8 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	("C-c C-i" . jupyter-inspect-at-point)
 	("C-c I" . jupyter-org-interrupt-kernel)
 	("M-i" . consult-imenu)))
+
+
 
 ;;;;; apheleia
 (use-package apheleia
