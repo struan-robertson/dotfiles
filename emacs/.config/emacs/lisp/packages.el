@@ -664,7 +664,8 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :ensure nil
   :demand t
   :config
-  (add-to-list 'org-src-lang-modes '("python" . python-ts))) ;; Fix issue with jupyter not working with ts python
+  (add-to-list 'org-src-lang-modes '("python" . python-ts))
+  (setq org-confirm-babel-evaluate nil)) ;; Fix issue with jupyter not working with ts python
 
 (use-package jupyter
   :after
