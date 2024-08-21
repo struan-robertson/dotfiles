@@ -660,7 +660,15 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :config (eglot-booster-mode))
 
 ;;;;; jupyter
+(use-package org-src
+  :ensure nil
+  :demand t
+  :config
+  (add-to-list 'org-src-lang-modes '("python" . python-ts))) ;; Fix issue with jupyter not working with ts python
+
 (use-package jupyter
+  :after
+  org-src
   :ensure-system-package
   jupyterlab
   :init
