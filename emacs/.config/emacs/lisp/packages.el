@@ -681,7 +681,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (setf (alist-get 'python-ts-mode apheleia-mode-alist)
 	'(ruff-isort ruff))
   :hook
-  (python-base-mode emacs-lisp-mode lisp-mode))
+  (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
 
 ;;;; CSV
 
