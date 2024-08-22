@@ -245,11 +245,11 @@
           "\\*Async Shell Command\\*"
           help-mode
           compilation-mode
-	  "^\\*eshell.*\\*$" eshell-mode
-          "^\\*eat\\*" eat-mode
-	  "^\\*ielm\\*" ielm-mode
-	  "^\\*Python\\*" inferior-python-mode
-	  "^\\*shell\\*" shell-mode)
+	  "eshell.*\\*$" eshell-mode
+          "eat\\*" eat-mode
+	  "ielm\\*" ielm-mode
+	  "Python\\*" inferior-python-mode
+	  "shell\\*" shell-mode)
 	;; popper-group-function #'popper-group-by-directory
 	)
   ;; Set min popup height to 1/3 of frame height
