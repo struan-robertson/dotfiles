@@ -336,7 +336,7 @@
 	'((file reverse)
 	  (minor-mode reverse)
 	  (imenu buffer)
-	  (jinx grid)
+	  (jinx grid (vertico-grid-annotate . 20))
 	  (consult-grep buffer)
 	  (t reverse)
 	  ))
