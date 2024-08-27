@@ -1,4 +1,4 @@
-;;; eshell-venv.el --- Use emacs-pet to activate and deactivate python venvs in Eshell -*- lexical-binding: t; -*-
+];;; eshell-venv.el --- Use emacs-pet to activate and deactivate python venvs in Eshell -*- lexical-binding: t; -*-
 
 ;; Author: Struan Robertson contact@struanrobertson.co.uk
 ;; Version: 1.0
@@ -41,18 +41,18 @@ at the `default-directory'."
 	    (setq-local python-shell-virtualenv-root venv
 			python-shell-virtualenv-bin (expand-file-name "bin" venv))
 	    (eshell-set-path (cons (eshell-venv-get-local-file-path python-shell-virtualenv-bin) (eshell-get-path t)))
-	    (message "Activated venv %s." python-shell-virtualenv-root)))
+	    (message "Activated venv %s" python-shell-virtualenv-root)))
     (message "No venv found.")))
 
 (defun eshell/deactivate-venv ()
   "Deactivate the currently active Python virtual environment in Eshell."
   (interactive)
   (if (bound-and-true-p python-shell-virtualenv-root)
-	  (progn
-	    (eshell-venv--remove-from-PATH (eshell-venv-get-local-file-path python-shell-virtualenv-bin))
-	    (message "Deactivated venv %s" python-shell-virtualenv-root)
-	    (setq-local python-shell-virtualenv-root nil
-			python-shell-virtualenv-bin nil))
+      (progn
+	(eshell-venv--remove-from-PATH (eshell-venv-get-local-file-path python-shell-virtualenv-bin))
+	(message "Deactivated venv %s" python-shell-virtualenv-root)
+	(setq-local python-shell-virtualenv-root nil
+		    python-shell-virtualenv-bin nil))
     (message "No currently active venv")))
 
 (defun eshell-venv--find-venv (dir)
@@ -83,7 +83,7 @@ Uses the `eshell-venv--auto-activate-venv' function."
       (progn
 	(add-hook 'eshell-directory-change-hook 'eshell-venv--auto-activate-venv)
 	(eshell-venv--auto-activate-venv))
-     (remove-hook 'eshell-directory-change-hook 'eshell-venv--auto-activate-venv)))
+    (remove-hook 'eshell-directory-change-hook 'eshell-venv--auto-activate-venv)))
 
 (provide 'eshell-venv)
 

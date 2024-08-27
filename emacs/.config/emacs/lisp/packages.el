@@ -245,11 +245,11 @@
           "\\*Async Shell Command\\*"
           help-mode
           compilation-mode
-	  "^\\*eshell.*\\*$" eshell-mode
-          "^\\*eat\\*" eat-mode
-	  "^\\*ielm\\*" ielm-mode
-	  "^\\*Python\\*" inferior-python-mode
-	  "^\\*shell\\*" shell-mode)
+	  "eshell.*\\*$" eshell-mode
+          "eat\\*" eat-mode
+	  "ielm\\*" ielm-mode
+	  "Python\\*" inferior-python-mode
+	  "shell\\*" shell-mode)
 	;; popper-group-function #'popper-group-by-directory
 	)
   ;; Set min popup height to 1/3 of frame height
@@ -336,7 +336,7 @@
 	'((file reverse)
 	  (minor-mode reverse)
 	  (imenu buffer)
-	  (jinx grid)
+	  (jinx grid (vertico-grid-annotate . 20))
 	  (consult-grep buffer)
 	  (t reverse)
 	  ))
@@ -699,7 +699,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (setf (alist-get 'python-ts-mode apheleia-mode-alist)
 	'(ruff-isort ruff))
   :hook
-  (python-base-mode emacs-lisp-mode lisp-mode))
+  (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
 
 ;;;; CSV
 
