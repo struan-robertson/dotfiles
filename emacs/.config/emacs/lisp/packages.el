@@ -696,7 +696,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	("C-c C-i" . jupyter-inspect-at-point)
 	("C-c I" . jupyter-repl-interrupt-kernel)
 	("M-i" . consult-imenu))
-  (:map jupyter-org-interaction-mode
+  (:map jupyter-org-interaction-mode-map
 	("C-c C-i" . jupyter-inspect-at-point)
 	("C-c I" . jupyter-org-interrupt-kernel)
 	("M-i" . consult-imenu)))

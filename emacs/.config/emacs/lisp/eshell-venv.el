@@ -1,4 +1,4 @@
-];;; eshell-venv.el --- Use emacs-pet to activate and deactivate python venvs in Eshell -*- lexical-binding: t; -*-
+;;; eshell-venv.el --- Use emacs-pet to activate and deactivate python venvs in Eshell -*- lexical-binding: t; -*-
 
 ;; Author: Struan Robertson contact@struanrobertson.co.uk
 ;; Version: 1.0
