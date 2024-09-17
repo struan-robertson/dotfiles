@@ -506,6 +506,9 @@
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
+
+  :config
+  (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'"))
   )
 
 ;;;;; wgrep
@@ -872,21 +875,31 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	TeX-source-correlate-mode t
 	TeX-source-correlate-start-server t))
 
+;;;; openwith
+(use-package openwith
+  :config
+  (openwith-mode)
+  (setq openwith-associations
+	'(("\\.pdf\\'" "sioyek" (file)))))
+
 ;;;; citar
 
 ;; reference management 
 (use-package citar
+  :demand t
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
   ((LaTeX-mode org-mode) . citar-capf-setup)
   )
 
+(use-package embark
+  :demand t)
+
 ;; embark actions
 (use-package citar-embark
   :after
   citar embark
-  :no-require
   :hook
   ((LaTeX-mode org-mode) . citar-embark-mode))
 
