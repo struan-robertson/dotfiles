@@ -200,6 +200,16 @@
 
 ;;; Editor
 
+;;;; avy
+;; Tree based point selection
+(use-package avy
+  :config
+  (avy-setup-default)
+  :bind
+  (("C-c C-j" . 'avy-resume)
+   ("C-:" . 'avy-goto-char)
+   ("C-'" . 'avy-goto-char-timer)))
+
 ;;;; expand-region
 ;; C-= to expand selection intelligently
 (use-package expand-region
@@ -643,8 +653,10 @@
     "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
 FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
     (pcase-let ((`(,command . ,_) args))
-      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
-          (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))))
+      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")) (derived-mode-p 'python-base-mode))
+	  (if python-shell-virtualenv-root
+	      (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args))
+	    (apply fn args)))))
 
   (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
   )
@@ -856,7 +868,9 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (setq TeX-view-program-selection '((output-pdf "Sioyek")
 				     (output-html "xdg-open"))
 	TeX-auto-save t
-	TeX-parse-self t))
+	TeX-parse-self t
+	TeX-source-correlate-mode t
+	TeX-source-correlate-start-server t))
 
 ;;;; citar
 
