@@ -692,11 +692,11 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
       (add-to-list 'recentf-exclude "^/tmp/jupyter")
     (setq recentf-exclude '("^/tmp/jupyter")))
   :bind
-  (:map jupyter-repl-interaction-mode-map
+  (:map jupyter-repl-interaction-mode
 	("C-c C-i" . jupyter-inspect-at-point)
 	("C-c I" . jupyter-repl-interrupt-kernel)
 	("M-i" . consult-imenu))
-  (:map jupyter-org-interaction-mode-map
+  (:map jupyter-org-interaction-mode
 	("C-c C-i" . jupyter-inspect-at-point)
 	("C-c I" . jupyter-org-interrupt-kernel)
 	("M-i" . consult-imenu)))
