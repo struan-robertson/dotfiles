@@ -86,6 +86,10 @@
   :init
   (setq recentf-max-menu-items 15
 	recentf-max-saved-items 100)
+  :config
+  (if (boundp 'recentf-exclude)
+      (setq recentf-exclude (append recentf-exclude '("bookmark-default.el")))
+    (setq recentf-exclude '("bookmark-default.el")))
   :hook
   (after-init . recentf-mode))
 
@@ -199,6 +203,16 @@
    ("C-c C-d" . helpful-at-point)))
 
 ;;; Editor
+
+;;;; avy
+;; Tree based point selection
+(use-package avy
+  :config
+  (avy-setup-default)
+  :bind
+  (("C-c C-j" . 'avy-resume)
+   ("C-:" . 'avy-goto-char)
+   ("C-'" . 'avy-goto-char-timer)))
 
 ;;;; expand-region
 ;; C-= to expand selection intelligently
@@ -496,6 +510,9 @@
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
+
+  :config
+  (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'"))
   )
 
 ;;;;; wgrep
@@ -643,8 +660,10 @@
     "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
 FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
     (pcase-let ((`(,command . ,_) args))
-      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")) (derived-mode-p 'python-base-mode) python-shell-virtualenv-root)
-          (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args)))))
+      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")) (derived-mode-p 'python-base-mode))
+	  (if python-shell-virtualenv-root
+	      (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args))
+	    (apply fn args)))))
 
   (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
   )
@@ -856,23 +875,39 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (setq TeX-view-program-selection '((output-pdf "Sioyek")
 				     (output-html "xdg-open"))
 	TeX-auto-save t
-	TeX-parse-self t))
+	TeX-parse-self t
+	TeX-source-correlate-mode t
+	TeX-source-correlate-start-server t))
+
+;;;; openwith
+(use-package openwith
+  :config
+  (openwith-mode)
+  (setq openwith-associations
+	'(("\\.pdf\\'" "sioyek" (file)))))
 
 ;;;; citar
 
 ;; reference management 
 (use-package citar
+  :demand t
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
   ((LaTeX-mode org-mode) . citar-capf-setup)
-  )
+  :bind
+  (:map LaTeX-mode-map
+	("C-c c" . citar-insert-citation)
+	:map TeX-mode-map
+	("C-c c" . citar-insert-citation)))
+
+(use-package embark
+  :demand t)
 
 ;; embark actions
 (use-package citar-embark
   :after
   citar embark
-  :no-require
   :hook
   ((LaTeX-mode org-mode) . citar-embark-mode))
 
