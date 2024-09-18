@@ -895,7 +895,11 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
   ((LaTeX-mode org-mode) . citar-capf-setup)
-  )
+  :bind
+  (:map LaTeX-mode-map
+	("C-c c" . citar-insert-citation)
+	:map TeX-mode-map
+	("C-c c" . citar-insert-citation)))
 
 (use-package embark
   :demand t)
