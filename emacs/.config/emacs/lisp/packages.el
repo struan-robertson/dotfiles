@@ -86,6 +86,10 @@
   :init
   (setq recentf-max-menu-items 15
 	recentf-max-saved-items 100)
+  :config
+  (if (boundp 'recentf-exclude)
+      (setq recentf-exclude (append recentf-exclude '("bookmark-default.el")))
+    (setq recentf-exclude '("bookmark-default.el")))
   :hook
   (after-init . recentf-mode))
 
