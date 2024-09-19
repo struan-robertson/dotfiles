@@ -214,8 +214,8 @@
   (avy-setup-default)
   :bind
   (("C-c C-j" . 'avy-resume)
-   ("C-:" . 'avy-goto-char)
-   ("C-'" . 'avy-goto-char-timer)))
+   ("C-:" . 'avy-goto-char-in-line)
+   ("C-'" . 'avy-goto-char-2)))
 
 ;;;; expand-region
 ;; C-= to expand selection intelligently
