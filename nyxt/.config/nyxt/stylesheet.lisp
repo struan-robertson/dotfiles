@@ -7,7 +7,7 @@
 		     :dark-p t
 
 		     :font-family "Roboto"
-		     :monospace-font-family "RobotMono Nerd Font"
+		     :monospace-font-family "RobotoMono Nerd Font"
 		     
 		     :action-color- "#81A1C1"
 		     :action-color "#5E81AC"
