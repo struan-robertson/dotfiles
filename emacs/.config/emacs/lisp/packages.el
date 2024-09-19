@@ -879,6 +879,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 
 ;; AucTeX improved Tex experience
 (use-package tex
+  :demand t
   :ensure
   auctex
   :hook
@@ -904,11 +905,11 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 (use-package citar
   :demand t
   :after
-  auctex
+  tex latex
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
-  ((LaTeX-mode org-mode) . citar-capf-setup)
+  ((LaTeX-mode TeX-mode org-mode) . citar-capf-setup)
   :bind
   (:map LaTeX-mode-map
 	("C-c c" . citar-insert-citation)
@@ -922,7 +923,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 (use-package citar-embark
   :after
   citar embark
-  :hook
+  :hook 
   ((LaTeX-mode org-mode) . citar-embark-mode))
 
 ;;;; flymake-vale
