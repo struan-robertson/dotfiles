@@ -7,8 +7,8 @@
 (load "keybindings")
 
 ;;; Faces
-(set-face-attribute 'variable-pitch nil :family "ShureTechMono Nerd Font Propo" :height 130)
-(set-face-attribute 'default nil :font "ShureTechMono Nerd Font" :height 130)
+(set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light)
+(set-face-attribute 'default nil :font "RobotoMono Nerd Font" :height 130)
 
 ;;; Custom Variables 
 (custom-set-variables

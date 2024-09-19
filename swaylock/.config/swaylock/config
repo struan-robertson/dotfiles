@@ -11,7 +11,7 @@ show-failed-attempts
 image=/home/struan/Pictures/Wallpapers/wallpaper.jpg 
 
 # Sets the font of the text
-font=ShureTechMono Nerd Font
+font=RobotoMono Nerd Font
 
 # Sets the indicator radius (default: 50)
 indicator-radius=100

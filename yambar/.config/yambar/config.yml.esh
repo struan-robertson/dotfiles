@@ -15,9 +15,9 @@ bar:
   #font: Roboto Mono Nerd Font:pixelsize=30:weight=bold
 
 <% if [ $(hostname) = "arch" ]; then -%>
-  font: ShureTechMono Nerd Font:pixelsize=20
+  font: RobotoMono Nerd Font:pixelsize=20
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
-  font: ShureTechMono Nerd Font:pixelsize=32
+  font: RobotoMono Nerd Font:pixelsize=32
 <% fi -%>
     
   left:
@@ -133,7 +133,7 @@ bar:
             conditions:
               name == "wlan0":
                 string:
-                  text: "NET {ssid} ({quality:03})"
+                  text: "NET {ssid} {quality:03}"
                   on-click: "iwgtk"
 
   right:

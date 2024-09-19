@@ -6,8 +6,8 @@
       (make-instance 'theme:theme
 		     :dark-p t
 
-		     :font-family "ShureTechMono Nerd Font"
-		     :monospace-font-family "ShureTechMono Nerd Font"
+		     :font-family "Roboto"
+		     :monospace-font-family "RobotMono Nerd Font"
 		     
 		     :action-color- "#81A1C1"
 		     :action-color "#5E81AC"
