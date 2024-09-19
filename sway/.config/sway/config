@@ -3,10 +3,10 @@
 ### Variables
 set $mod Mod4
 # Home row direction keys, like vim
-set $left h
-set $down j
-set $up k
-set $right l
+set $left b
+set $down n
+set $up p
+set $right f
 # Terminal emulator
 set $term foot
 # Menu (use swaymsg to exec for applications to launch in correct workspaced)
