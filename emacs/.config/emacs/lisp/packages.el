@@ -870,7 +870,8 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :ensure
   auctex
   :hook
-  (LaTeX-mode . reftex-mode)
+  ((LaTeX-mode . reftex-mode)
+   ((LaTeX-mode TeX-mode) . variable-pitch-mode))
   :config
   (setq TeX-view-program-selection '((output-pdf "Sioyek")
 				     (output-html "xdg-open"))
@@ -891,6 +892,8 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 ;; reference management 
 (use-package citar
   :demand t
+  :after
+  auctex
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
