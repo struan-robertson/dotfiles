@@ -54,6 +54,9 @@
 
   ;; Remember location in file
   (save-place-mode t)
+
+  ;; Use bar cursor
+  (setq-default cursor-type 'bar)
   )
 
 
@@ -295,6 +298,15 @@
 (use-package consult-todo
   :bind
   ("M-g t" . consult-todo))
+
+;;;; mixed-pitch
+;; Allow mixing of variable pitch and monospaced fonts
+(use-package mixed-pitch
+  :config
+  (setq mixed-pitch-set-height t
+	mixed-pitch-fixed-pitch-faces (delete 'font-latex-sectioning-5-face mixed-pitch-fixed-pitch-faces))
+  :hook
+  (text-mode . mixed-pitch-mode))
 
 ;;;; Monad Stack
 
@@ -870,8 +882,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :ensure
   auctex
   :hook
-  ((LaTeX-mode . reftex-mode)
-   ((LaTeX-mode TeX-mode) . variable-pitch-mode))
+  ((LaTeX-mode . reftex-mode))
   :config
   (setq TeX-view-program-selection '((output-pdf "Sioyek")
 				     (output-html "xdg-open"))
