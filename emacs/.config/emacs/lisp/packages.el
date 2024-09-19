@@ -767,6 +767,11 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :hook
   (eglot-managed-mode . flymake-ruff-load))
 
+;;;; Shell
+;;;;;; emacs-fish
+;; Syntax for fish scripts
+(use-package fish-mode)
+
 ;;; External Tools
 
 ;;;; Git
