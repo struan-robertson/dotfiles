@@ -205,6 +205,14 @@
    :map emacs-lisp-mode-map
    ("C-c C-d" . helpful-at-point)))
 
+;;;; Casual
+;;;;;; casual-isearch
+;; Transient I-Search menu
+(use-package casual-isearch
+  :bind
+  (:map isearch-mode-map
+	("C-o" . casual-isearch-tmenu)))
+
 ;;; Editor
 
 ;;;; avy
