@@ -28,7 +28,8 @@
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
-   '((python-shell-virtualenv-root . "/home/struan/Development/Doctorate/sefa/.venv/")
+   '((python-shell-virtualenv-root . "/home/srobertson/StyleGAN/.venv/")
+     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/sefa/.venv/")
      (citar-bibliography . "biblio.bib")
      (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/dataset-similarities/.venv/")
      (python-shell-process-environment "HSA_OVERRIDE_GFX_VERSION=10.3.0")
