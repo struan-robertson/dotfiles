@@ -56,7 +56,7 @@
   (save-place-mode t)
 
   ;; Use bar cursor
-  (setq-default cursor-type 'bar)
+  (setq-default cursor-type 'box)
   )
 
 
