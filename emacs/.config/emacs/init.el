@@ -57,6 +57,7 @@
  '(avy-lead-face-2 ((t (:background "#b48ead" :foreground "white"))))
  '(bold ((t (:inherit nano-strong :weight normal))))
  '(diff-hl-delete ((t (:background "#BF616A"))))
+ '(dired-broken-symlink ((t (:background "#bf616a" :weight bold))))
  '(eat-term-color-10 ((t (:inherit ansi-color-bright-black :foreground "#a3be8c"))))
  '(eat-term-color-11 ((t (:inherit ansi-color-bright-black :foreground "#ebcb8b"))))
  '(eat-term-color-12 ((t (:inherit ansi-color-bright-black :foreground "#5e81ac"))))

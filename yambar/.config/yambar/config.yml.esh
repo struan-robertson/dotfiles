@@ -5,6 +5,8 @@ bar:
   height: 25
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
   height: 45
+<% elif [ $(hostname) = "oldlaptop" ]; then -%>
+  height: 45
 <% fi -%>
 
   location: top
@@ -17,6 +19,8 @@ bar:
 <% if [ $(hostname) = "arch" ]; then -%>
   font: RobotoMono Nerd Font:pixelsize=20
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
+  font: RobotoMono Nerd Font:pixelsize=32
+<% elif [ $(hostname) = "oldlaptop" ]; then -%>
   font: RobotoMono Nerd Font:pixelsize=32
 <% fi -%>
     
@@ -33,6 +37,8 @@ bar:
                    margin: 5
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
                    margin: 8
+<% elif [ $(hostname) = "oldlaptop" ]; then -%>
+                   margin: 8
 <% fi -%>
 
                    foreground: eceff44d
@@ -44,6 +50,8 @@ bar:
 <% if [ $(hostname) = "arch" ]; then -%>
                      margin: 5
 <% elif [ $(hostname) = "archlaptop" ]; then -%>
+                     margin: 8
+<% elif [ $(hostname) = "oldlaptop" ]; then -%>
                      margin: 8
 <% fi -%>
 
@@ -90,7 +98,7 @@ bar:
 
               - string: {text: "┃", margin: 16}
 
-<% if [ $(hostname) = "archlaptop" ]; then -%>
+<% if [ $(hostname) = "archlaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
     - battery:
         name: BAT0
         poll-interval: 30000
