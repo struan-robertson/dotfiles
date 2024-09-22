@@ -91,9 +91,8 @@ bind <C-x>52 winopen
 bind <C-u><C-x>52 winopen -private
 
 " Open links
-bind g fillcmdline open
-bind <C-u>0g current_url open
-bind <C-u>g fillcmdline tabopen
+bind <C-x><C-f> fillcmdline tabopen
+bind <C-x><C-v> fillcmdline open
 
 " Textfields
 bind --mode=insert <C-d> text.delete_char
