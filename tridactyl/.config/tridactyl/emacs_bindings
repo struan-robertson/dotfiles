@@ -43,7 +43,7 @@ bind --mode=ex <C-r> findnext --reverse
 bind f hint
 bind <C-u>f hint -b
 bind c hint -y
-bind w clipboard yank
+bind <A-w> clipboard yank
 bind --mode=hint <C-g> hint.reset
 bind --mode=hint <C-n> hint.focusBottomHint
 bind --mode=hint <C-p> hint.focusTopHint
