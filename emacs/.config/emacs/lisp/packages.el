@@ -312,7 +312,8 @@
 (use-package mixed-pitch
   :config
   (setq mixed-pitch-set-height t
-	mixed-pitch-fixed-pitch-faces (delete 'font-latex-sectioning-5-face mixed-pitch-fixed-pitch-faces))
+	mixed-pitch-fixed-pitch-faces (delete 'font-latex-sectioning-5-face mixed-pitch-fixed-pitch-faces)
+	mixed-pitch-variable-pitch-cursor nil)
   :hook
   (text-mode . mixed-pitch-mode))
 
