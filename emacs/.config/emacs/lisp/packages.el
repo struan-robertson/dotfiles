@@ -223,7 +223,7 @@
   :bind
   (("C-c C-j" . 'avy-resume)
    ("C-:" . 'avy-goto-char-in-line)
-   ("C-'" . 'avy-goto-char-2)))
+   ("C-;" . 'avy-goto-char-2)))
 
 ;;;; expand-region
 ;; C-= to expand selection intelligently
@@ -549,7 +549,7 @@
 (use-package embark
   :bind
   (("C-." . embark-act)
-   ("C-;" . embark-dwim)
+   ("C-'" . embark-dwim)
    ("C-h B" . embark-bindings)
    :map embark-file-map
    ("S" . sudo-find-file))
