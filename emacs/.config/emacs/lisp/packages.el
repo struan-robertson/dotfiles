@@ -958,7 +958,8 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 ;; Jinx spell checker
 (use-package jinx
   :hook
-  ((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
+  (((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
+   (toml-ts-mode . (lambda () (jinx-mode -1))))
   :bind
   ("M-$" . jinx-correct)
   :config
