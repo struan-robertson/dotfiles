@@ -315,7 +315,8 @@
 	mixed-pitch-fixed-pitch-faces (delete 'font-latex-sectioning-5-face mixed-pitch-fixed-pitch-faces)
 	mixed-pitch-variable-pitch-cursor nil)
   :hook
-  (text-mode . mixed-pitch-mode))
+  ((text-mode . mixed-pitch-mode)
+   (toml-ts-mode . (lambda () (mixed-pitch-mode -1)))))
 
 ;;;; Monad Stack
 
