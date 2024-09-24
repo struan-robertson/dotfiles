@@ -1,0 +1,12 @@
+#+title: My Dotfiles
+
+Requires [[https://github.com/jirutka/esh][esh]], [[https://www.gnu.org/software/make/][make]] and [[https://www.gnu.org/software/stow/][stow]].
+
+- Install all with ~make all~
+- Uninstall all with ~make delete~
+- Install specific folder (i.e. =emacs=) with ~make stow-emacs~
+- Uninstall specific folder with ~make delete-emacs~
+
+=esh= first parses =.esh= template files, then =stow= symlinks files and folders to =$HOME=.
+
+System dirs which should be created rather than symlinked are handled in the =system_dirs= command in the makefile.
