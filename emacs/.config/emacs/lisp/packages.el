@@ -782,6 +782,17 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 ;; Syntax for fish scripts
 (use-package fish-mode)
 
+;;;; Rust
+;;;;;; rust-mode
+;; Official Rust mode
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t))
+
+;;;;;; ob-rust
+;; Rust in org-babel
+(use-package ob-rust)
+
 ;;; External Tools
 
 ;;;; Git

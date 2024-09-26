@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(casual-isearch fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia flymake-ruff eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
+   '(ob-rust rust-mode casual-isearch fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia flymake-ruff eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
      (ruff-flymake :url "https://github.com/cjfuller/ruff-flymake" :branch "main")
@@ -50,13 +50,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-red ((t (:foreground "#bf616a"))))
  '(avy-lead-face ((t (:background "#bf616a" :foreground "white"))))
  '(avy-lead-face-0 ((t (:background "#5e81ac" :foreground "white"))))
  '(avy-lead-face-1 ((t (:background "#d8dee9" :foreground "white"))))
  '(avy-lead-face-2 ((t (:background "#b48ead" :foreground "white"))))
- '(bold ((t (:inherit nano-strong :weight normal))))
- '(diff-hl-delete ((t (:background "#BF616A"))))
  '(dired-broken-symlink ((t (:background "#bf616a" :weight bold))))
  '(eat-term-color-10 ((t (:inherit ansi-color-bright-black :foreground "#a3be8c"))))
  '(eat-term-color-11 ((t (:inherit ansi-color-bright-black :foreground "#ebcb8b"))))
@@ -69,7 +66,6 @@
  '(eat-term-color-8 ((t (:inherit nano-faded))))
  '(eglot-inlay-hint-face ((t (:inherit shadow))))
  '(eros-result-overlay-face ((t (:background "#434c5e" :box (:line-width (1 . -1) :color "#434c5e")))))
- '(error ((t (:foreground "#bf616a"))))
  '(escape-glyph ((t (:foreground "#5e81ac"))))
  '(flymake-error ((t (:underline (:color "#bf616a" :style wave :position nil)))))
  '(flymake-note ((t (:underline (:color "#a3be8c" :style wave :position nil)))))
@@ -91,7 +87,6 @@
  '(jupyter-repl-input-prompt ((t (:foreground "#a3be8c"))))
  '(jupyter-repl-output-prompt ((t (:foreground "#bf616a"))))
  '(jupyter-repl-traceback ((t nil)))
- '(nano-strong ((t (:foreground "#FFFFFF" :weight bold))) t)
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
  '(writegood-duplicates-face ((t (:underline (:color "#b48ead" :style wave :position nil)))))
