@@ -793,6 +793,15 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 ;; Rust in org-babel
 (use-package ob-rust)
 
+;;;; C
+;;;;;; c-ts-mode
+(use-package c-ts-mode
+  :if
+  (treesit-language-available-p 'c)
+  :custom
+  (c-ts-mode-indent-offset 4)
+  (c-ts-mode-indent-style 'linux))
+
 ;;; External Tools
 
 ;;;; Git
