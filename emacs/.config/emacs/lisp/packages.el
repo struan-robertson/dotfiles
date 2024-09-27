@@ -641,9 +641,6 @@
 ;;;;; eglot
 ;; :ensure-system-package doesn't work with python packages as they are not in the PATH
 ;; Requires
-;; python-lsp-server
-;; python-lsp-ruff
-
 (use-package eglot
   :bind
   (:map eglot-mode-map
@@ -651,28 +648,14 @@
 	("C-c C-e" . eglot-rename)
 	("C-c C-f" . eglot-format-buffer))
   :hook
-  (((python-base-mode c-ts-mode c++-ts-mode) . eglot-ensure))
+  (((python-base-mode c-ts-mode) . eglot-ensure))
   :config
   (setq-default eglot-workspace-configuration
-		'(:basedpyright (:disableOrganizeImports t))
-		;; '(:pylsp (:plugins (
-		;; 		    :ruff (:enabled t
-		;; 				    :line_length 88
-		;; 				    :target_version "py38"
-		;; 				    :extendSelect ["ALL"]
-		;; 				    :extendIgnore ["ANN" ;; Type hinting, leave for mypy
-		;; 						   "PGH003" ;; Allow for #type: ignore instead of specific types
-		;; 						   "FIX" ;; fixme should be handled by emacs not ruff
-		;; 						   "TD" ;; same with todo
-		;; 						   ]
-		;; 				    :format ["I"]
-		;; 				    ))))
-		)
+		'(:basedpyright (:disableOrganizeImports t)))
   (setq enable-remote-dir-locals t)
   (add-to-list 'eglot-server-programs
 	       '((python-mode python-ts-mode)
-		 "basedpyright-langserver" "--stdio"
-		 (c-ts-mode c++-ts-mode) "clangd"))
+		 "basedpyright-langserver" "--stdio"))
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
@@ -683,10 +666,11 @@
     "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
 FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
     (pcase-let ((`(,command . ,_) args))
-      (if (and (member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")) (derived-mode-p 'python-base-mode))
+      (if (and (derived-mode-p 'python-base-mode)(member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")))
 	  (if python-shell-virtualenv-root
 	      (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args))
-	    (apply fn args)))))
+	    (apply fn args))
+	(apply fn args))))
 
   (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
   )
