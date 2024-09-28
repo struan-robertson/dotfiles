@@ -785,7 +785,12 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (treesit-language-available-p 'c)
   :custom
   (c-ts-mode-indent-offset 4)
-  (c-ts-mode-indent-style 'linux))
+  (c-ts-mode-indent-style 'linux)
+  :init
+  ;; Remap the standard C/C++ modes
+  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
 
 ;;; External Tools
 
