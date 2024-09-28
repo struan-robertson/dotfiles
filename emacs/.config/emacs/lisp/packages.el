@@ -790,7 +790,9 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   ;; Remap the standard C/C++ modes
   (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
   (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
+  (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
+  (add-to-list 'org-src-lang-modes '("C" . c-ts))
+  (add-to-list 'org-src-lang-modes '("C++" . c++-ts)))
 
 ;;; External Tools
 
