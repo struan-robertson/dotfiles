@@ -699,7 +699,10 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :ensure-system-package
   jupyterlab
   :init
+  ;; TODO extract extra languages somehow from jupyter settings
   (setq org-babel-load-languages '((emacs-lisp . t)
+				   (C . t)
+				   (rust . t)
 				   (python . t)
 				   (jupyter . t)))
   (if (boundp 'recentf-exclude)
@@ -786,13 +789,17 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :custom
   (c-ts-mode-indent-offset 4)
   (c-ts-mode-indent-style 'linux)
+  ;; :config
+  ;; ;; Org mode compat
+  ;; (setq-default c-basic-offset 4)
+  ;; (add-to-list 'c-default-style '(c-mode . "linux"))
   :init
-  ;; Remap the standard C/C++ modes
+  ;; Remap the standard C mode
+  ;; If adding C++ modes, need to also add to org-babel-load-languages currently declared in jupyter settings
   (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode))
-  (add-to-list 'org-src-lang-modes '("C" . c-ts))
-  (add-to-list 'org-src-lang-modes '("C++" . c++-ts)))
+  (add-to-list 'org-src-lang-modes '("C" . c-ts)))
+
+
 
 ;;; External Tools
 
