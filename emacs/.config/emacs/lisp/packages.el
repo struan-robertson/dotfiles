@@ -924,7 +924,29 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	TeX-auto-save t
 	TeX-parse-self t
 	TeX-source-correlate-mode t
-	TeX-source-correlate-start-server t))
+	TeX-source-correlate-start-server t)
+  ;; Word count that actually works
+  (defun latex-word-count ()
+    (interactive)
+    (let ((file-name
+	   ;; If region selected then count words in that
+	   (if (use-region-p)
+	       (let ((temp-file (make-temp-file "emacs-temp-"))
+		     (selected-text (buffer-substring-no-properties (region-beginning) (region-end))))
+		 (with-temp-file temp-file
+		   (insert selected-text))
+		 temp-file)
+	     (if (or (derived-mode-p 'latex-mode)
+		     (derived-mode-p 'tex-mode))
+		 (buffer-file-name)
+	       (progn
+		 (message "Not in LaTeX or TeX buffer.")
+		 nil)))))
+      (if file-name
+	  (shell-command (concat "/usr/bin/texcount "
+				 "-inc "
+				 (shell-quote-argument (expand-file-name file-name))))))))
+
 
 ;;;; openwith
 (use-package openwith
