@@ -708,6 +708,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (setq org-babel-load-languages '((emacs-lisp . t)
 				   (C . t)
 				   (rust . t)
+				   (racket . t)
 				   (python . t)
 				   (jupyter . t)))
   (if (boundp 'recentf-exclude)
@@ -805,6 +806,22 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (add-to-list 'org-src-lang-modes '("C" . c-ts)))
 
 
+
+;;;; Lisp
+
+;;;;;; Racket
+
+;;;;;;;; racket-mode
+;; Going to be useful when going through SICP
+;; Install racket SICP lang with ~raco pkg install sicp~ after installing racket
+(use-package racket-mode)
+
+;;;;;;;; ob-racket
+;; To use racket sicp in code blocks, use ~#+begin_src racket :lang sicp~
+(use-package ob-racket
+  :vc
+  (ob-racket :url "https://github.com/hasu/emacs-ob-racket"
+	     :branch "master"))
 
 ;;; External Tools
 
