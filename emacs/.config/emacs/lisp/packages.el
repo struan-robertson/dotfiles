@@ -185,6 +185,11 @@
   :config
   (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
 
+;;;;; info
+(use-package info
+  :config
+  (add-to-list 'Info-directory-list (expand-file-name "~/.local/share/info/")))
+
 ;;; Help
 
 ;;;; which-key
