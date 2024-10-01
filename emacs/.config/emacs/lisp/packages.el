@@ -929,6 +929,17 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	eshell-prompt-regexp ".* λ "))
 
 
+;;;; IRC
+;;;;;; circe
+
+(use-package circe
+  :custom
+  (circe-network-optionsp
+   '(("Libera Chat"
+      :tls t
+      :nick "StruanR"
+      :channels ("#emacs" "#emacs-til" "#archlinux-testing")))))
+
 ;;; Academic
 
 ;;;; auctex

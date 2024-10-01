@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(ob-rust rust-mode casual-isearch fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia flymake-ruff eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
+   '(circe ob-rust rust-mode casual-isearch fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia flymake-ruff eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
      (ruff-flymake :url "https://github.com/cjfuller/ruff-flymake" :branch "main")
@@ -54,6 +54,9 @@
  '(avy-lead-face-0 ((t (:background "#5e81ac" :foreground "white"))))
  '(avy-lead-face-1 ((t (:background "#d8dee9" :foreground "white"))))
  '(avy-lead-face-2 ((t (:background "#b48ead" :foreground "white"))))
+ '(circe-highlight-nick-face ((t (:foreground "#8FBCBB" :weight bold))))
+ '(circe-prompt-face ((t (:background "#5E81AC" :foreground "#2E3440" :weight bold))))
+ '(circe-server-face ((t (:foreground "#81A1C1"))))
  '(dired-broken-symlink ((t (:background "#bf616a" :weight bold))))
  '(eat-term-color-10 ((t (:inherit ansi-color-bright-black :foreground "#a3be8c"))))
  '(eat-term-color-11 ((t (:inherit ansi-color-bright-black :foreground "#ebcb8b"))))
@@ -87,6 +90,8 @@
  '(jupyter-repl-input-prompt ((t (:foreground "#a3be8c"))))
  '(jupyter-repl-output-prompt ((t (:foreground "#bf616a"))))
  '(jupyter-repl-traceback ((t nil)))
+ '(lui-button-face ((t (:foreground "#88c0d0" :underline t))))
+ '(lui-time-stamp-face ((t (:foreground "#5E81AC" :weight bold))))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
  '(writegood-duplicates-face ((t (:underline (:color "#b48ead" :style wave :position nil)))))
