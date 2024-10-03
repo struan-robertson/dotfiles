@@ -940,6 +940,19 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
       :nick "StruanR"
       :channels ("#emacs" "#emacs-til" "#archlinux-testing")))))
 
+;;;; Accounting
+
+(use-package ledger-mode
+  :config
+  (defun insert-pound-sterling ()
+    "Insert a pound sterling symbol (£) at the current cursor position."
+    (interactive)
+    (insert "£"))
+
+  :bind
+  (:map ledger-mode-map
+	("C-c C-4" . insert-pound-sterling)))
+
 ;;; Academic
 
 ;;;; auctex
