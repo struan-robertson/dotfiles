@@ -829,7 +829,9 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 
 ;;;;; magit
 ;; The best git porcelain
-(use-package magit)
+(use-package magit
+  :config
+  (setq magit-keep-region-overlay t))
 
 ;;;;; diff-hl
 ;; Highlight git diff in gutter
