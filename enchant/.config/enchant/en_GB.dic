@@ -55,6 +55,7 @@ misalignments
 periodogram
 timeframe
 invariants
+quantised
 codebook
 encodings
 Ebay
@@ -69,3 +70,4 @@ softmax
 overfitting
 ResNet
 backpropagation
+
