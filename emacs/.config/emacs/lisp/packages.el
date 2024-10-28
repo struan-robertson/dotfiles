@@ -970,7 +970,10 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	TeX-auto-save t
 	TeX-parse-self t
 	TeX-source-correlate-mode t
-	TeX-source-correlate-start-server t)
+	TeX-source-correlate-start-server t
+	TeX-engine 'luatex
+	LaTeX-flymake-chktex-options '("-n1") ;; Disable warning 1 , "Command terminated with a space"
+	) 
   ;; Word count that actually works
   (defun latex-word-count ()
     (interactive)
