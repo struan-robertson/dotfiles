@@ -971,11 +971,14 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 				     (output-html "xdg-open"))
 	TeX-auto-save t
 	TeX-parse-self t
+	TeX-auto-regexp-list 'TeX-auto-full-regexp-list
+	TeX-auto-parse-length 999999
 	TeX-source-correlate-mode t
 	TeX-source-correlate-start-server t
 	TeX-engine 'luatex
 	LaTeX-flymake-chktex-options '("-n1" "-n24") ;; Disable warnings 1 and 24
-	) 
+	)
+  (setq-default TeX-master "main") 
   ;; Word count that actually works
   (defun latex-word-count ()
     (interactive)

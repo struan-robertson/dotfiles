@@ -79,6 +79,7 @@
  '(font-latex-bold-face ((t (:inherit bold))))
  '(font-latex-italic-face ((t (:inherit italic :foreground "#a3be8c"))))
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#ECEFF4" :weight normal))))
+ '(font-latex-sedate-face ((t (:foreground "#81a1c1"))))
  '(font-latex-string-face ((t (:foreground "#d8dee9"))))
  '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a"))))
  '(hi-aquamarine ((t (:background "#8fbcbb" :foreground "#2e3440"))))
