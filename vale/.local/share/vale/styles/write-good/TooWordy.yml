@@ -3,7 +3,6 @@ message: "'%s' is too wordy."
 ignorecase: true
 level: warning
 tokens:
-  - a number of
   - accede to
   - adjacent to
   - adversely impact
