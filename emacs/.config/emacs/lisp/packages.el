@@ -976,7 +976,7 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
 	TeX-source-correlate-mode t
 	TeX-source-correlate-start-server t
 	TeX-engine 'luatex
-	LaTeX-flymake-chktex-options '("-n1" "-n24") ;; Disable warnings 1 and 24
+	LaTeX-flymake-chktex-options '("-n1" "-n24" "-n35") ;; Disable warnings 
 	)
   (setq-default TeX-master "main") 
   ;; Word count that actually works
