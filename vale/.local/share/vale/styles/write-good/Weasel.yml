@@ -3,7 +3,6 @@ message: "'%s' is a weasel word!"
 ignorecase: true
 level: warning
 tokens:
-  - clearly
   - completely
   - exceedingly
   - excellent
