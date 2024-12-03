@@ -56,9 +56,40 @@
   (save-place-mode t)
 
   ;; Use bar cursor
-  (setq-default cursor-type 'box)
-  )
+  (setq-default cursor-type 'box))
 
+;;;;; bookmark
+;; Built in bookmark package
+(use-package bookmark
+  :custom
+  (bookmark-save-flag 1)  ;; Save bookmark list after every change
+  :hook
+  (bookmark-bmenu-mode . hl-line-mode))
+
+;;;;; ibuffer
+;; Built in ibuffer package
+(use-package ibuffer
+  :hook
+  (ibuffer-mode . ibuffer-auto-mode)
+  (ibuffer-mode . hl-line-mode)
+  :bind
+  (:map ibuffer-mode-map
+	("{"   . ibuffer-backwards-next-marked)
+	("}"   . ibuffer-forward-next-marked)
+	("["   . ibuffer-backward-filter-group)
+	("]"   . ibuffer-forward-filter-group)
+	("$"   . ibuffer-toggle-filter-group)))
+
+;;;;; info
+;; Built in info reader
+(use-package info
+  :hook
+  (Info-mode . hl-line-mode)
+  :bind
+  (:map Info-mode-map
+	("M-[" . Info-history-back)
+	("M-]" . Info-history-forward)
+	("B" . bookmark-set)))
 
 ;;;;; exec-path-from-shell
 ;; Load PATH from fish config
@@ -115,17 +146,17 @@
                                              (if (window-system frame)
 						 (unless my:theme-window-loaded
                                                    (if my:theme-terminal-loaded
-                                                       (enable-theme my:theme)
+						       (enable-theme my:theme)
                                                      (load-theme my:theme t))
                                                    (setq my:theme-window-loaded t)
                                                    )
-                                               (unless my:theme-terminal-loaded
+					       (unless my:theme-terminal-loaded
 						 (if my:theme-window-loaded
                                                      (enable-theme my:theme)
                                                    (load-theme my:theme t))
 						 (setq my:theme-terminal-loaded t)
 						 )
-                                               )))
+					       )))
 
     (progn
       (load-theme my:theme t)
@@ -149,8 +180,8 @@
             (edebug-safe-prin1-to-string previous-value))))
 
   (advice-add #'edebug-compute-previous-result
-              :around
-              #'adviced:edebug-compute-previous-result)
+	      :around
+	      #'adviced:edebug-compute-previous-result)
   
   (defun adviced:edebug-previous-result (_ &rest r)
     "Adviced `edebug-previous-result'."
@@ -159,8 +190,8 @@
       :duration eros-eval-result-duration))
   
   (advice-add #'edebug-previous-result
-              :around
-              #'adviced:edebug-previous-result)
+	      :around
+	      #'adviced:edebug-previous-result)
 
   (setq eval-expression-print-length nil
 	eval-expression-print-level nil
@@ -211,12 +242,111 @@
    ("C-c C-d" . helpful-at-point)))
 
 ;;;; Casual
-;;;;;; casual-isearch
-;; Transient I-Search menu
+;;;;;; casual
+;; Transient menus to help with built in Emacs commands
+
+;; General Editing
+(use-package casual
+  :bind*
+  (("M-o" . casual-editkit-main-tmenu)))
+
+;; I-Search
 (use-package casual-isearch
-  :bind
+  :ensure nil
+  :after
+  isearch
+  :bind*
   (:map isearch-mode-map
 	("C-o" . casual-isearch-tmenu)))
+
+;; Org-agenda
+(use-package casual-agenda
+  :ensure nil
+  :after
+  org-agenda
+  :bind*
+  (:map org-agenda-mode-map
+	("C-o" . casual-agenda-tmenu)
+	("M-j" . org-agenda-clock-goto)
+	("J"   . bookmark-jump)))
+
+;; Bookmark
+(use-package casual-bookmark
+  :ensure nil
+  :after
+  bookmark
+  :bind*
+  (:map bookmark-bmenu-mode-map
+	("C-o" . casual-bookmarks-tmenu)
+	("J"   . bookmark-jump)))
+
+;; Calc
+(use-package casual-calc
+  :ensure nil
+  :after
+  calc
+  :bind*
+  (:map calc-mode-map
+	("C-o" . casual-calc-tmenu)
+	:map calc-alg-map
+	("C-o" . casual-calc-tmenu)))
+
+;; Calendar
+(use-package casual-calendar
+  :ensure nil
+  :after
+  calendar
+  :bind*
+  (:map calendar-mode-map
+	("C-o" . casual-calendar)))
+
+;; Dired
+(use-package casual-dired
+  :ensure nil
+  :after
+  dired
+  :bind*
+  (:map dired-mode-map
+	("C-o" . casual-dired-tmenu)
+	("s"   . casual-dired-sort-by-tmenu)))
+
+;; I-Buffer
+(use-package casual-ibuffer
+  :ensure nil
+  :after
+  ibuffer
+  :bind*
+  (:map ibuffer-mode-map
+	("C-o" . casual-ibuffer-tmenu)
+	("F"   . casual-ibuffer-filter-tmenu)
+	("s"   . casual-ibuffer-sortby)))
+
+;; Info
+(use-package casual-info
+  :ensure nil
+  :after
+  info
+  :bind*
+  (:map Info-mode-map
+	("C-o" . casual-info-tmenu)
+	("p" . casual-info-browse-backward-paragraph)
+	("n" . casual-info-browse-forward-paragraph)))
+
+(use-package casual-re-builder
+  :ensure nil
+  :after
+  re-builder
+  :bind*
+  (:map reb-mode-map
+	("C-o" . casual-re-builder-tmenu)
+	:map reb-lisp-mode-map
+	("C-o" . casual-re-builder-tmenu)))
+
+;;;;; casual-avy
+;; casual transient menu for avy commands
+(use-package casual-avy
+  :bind
+  ("M-s a" . casual-avy-tmenu))
 
 ;;; Editor
 
@@ -284,7 +414,7 @@
 	)
   ;; Set min popup height to 1/3 of frame height
   (setq popper-window-height (lambda (win)
-                               (fit-window-to-buffer
+			       (fit-window-to-buffer
                                 win
                                 (floor (frame-height) 3)
 				(floor (frame-height) 3))))
@@ -419,7 +549,7 @@
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
-              ("M-A" . marginalia-cycle))
+	      ("M-A" . marginalia-cycle))
 
   ;; The :init section is always executed.
   :init
@@ -564,7 +694,7 @@
 
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+	       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none))))
   :config
