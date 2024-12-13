@@ -18,6 +18,7 @@ system_dirs:
 	@mkdir -p $$HOME/.local/share/flatpak/overrides
 	@mkdir -p $$HOME/.local/share/icons
 	@mkdir -p $$HOME/.local/share/themes
+	@mkdir -p $$HOME/.local/share/applications
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
