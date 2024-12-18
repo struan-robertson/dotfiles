@@ -903,17 +903,12 @@ If SETPATH is non-nil, temporarily modify PATH environment variable."
 	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs")
   (indent-tabs-mode nil)
 
-  (defun my/run-python-advice (fn &rest args)
-    (if (derived-mode-p 'python-base-mode)
-	(when-let ((venv (my/detect-venv default-directory)))
-	  (my/execute-with-venv-vars
-	   (apply fn args)
-	   venv
-	   t))
+  ;; python.el has its own code for setting exec path etc., I just need to set python-shell-virtualenv-root.
+  (defun my/python-wrap-venv-advice (fn &rest args)
+    (let ((python-shell-virtualenv-root (my/detect-venv default-directory)))
       (apply fn args)))
-
-  (advice-add 'run-python :around #'my/run-python-advice))
-
+  
+  (advice-add 'run-python :around #'my/python-wrap-venv-advice))
 
 
 ;;;;; eshell-venv
