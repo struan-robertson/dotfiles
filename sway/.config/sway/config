@@ -15,7 +15,7 @@ set $menu tofi-drun --terminal foot | xargs swaymsg exec --
 ### Output configuration
 output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
 # Use VRR on desktop widescreen 
-#output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
+output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
 # Smaller scale on oldlaptop
 output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.6
 
