@@ -772,6 +772,30 @@
 (global-set-key (kbd "M-<tab>") 'my/conditional-big-toggle)
 (global-set-key (kbd "C-<tab>") 'my/conditional-small-toggle)
 
+(defun my/detect-venv (dir)
+  "Check if a .venv directory exists either at project root of DIR or at DIR.
+If so, return path to .venv/bin"
+  (let
+      ;; Expands to just $PWD/.venv/bin if not in a git repo
+      ((venv (expand-file-name ".venv" (vc-git-root dir))))
+    (if (file-directory-p venv)
+	venv
+      nil)))
+
+(defmacro my/execute-with-venv-vars (sexp venv setpath)
+  "Execute SEXP with virtual environment at VENV.
+If SETPATH is non-nil, temporarily modify PATH environment variable."
+  `(let* ((venv-bin (file-name-concat ,venv "bin"))
+          (exec-path (cons venv-bin exec-path))
+          (python-shell-virtualenv-root ,venv))
+     (if (not ,setpath)
+         ,sexp
+       (let ((old-path (getenv "PATH")))
+         (unwind-protect
+             (progn
+               (setenv "PATH" (concat venv-bin path-separator old-path))
+               ,sexp)
+           (setenv "PATH" old-path))))))
 
 ;;;;; eglot
 ;; :ensure-system-package doesn't work with python packages as they are not in the PATH
@@ -797,18 +821,16 @@
 	eldoc-echo-area-use-multiline-p nil
 	eldoc-idle-delay 1.0)
   
-  (defun my/eglot--executable-find-advice (fn &rest args)
-    "If `python-base-mode' is active and `python-shell-virtualenv-root' bound, search there first for lsp servers.
-FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find'."
-    (pcase-let ((`(,command . ,_) args))
-      (if (and (derived-mode-p 'python-base-mode)(member command '("pylsp" "pyls" "pyright-langserver" "jedi-language-server" "ruff-lsp" "python" "basedpyright-langserver")))
-	  (if python-shell-virtualenv-root
-	      (or (my/executable-find-dir command (list (expand-file-name "bin" python-shell-virtualenv-root)) t) (apply fn args))
-	    (apply fn args))
-	(apply fn args))))
+  (defun my/eglot--connect-advice (fn &rest args)
+    (if (derived-mode-p 'python-base-mode)
+	(when-let ((venv (my/detect-venv default-directory)))
+	  (my/execute-with-venv-vars
+	   (apply fn args)
+	   venv
+	   t))
+      (apply fn args)))
 
-  (advice-add 'eglot--executable-find :around #'my/eglot--executable-find-advice)
-  )
+  (advice-add 'eglot--connect :around #'my/eglot--connect-advice))
 
 ;;;;; eglot-booster
 ;; Boost emacs using emacs-lsp-booster
@@ -818,7 +840,8 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (eglot-booster :url "https://github.com/jdtsmith/eglot-booster"
 		 :branch "main")
   :after eglot
-  :config (eglot-booster-mode))
+  :config (eglot-booster-mode)
+  )
 
 ;;;;; jupyter
 (use-package org-src
@@ -878,11 +901,18 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   :config
   (setq python-shell-interpreter "ipython"
 	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs")
-  (indent-tabs-mode nil))
+  (indent-tabs-mode nil)
 
+  (defun my/run-python-advice (fn &rest args)
+    (if (derived-mode-p 'python-base-mode)
+	(when-let ((venv (my/detect-venv default-directory)))
+	  (my/execute-with-venv-vars
+	   (apply fn args)
+	   venv
+	   t))
+      (apply fn args)))
 
-
-
+  (advice-add 'run-python :around #'my/run-python-advice))
 
 
 
@@ -895,11 +925,34 @@ FN is `eglot--executable-find', ARGS is the arguments to `eglot--executable-find
   (eshell-mode . eshell-venv-mode)
   )
 
-
 ;;;;; flymake-ruff
 (use-package flymake-ruff
-  :hook
-  (eglot-managed-mode . flymake-ruff-load))
+  :config
+
+  (defun my/flymake-ruff--check-buffer-closure (venv)
+    (lambda ()
+      (my/execute-with-venv-vars
+       (flymake-ruff--check-buffer)
+       venv
+       nil)))
+
+  (defun my/flymake-ruff--run-checker-closure (venv)
+    (lambda (report-fn &rest _args)
+      ;; Execute the closure and pass its result to report-fn
+      (funcall report-fn (funcall (my/flymake-ruff--check-buffer-closure venv)))))
+  
+  (defun my/flymake-ruff-load-advice ()
+    "Load hook for the current buffer to tell flymake to run checker."
+    (interactive)
+    (when (derived-mode-p 'python-mode 'python-ts-mode)
+      (if-let ((venv (my/detect-venv default-directory)))
+	  (add-hook 'flymake-diagnostic-functions (my/flymake-ruff--run-checker-closure venv) nil t)
+	(add-hook 'flymake-diagnostic-functions #'flymake-ruff--run-checker nil t))
+      ))
+
+  (advice-add 'flymake-ruff-load :override #'my/flymake-ruff-load-advice)
+
+  (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
 
 ;;;; Shell
 ;;;;;; emacs-fish
