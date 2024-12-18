@@ -990,21 +990,6 @@ If SETPATH is non-nil, temporarily modify PATH environment variable."
 
 
 
-;;;; Lisp
-
-;;;;;; Racket
-
-;;;;;;;; racket-mode
-;; Going to be useful when going through SICP
-;; Install racket SICP lang with ~raco pkg install sicp~ after installing racket
-(use-package racket-mode)
-
-;;;;;;;; ob-racket
-;; To use racket sicp in code blocks, use ~#+begin_src racket :lang sicp~
-(use-package ob-racket
-  :vc
-  (ob-racket :url "https://github.com/hasu/emacs-ob-racket"
-	     :branch "master"))
 
 ;;; External Tools
 
