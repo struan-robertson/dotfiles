@@ -18,7 +18,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(ob-racket ledger-mode circe ob-rust rust-mode fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia flymake-ruff eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
+   '(flymake-ruff ledger-mode circe ob-rust rust-mode fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
  '(package-vc-selected-packages
    '((flymake-hledger :url "https://github.com/DamienCassou/flymake-hledger/" :branch "main")
      (eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
@@ -29,7 +29,8 @@
      (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
      (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
-   '((python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa/.venv/")
+   '((python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa-gui/.venv/")
+     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa/.venv/")
      (python-shell-virtualenv-root . "/home/srobertson/santa/.venv/")
      (python-shell-virtualenv-root . "/home/srobertson/StyleGAN/.venv/")
      (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/sefa/.venv/")
