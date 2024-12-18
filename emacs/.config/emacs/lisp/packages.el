@@ -782,20 +782,23 @@ If so, return path to .venv/bin"
 	venv
       nil)))
 
-(defmacro my/execute-with-venv-vars (sexp venv setpath)
+(defmacro my/execute-with-venv-vars (sexp venv setenv)
   "Execute SEXP with virtual environment at VENV.
-If SETPATH is non-nil, temporarily modify PATH environment variable."
+If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variables."
   `(let* ((venv-bin (file-name-concat ,venv "bin"))
           (exec-path (cons venv-bin exec-path))
           (python-shell-virtualenv-root ,venv))
-     (if (not ,setpath)
+     (if (not ,setenv)
          ,sexp
        (let ((old-path (getenv "PATH")))
          (unwind-protect
              (progn
                (setenv "PATH" (concat venv-bin path-separator old-path))
+	       (setenv "VIRTUAL_ENV" ,venv)
                ,sexp)
-           (setenv "PATH" old-path))))))
+           (progn
+	     (setenv "PATH" old-path)
+	     (setenv "VIRTUAL_ENV" nil)))))))
 
 ;;;;; eglot
 ;; :ensure-system-package doesn't work with python packages as they are not in the PATH
