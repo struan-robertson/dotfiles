@@ -1,5 +1,7 @@
 ;; early-init.el -*- lexical-binding: t; -*-
 
+;; Disable package.el
+(setq package-enable-startup nil)
 ;; Disable the toolbar
 (tool-bar-mode -1)
 ;; Disable the scrollbar

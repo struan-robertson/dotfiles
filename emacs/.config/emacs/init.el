@@ -1,8 +1,48 @@
 (add-to-list 'load-path "~/.config/emacs/lisp")
-
 ;;; Packages
 
+;;;;; elpaca
+(defvar elpaca-installer-version 0.8)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
+
 (load "packages")
+
 ;;; Keybindings
 (load "keybindings")
 
@@ -17,17 +57,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
- '(package-selected-packages
-   '(flymake-ruff ledger-mode circe ob-rust rust-mode fish-mode powerthesaurus magit mixed-pitch openwith avy apheleia eglot-booster ruff-flymake consult-todo diff-hl persistent-scratch eros citar-embark embark-consult embark wgrep ibuffer-vc cape consult vundo flymake-vale outli treesit-fold virtualenvwrapper fish-completion eshell-toggle csv-mode treesit-auto helpful use-package-ensure-system-package vertico orderless corfu auctex eat which-key nano-theme expand-region no-littering vc-use-package))
- '(package-vc-selected-packages
-   '((flymake-hledger :url "https://github.com/DamienCassou/flymake-hledger/" :branch "main")
-     (eglot-booster :url "https://github.com/jdtsmith/eglot-booster" :branch "main")
-     (ruff-flymake :url "https://github.com/cjfuller/ruff-flymake" :branch "main")
-     (fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion" :branch "master")
-     (eshell-toggle :url "https://github.com/4DA/eshell-toggle" :branch "master")
-     (ts-fold :url "https://github.com/emacs-tree-sitter/ts-fold" :branch "master")
-     (nano-theme :url "https://github.com/rougier/nano-theme" :branch "master")
-     (vc-use-package :vc-backend Git :url "https://github.com/slotThe/vc-use-package")))
  '(safe-local-variable-values
    '((python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa-gui/.venv/")
      (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa/.venv/")

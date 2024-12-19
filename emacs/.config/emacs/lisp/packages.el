@@ -1,25 +1,31 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Package Manmagement Configuration
-
-;; Replace with built in at Emacs 30
-(unless (package-installed-p 'vc-use-package)
-  (package-vc-install "https://github.com/slotThe/vc-use-package"))
+;; ;;; Package Manmagement Configuration
 (setopt use-package-always-ensure t)
-(require 'vc-use-package)
 
-;; Allows for ensuring a system package is present and installing if not
-(use-package use-package-ensure-system-package)
+;; ;; Allows for ensuring a system package is present and installing if not
+;; (use-package use-package-ensure-system-package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")
-			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;;                          ("org" . "https://orgmode.org/elpa/")
+;;                          ("gnu" . "https://elpa.gnu.org/packages/")
+;; 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+(elpaca elpaca-use-package
+  (elpaca-use-package-mode)
+  (setq elpaca-use-package-by-default t))
+
+;; Block until use-package-ensure-system-package has been installed
+(use-package use-package-ensure-system-package
+  :ensure nil
+  :demand t)
 
 ;;; Emacs Configuration
 
 ;;;;; emacs
 (use-package emacs
+  :ensure
+  nil
   :init
 
   ;; Do not allow the cursor in the minibuffer prompt
@@ -55,12 +61,13 @@
   ;; Remember location in file
   (save-place-mode t)
 
-  ;; Use bar cursor
+  ;; Use box cursor
   (setq-default cursor-type 'box))
 
 ;;;;; bookmark
 ;; Built in bookmark package
 (use-package bookmark
+  :ensure nil
   :custom
   (bookmark-save-flag 1)  ;; Save bookmark list after every change
   :hook
@@ -69,6 +76,7 @@
 ;;;;; ibuffer
 ;; Built in ibuffer package
 (use-package ibuffer
+  :ensure nil
   :hook
   (ibuffer-mode . ibuffer-auto-mode)
   (ibuffer-mode . hl-line-mode)
@@ -83,6 +91,7 @@
 ;;;;; info
 ;; Built in info reader
 (use-package info
+  :ensure nil
   :hook
   (Info-mode . hl-line-mode)
   :bind
@@ -109,14 +118,16 @@
 	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
 
 ;;;;; savehist
+;; Built in
 (use-package savehist
+  :ensure nil
   :init
   (savehist-mode))
 
 ;;;;; recentf
+;; Built in
 (use-package recentf
-  ;; :bind
-  ;; ("C-x C-r" . recentf-open)
+  :ensure nil
   :init
   (setq recentf-max-menu-items 15
 	recentf-max-saved-items 100)
@@ -125,45 +136,36 @@
       (setq recentf-exclude (append recentf-exclude '("bookmark-default.el")))
     (setq recentf-exclude '("bookmark-default.el")))
   :hook
-  (after-init . recentf-mode))
+  (elpaca-after-init . recentf-mode))
+
+;;;;; transient
+;; Built in version is too low for upstream packages that depend on it
+(use-package transient)
+
+;; ;;;;; eldoc
+;; ;; Built in version is too low for upstream packages that depend on it
+;;  (use-package eldoc
+;;     :preface
+;;     (unload-feature 'eldoc t)
+;;     (setq custom-delayed-init-variables '())
+;;     (defvar global-eldoc-mode nil)
+;;     :config
+;;     (global-eldoc-mode))
+
+;; ;;;;; jsonrpc
+;; ;; Built in version is too low for upstream packages that depend on it
+;; (use-package jsonrpc)
+
+
 
 ;;;;; nano-theme
 
 ;; Nano theme 
 (use-package nano-theme
-  :vc
-  (nano-theme :url "https://github.com/rougier/nano-theme"
-	      :branch "master") ;; Remember that when switching to emacs 30, need to specify ":rev newest"
+  :ensure
+  (:host github :repo "rougier/nano-theme" :branch "master")
   :config
-  (load-theme 'nano-dark t)
-  ;; Fix theme not being set on terminal clients
-  (defvar my:theme 'nano-dark)
-  (defvar my:theme-window-loaded nil)
-  (defvar my:theme-terminal-loaded nil)
-  (if (daemonp)
-      (add-hook 'after-make-frame-functions(lambda (frame)
-                                             (select-frame frame)
-                                             (if (window-system frame)
-						 (unless my:theme-window-loaded
-                                                   (if my:theme-terminal-loaded
-						       (enable-theme my:theme)
-                                                     (load-theme my:theme t))
-                                                   (setq my:theme-window-loaded t)
-                                                   )
-					       (unless my:theme-terminal-loaded
-						 (if my:theme-window-loaded
-                                                     (enable-theme my:theme)
-                                                   (load-theme my:theme t))
-						 (setq my:theme-terminal-loaded t)
-						 )
-					       )))
-
-    (progn
-      (load-theme my:theme t)
-      (if (display-graphic-p)
-          (setq my:theme-window-loaded t)
-	(setq my:theme-terminal-loaded t)))))
-
+  (load-theme 'nano-dark t))
 
 ;;;;; eros
 ;; Display eval result (including for debug) in popup instead of echo area.
@@ -207,7 +209,9 @@
   :demand t
   :config
   (persistent-scratch-setup-default))
+
 ;;;;; tramp
+;; Use system ssh settings and search .local paths on remote
 (use-package tramp-sh
   :ensure
   nil
@@ -216,10 +220,6 @@
   :config
   (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
 
-;;;;; info
-(use-package info
-  :config
-  (add-to-list 'Info-directory-list (expand-file-name "~/.local/share/info/")))
 
 ;;; Help
 
@@ -247,7 +247,7 @@
 
 ;; General Editing
 (use-package casual
-  :bind*
+  :bind
   (("M-o" . casual-editkit-main-tmenu)))
 
 ;; I-Search
@@ -255,7 +255,7 @@
   :ensure nil
   :after
   isearch
-  :bind*
+  :bind
   (:map isearch-mode-map
 	("C-o" . casual-isearch-tmenu)))
 
@@ -264,7 +264,7 @@
   :ensure nil
   :after
   org-agenda
-  :bind*
+  :bind
   (:map org-agenda-mode-map
 	("C-o" . casual-agenda-tmenu)
 	("M-j" . org-agenda-clock-goto)
@@ -275,7 +275,7 @@
   :ensure nil
   :after
   bookmark
-  :bind*
+  :bind
   (:map bookmark-bmenu-mode-map
 	("C-o" . casual-bookmarks-tmenu)
 	("J"   . bookmark-jump)))
@@ -285,7 +285,7 @@
   :ensure nil
   :after
   calc
-  :bind*
+  :bind
   (:map calc-mode-map
 	("C-o" . casual-calc-tmenu)
 	:map calc-alg-map
@@ -296,7 +296,7 @@
   :ensure nil
   :after
   calendar
-  :bind*
+  :bind
   (:map calendar-mode-map
 	("C-o" . casual-calendar)))
 
@@ -305,7 +305,7 @@
   :ensure nil
   :after
   dired
-  :bind*
+  :bind
   (:map dired-mode-map
 	("C-o" . casual-dired-tmenu)
 	("s"   . casual-dired-sort-by-tmenu)))
@@ -315,7 +315,7 @@
   :ensure nil
   :after
   ibuffer
-  :bind*
+  :bind
   (:map ibuffer-mode-map
 	("C-o" . casual-ibuffer-tmenu)
 	("F"   . casual-ibuffer-filter-tmenu)
@@ -326,7 +326,7 @@
   :ensure nil
   :after
   info
-  :bind*
+  :bind
   (:map Info-mode-map
 	("C-o" . casual-info-tmenu)
 	("p" . casual-info-browse-backward-paragraph)
@@ -336,7 +336,7 @@
   :ensure nil
   :after
   re-builder
-  :bind*
+  :bind
   (:map reb-mode-map
 	("C-o" . casual-re-builder-tmenu)
 	:map reb-lisp-mode-map
@@ -370,9 +370,8 @@
 ;; Better keybindings for outline-minor-mode
 ;; ? for speed command help
 (use-package outli
-  :vc
-  (outli :url "https://github.com/jdtsmith/outli"
-	 :branch "main")
+  :ensure
+  (:host github :repo "jdtsmith/outli" :branch "main")
   :bind
   (:map outli-mode-map
 	("C-c C-p" . (lambda () (interactive) (outline-back-to-heading))))
@@ -384,6 +383,7 @@
 ;;;; flymake 
 ;; Flymake error checking
 (use-package flymake
+  :ensure nil
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
@@ -403,7 +403,6 @@
         '("\\*Messages\\*"
           "Output\\*$"
           "\\*Async Shell Command\\*"
-          help-mode
           compilation-mode
 	  "eshell.*\\*$" eshell-mode
           "eat\\*" eat-mode
@@ -461,7 +460,7 @@
   ;; Recommended: Enable Corfu globally. This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customisation variable
   ;; `global-corfu-modes' to exclude certain modes.
-  :init
+  :config
   (global-corfu-mode))
 
 ;;;;; cape
@@ -735,7 +734,9 @@
 
 ;;;;; hideshow
 ;; Code folding for non treesitter languages (elisp)
+;; Built in
 (use-package hideshow
+  :ensure nil
   :hook
   (emacs-lisp-mode . hs-minor-mode))
 
@@ -743,9 +744,8 @@
 
 ;; Code-folding using treesitter
 (use-package treesit-fold
-  :vc
-  (treesit-fold :url "https://github.com/emacs-tree-sitter/treesit-fold"
-		:branch "master")
+  :ensure
+  (:host github :repo "emacs-tree-sitter/treesit-fold" :branch "master")
   :config
   (global-treesit-fold-mode))
 
@@ -793,9 +793,9 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
        (let ((old-path (getenv "PATH")))
          (unwind-protect
              (progn
-               (setenv "PATH" (concat venv-bin path-separator old-path))
+	       (setenv "PATH" (concat venv-bin path-separator old-path))
 	       (setenv "VIRTUAL_ENV" ,venv)
-               ,sexp)
+	       ,sexp)
            (progn
 	     (setenv "PATH" old-path)
 	     (setenv "VIRTUAL_ENV" nil)))))))
@@ -804,6 +804,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;; :ensure-system-package doesn't work with python packages as they are not in the PATH
 ;; Requires
 (use-package eglot
+  :ensure nil
   :bind
   (:map eglot-mode-map
 	("C-c C-d" . eldoc)
@@ -839,9 +840,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;; Boost emacs using emacs-lsp-booster
 ;; Requires emacs-lsp-booster to be installed
 (use-package eglot-booster
-  :vc
-  (eglot-booster :url "https://github.com/jdtsmith/eglot-booster"
-		 :branch "main")
+  :ensure
+  (:host github :repo "jdtsmith/eglot-booster" :branch "main")
   :after eglot
   :config (eglot-booster-mode)
   )
@@ -864,7 +864,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   (setq org-babel-load-languages '((emacs-lisp . t)
 				   (C . t)
 				   (rust . t)
-				   (racket . t)
 				   (python . t)
 				   (jupyter . t)))
   (if (boundp 'recentf-exclude)
@@ -901,6 +900,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;; Use IPython as interpreter
 
 (use-package python
+  :ensure nil
   :config
   (setq python-shell-interpreter "ipython"
 	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs")
@@ -920,8 +920,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   :ensure
   nil
   :hook
-  (eshell-mode . eshell-venv-mode)
-  )
+  (eshell-mode . eshell-venv-mode))
 
 ;;;;; flymake-ruff
 (use-package flymake-ruff
@@ -969,8 +968,9 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 (use-package ob-rust)
 
 ;;;; C
-;;;;;; c-ts-mode
+;;;;;; Built in c-ts-mode 
 (use-package c-ts-mode
+  :ensure nil
   :if
   (treesit-language-available-p 'c)
   :custom
@@ -1022,9 +1022,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;;;;; fish-completion
 ;; Allow eshell to use any fish completions
 (use-package fish-completion
-  :vc
-  (fish-completion :url "https://github.com/LemonBreezes/emacs-fish-completion"
-		   :branch "master")
+  :ensure
+  (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
   :ensure-system-package
   fish
   :config
@@ -1038,10 +1037,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   :demand t
   :ensure nil)
 
-(use-package magit
-  :demand t)
-
 (use-package eshell
+  :ensure nil
   :requires
   (vc-git magit)
   :demand t
@@ -1129,7 +1126,12 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 (use-package tex
   :demand t
   :ensure
-  auctex
+  (:repo "https://git.savannah.gnu.org/git/auctex.git"
+	 :branch "main"
+	 :pre-build (("make" "elpa"))
+	 :build (:not elpa--compile-info) ;; Make will take care of this step
+	 :files ("*.el" "doc/*.info*" "etc" "images" "latex" "style")
+	 :version (lambda (_) (require 'tex-site) AUCTeX-version))
   :hook
   ((LaTeX-mode . reftex-mode))
   :config
@@ -1192,9 +1194,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 	:map TeX-mode-map
 	("C-c c" . citar-insert-citation)))
 
-(use-package embark
-  :demand t)
-
 ;; embark actions
 (use-package citar-embark
   :after
@@ -1206,9 +1205,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 
 ;; Use vale prose linter with Flymake
 (use-package flymake-vale
-  :vc
-  (flymake-vale :url "https://github.com/tpeacock19/flymake-vale"
-		:branch "main")
+  :ensure
+  (:host github :repo "tpeacock19/flymake-vale" :branch "main")
   :ensure-system-package
   vale
   :hook
