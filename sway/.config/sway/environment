@@ -13,7 +13,7 @@ XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
 # SSH agent auth socket
 SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
 
-EDITOR="emacsclient -t"
+EDITOR="mg"
 VISUAL="emacsclient -c"
 
 # hledger file
