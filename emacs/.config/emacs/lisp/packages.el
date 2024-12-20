@@ -3,19 +3,11 @@
 ;; ;;; Package Manmagement Configuration
 (setopt use-package-always-ensure t)
 
-;; ;; Allows for ensuring a system package is present and installing if not
-;; (use-package use-package-ensure-system-package)
-
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;;                          ("org" . "https://orgmode.org/elpa/")
-;;                          ("gnu" . "https://elpa.gnu.org/packages/")
-;; 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-
 (elpaca elpaca-use-package
   (elpaca-use-package-mode)
   (setq elpaca-use-package-by-default t))
 
-;; Block until use-package-ensure-system-package has been installed
+;; ;; Allows for ensuring a system package is present and installing if not
 (use-package use-package-ensure-system-package
   :ensure nil
   :demand t)
@@ -64,7 +56,10 @@
   ;; Use box cursor
   (setq-default cursor-type 'box))
 
-;;;;; bookmark
+
+;;;;; Built In
+
+;;;;;;; bookmark
 ;; Built in bookmark package
 (use-package bookmark
   :ensure nil
@@ -73,58 +68,29 @@
   :hook
   (bookmark-bmenu-mode . hl-line-mode))
 
-;;;;; ibuffer
+;;;;;;; ibuffer
 ;; Built in ibuffer package
 (use-package ibuffer
   :ensure nil
   :hook
   (ibuffer-mode . ibuffer-auto-mode)
-  (ibuffer-mode . hl-line-mode)
-  :bind
-  (:map ibuffer-mode-map
-	("{"   . ibuffer-backwards-next-marked)
-	("}"   . ibuffer-forward-next-marked)
-	("["   . ibuffer-backward-filter-group)
-	("]"   . ibuffer-forward-filter-group)
-	("$"   . ibuffer-toggle-filter-group)))
+  (ibuffer-mode . hl-line-mode))
 
-;;;;; info
+;;;;;;; info
 ;; Built in info reader
 (use-package info
   :ensure nil
   :hook
-  (Info-mode . hl-line-mode)
-  :bind
-  (:map Info-mode-map
-	("M-[" . Info-history-back)
-	("M-]" . Info-history-forward)
-	("B" . bookmark-set)))
+  (Info-mode . hl-line-mode))
 
-;;;;; exec-path-from-shell
-;; Load PATH from fish config
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
-
-;;;;; no-littering
-;; Dont litter folders with autosave or backup files
-(use-package no-littering
-  :init
-  (setq user-emacs-directory "~/.config/emacs")
-  :config
-  (setq auto-save-file-name-transforms
-	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
-	backup-directory-alist
-	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
-
-;;;;; savehist
+;;;;;;; savehist
 ;; Built in
 (use-package savehist
   :ensure nil
   :init
   (savehist-mode))
 
-;;;;; recentf
+;;;;;;; recentf
 ;; Built in
 (use-package recentf
   :ensure nil
@@ -138,28 +104,47 @@
   :hook
   (elpaca-after-init . recentf-mode))
 
-;;;;; transient
+;;;;;;; transient
 ;; Built in version is too low for upstream packages that depend on it
 (use-package transient)
 
-;; ;;;;; eldoc
-;; ;; Built in version is too low for upstream packages that depend on it
-;;  (use-package eldoc
-;;     :preface
-;;     (unload-feature 'eldoc t)
-;;     (setq custom-delayed-init-variables '())
-;;     (defvar global-eldoc-mode nil)
-;;     :config
-;;     (global-eldoc-mode))
+;;;;;;; tramp
+;; Use system ssh settings and search .local paths on remote
+(use-package tramp-sh
+  :ensure
+  nil
+  :init
+  (setq tramp-use-ssh-controlmaster-options nil)
+  :config
+  (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
 
-;; ;;;;; jsonrpc
-;; ;; Built in version is too low for upstream packages that depend on it
-;; (use-package jsonrpc)
+;;;;;;; flymake 
+;; Flymake error checking
+(use-package flymake
+  :ensure nil
+  :hook
+  ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
+;;;;; External
 
+;;;;;;; exec-path-from-shell
+;; Load PATH from fish config
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
 
-;;;;; nano-theme
+;;;;;;; no-littering
+;; Dont litter folders with autosave or backup files
+(use-package no-littering
+  :init
+  (setq user-emacs-directory "~/.config/emacs")
+  :config
+  (setq auto-save-file-name-transforms
+	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
+	backup-directory-alist
+	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
 
+;;;;;;; nano-theme
 ;; Nano theme 
 (use-package nano-theme
   :ensure
@@ -167,7 +152,7 @@
   :config
   (load-theme 'nano-dark t))
 
-;;;;; eros
+;;;;;;; eros
 ;; Display eval result (including for debug) in popup instead of echo area.
 ;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/
 (use-package eros
@@ -203,23 +188,23 @@
   (eros-mode))
 
 
-;;;;; persistent-scratch
+;;;;;;; persistent-scratch
 ;; Auto save scratch buffer
 (use-package persistent-scratch
   :demand t
   :config
   (persistent-scratch-setup-default))
 
-;;;;; tramp
-;; Use system ssh settings and search .local paths on remote
-(use-package tramp-sh
-  :ensure
-  nil
-  :init
-  (setq tramp-use-ssh-controlmaster-options nil)
-  :config
-  (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
 
+
+
+;;;;;;; openwith
+;; Open file type with external program instead of Emacs
+(use-package openwith
+  :config
+  (openwith-mode)
+  (setq openwith-associations
+	'(("\\.pdf\\'" "sioyek" (file)))))
 
 ;;; Help
 
@@ -240,113 +225,6 @@
    ("C-h F" . helpful-function)
    :map emacs-lisp-mode-map
    ("C-c C-d" . helpful-at-point)))
-
-;;;; Casual
-;;;;;; casual
-;; Transient menus to help with built in Emacs commands
-
-;; General Editing
-(use-package casual
-  :bind
-  (("M-o" . casual-editkit-main-tmenu)))
-
-;; I-Search
-(use-package casual-isearch
-  :ensure nil
-  :after
-  isearch
-  :bind
-  (:map isearch-mode-map
-	("C-o" . casual-isearch-tmenu)))
-
-;; Org-agenda
-(use-package casual-agenda
-  :ensure nil
-  :after
-  org-agenda
-  :bind
-  (:map org-agenda-mode-map
-	("C-o" . casual-agenda-tmenu)
-	("M-j" . org-agenda-clock-goto)
-	("J"   . bookmark-jump)))
-
-;; Bookmark
-(use-package casual-bookmark
-  :ensure nil
-  :after
-  bookmark
-  :bind
-  (:map bookmark-bmenu-mode-map
-	("C-o" . casual-bookmarks-tmenu)
-	("J"   . bookmark-jump)))
-
-;; Calc
-(use-package casual-calc
-  :ensure nil
-  :after
-  calc
-  :bind
-  (:map calc-mode-map
-	("C-o" . casual-calc-tmenu)
-	:map calc-alg-map
-	("C-o" . casual-calc-tmenu)))
-
-;; Calendar
-(use-package casual-calendar
-  :ensure nil
-  :after
-  calendar
-  :bind
-  (:map calendar-mode-map
-	("C-o" . casual-calendar)))
-
-;; Dired
-(use-package casual-dired
-  :ensure nil
-  :after
-  dired
-  :bind
-  (:map dired-mode-map
-	("C-o" . casual-dired-tmenu)
-	("s"   . casual-dired-sort-by-tmenu)))
-
-;; I-Buffer
-(use-package casual-ibuffer
-  :ensure nil
-  :after
-  ibuffer
-  :bind
-  (:map ibuffer-mode-map
-	("C-o" . casual-ibuffer-tmenu)
-	("F"   . casual-ibuffer-filter-tmenu)
-	("s"   . casual-ibuffer-sortby)))
-
-;; Info
-(use-package casual-info
-  :ensure nil
-  :after
-  info
-  :bind
-  (:map Info-mode-map
-	("C-o" . casual-info-tmenu)
-	("p" . casual-info-browse-backward-paragraph)
-	("n" . casual-info-browse-forward-paragraph)))
-
-(use-package casual-re-builder
-  :ensure nil
-  :after
-  re-builder
-  :bind
-  (:map reb-mode-map
-	("C-o" . casual-re-builder-tmenu)
-	:map reb-lisp-mode-map
-	("C-o" . casual-re-builder-tmenu)))
-
-;;;;; casual-avy
-;; casual transient menu for avy commands
-(use-package casual-avy
-  :bind
-  ("M-s a" . casual-avy-tmenu))
 
 ;;; Editor
 
@@ -379,13 +257,6 @@
   ((prog-mode text-mode) . outli-mode)
   :config
   (setq outli-blend nil))
-
-;;;; flymake 
-;; Flymake error checking
-(use-package flymake
-  :ensure nil
-  :hook
-  ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
 ;;;; vundo
 ;; Visualise undo tree and step between
@@ -452,6 +323,20 @@
   ((text-mode . mixed-pitch-mode)
    (toml-ts-mode . (lambda () (mixed-pitch-mode -1)))))
 
+;;;; jinx
+;; Jinx spell checker
+(use-package jinx
+  :hook
+  (((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
+   (toml-ts-mode . (lambda () (jinx-mode -1))))
+  :bind
+  ("M-$" . jinx-correct)
+  :config
+  (add-to-list 'jinx-exclude-faces
+	       '(LaTeX-mode font-lock-constant-face))
+  (add-to-list 'jinx-exclude-faces
+	       '(prog-mode font-lock-string-face)))
+
 ;;;; Monad Stack
 
 ;;;;; corfu
@@ -515,6 +400,7 @@
 	'((consult-location buffer)
 	  (consult-flymake buffer)
 	  (consult-line buffer)
+	  (consult-line-multi buffer)
 	  (consult-buffer unobtrusive)
 	  (consult-outline buffer)
 	  ))
@@ -544,18 +430,7 @@
 ;;;;; marginalia
 ;; Rich annotations in minibuffer
 (use-package marginalia
-  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
-  ;; available in the *Completions* buffer, add it to the
-  ;; `completion-list-mode-map'.
-  :bind (:map minibuffer-local-map
-	      ("M-A" . marginalia-cycle))
-
-  ;; The :init section is always executed.
   :init
-
-  ;; Marginalia must be activated in the :init section of use-package such that
-  ;; the mode gets enabled right away. Note that this forces loading the
-  ;; package.
   (marginalia-mode))
 
 
@@ -597,12 +472,13 @@
 	 ("M-i"   . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings in `search-map'
-         ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+         ("M-s d" . consult-fd)                  ;; Alternative: consult-find
          ("M-s c" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
          ("M-s l" . consult-line)
+	 ;; Search accross multiple buffers
          ("M-s L" . consult-line-multi)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
@@ -663,10 +539,6 @@
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
 
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
-
   :config
   (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'"))
   )
@@ -690,7 +562,7 @@
   :init
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
   (setq prefix-help-command #'embark-prefix-help-command)
-
+  
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
 	       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -986,9 +858,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
   (add-to-list 'org-src-lang-modes '("C" . c-ts)))
 
-
-
-
 ;;; External Tools
 
 ;;;; Git
@@ -996,6 +865,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;;;;; magit
 ;; The best git porcelain
 (use-package magit
+  :demand t ;; Required for custom eshell prompt
   :config
   (setq magit-keep-region-overlay t))
 
@@ -1039,7 +909,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 
 (use-package eshell
   :ensure nil
-  :requires
+  :after
   (vc-git magit)
   :demand t
   :config
@@ -1107,6 +977,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 
 ;;;; Accounting
 
+;;;;;; ledger-mode
+;; Emacs more for ledger plain text accounting
 (use-package ledger-mode
   :config
   (defun insert-pound-sterling ()
@@ -1121,7 +993,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;;; Academic
 
 ;;;; auctex
-
 ;; AucTeX improved Tex experience
 (use-package tex
   :demand t
@@ -1169,19 +1040,10 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 				 "-inc "
 				 (shell-quote-argument (expand-file-name file-name))))))))
 
-
-;;;; openwith
-(use-package openwith
-  :config
-  (openwith-mode)
-  (setq openwith-associations
-	'(("\\.pdf\\'" "sioyek" (file)))))
-
 ;;;; citar
-
 ;; reference management 
 (use-package citar
-  :demand t
+  :demand t ;; Make sure embark options are available
   :after
   tex latex
   :custom
@@ -1202,7 +1064,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   ((LaTeX-mode org-mode) . citar-embark-mode))
 
 ;;;; flymake-vale
-
 ;; Use vale prose linter with Flymake
 (use-package flymake-vale
   :ensure
@@ -1212,23 +1073,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-vale-load))
 
-;;;; jinx
-
-;; Jinx spell checker
-(use-package jinx
-  :hook
-  (((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
-   (toml-ts-mode . (lambda () (jinx-mode -1))))
-  :bind
-  ("M-$" . jinx-correct)
-  :config
-  (add-to-list 'jinx-exclude-faces
-	       '(LaTeX-mode font-lock-constant-face))
-  (add-to-list 'jinx-exclude-faces
-	       '(prog-mode font-lock-string-face)))
 
 ;;;; powerthesaurus
-
 ;; Powerthesaurus integration
 (use-package powerthesaurus
   :bind
@@ -1245,21 +1091,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 	(flymake-mode -1))
     (progn
       (jinx-mode 1)
-      (flymake-mode 1)))
-  )
-
-(defun my/executable-find-dir (command dirs &optional remote)
-  "Implementation of `executable-find' which just searches DIRS."
-  (if (and remote (file-remote-p default-directory))
-      (let ((res (locate-file
-		  command
-		  (mapcar
-		   (lambda (x) (concat (file-remote-p default-directory) x))
-		   dirs)
-		  exec-suffixes 'file-executable-p)))
-	(when (stringp res) (file-local-name res)))
-    (let ((default-directory (file-name-quote default-directory 'top)))
-      (locate-file command dirs exec-suffixes 1))))
+      (flymake-mode 1))))
 
 ;; Local Variables:
 ;; jinx-local-words: "Dabbrev Powerthesaurus"
