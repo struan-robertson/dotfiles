@@ -201,6 +201,14 @@
   (setq openwith-associations
 	'(("\\.pdf\\'" "sioyek" (file)))))
 
+;;;;;; ace-window
+;; More efficient window selection
+(use-package ace-window
+  :bind
+  ("M-o" . ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+
 ;;; Help
 
 ;;;; which-key
