@@ -16,10 +16,9 @@
 
 ;;;;; emacs
 (use-package emacs
-  :ensure
-  nil
+  :ensure nil
   :init
-
+  
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
@@ -59,7 +58,7 @@
 
 ;;;;; Built In
 
-;;;;;;; bookmark
+;;;;;; bookmark
 ;; Built in bookmark package
 (use-package bookmark
   :ensure nil
@@ -68,7 +67,7 @@
   :hook
   (bookmark-bmenu-mode . hl-line-mode))
 
-;;;;;;; ibuffer
+;;;;;; ibuffer
 ;; Built in ibuffer package
 (use-package ibuffer
   :ensure nil
@@ -76,21 +75,21 @@
   (ibuffer-mode . ibuffer-auto-mode)
   (ibuffer-mode . hl-line-mode))
 
-;;;;;;; info
+;;;;;; info
 ;; Built in info reader
 (use-package info
   :ensure nil
   :hook
   (Info-mode . hl-line-mode))
 
-;;;;;;; savehist
+;;;;;; savehist
 ;; Built in
 (use-package savehist
   :ensure nil
   :init
   (savehist-mode))
 
-;;;;;;; recentf
+;;;;;; recentf
 ;; Built in
 (use-package recentf
   :ensure nil
@@ -104,21 +103,20 @@
   :hook
   (elpaca-after-init . recentf-mode))
 
-;;;;;;; transient
+;;;;;; transient
 ;; Built in version is too low for upstream packages that depend on it
 (use-package transient)
 
-;;;;;;; tramp
+;;;;;; tramp
 ;; Use system ssh settings and search .local paths on remote
 (use-package tramp-sh
-  :ensure
-  nil
+  :ensure nil
   :init
   (setq tramp-use-ssh-controlmaster-options nil)
   :config
   (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
 
-;;;;;;; flymake 
+;;;;;; flymake 
 ;; Flymake error checking
 (use-package flymake
   :ensure nil
@@ -127,13 +125,13 @@
 
 ;;;;; External
 
-;;;;;;; exec-path-from-shell
+;;;;;; exec-path-from-shell
 ;; Load PATH from fish config
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
 
-;;;;;;; no-littering
+;;;;;; no-littering
 ;; Dont litter folders with autosave or backup files
 (use-package no-littering
   :init
@@ -144,7 +142,7 @@
 	backup-directory-alist
 	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
 
-;;;;;;; nano-theme
+;;;;;; nano-theme
 ;; Nano theme 
 (use-package nano-theme
   :ensure
@@ -152,7 +150,7 @@
   :config
   (load-theme 'nano-dark t))
 
-;;;;;;; eros
+;;;;;; eros
 ;; Display eval result (including for debug) in popup instead of echo area.
 ;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/
 (use-package eros
@@ -188,17 +186,14 @@
   (eros-mode))
 
 
-;;;;;;; persistent-scratch
+;;;;;; persistent-scratch
 ;; Auto save scratch buffer
 (use-package persistent-scratch
   :demand t
   :config
   (persistent-scratch-setup-default))
 
-
-
-
-;;;;;;; openwith
+;;;;;; openwith
 ;; Open file type with external program instead of Emacs
 (use-package openwith
   :config
@@ -418,10 +413,8 @@
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
 
 (use-package vertico-multiform
-  :after
-  vertico
-  :ensure
-  nil
+  :after vertico
+  :ensure nil
   :bind
   (:map vertico-map
 	("C-'" . vertico-quick-exit)))
@@ -789,8 +782,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;;;;; eshell-venv
 ;; Custom package to allow Eshell venv activation
 (use-package eshell-venv
-  :ensure
-  nil
+  :ensure nil
   :hook
   (eshell-mode . eshell-venv-mode))
 
@@ -824,23 +816,24 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
 
 ;;;; Shell
-;;;;;; emacs-fish
+;;;;; emacs-fish
 ;; Syntax for fish scripts
 (use-package fish-mode)
 
 ;;;; Rust
-;;;;;; rust-mode
+;;;;; rust-mode
 ;; Official Rust mode
 (use-package rust-mode
   :init
   (setq rust-mode-treesitter-derive t))
 
-;;;;;; ob-rust
+;;;;; ob-rust
 ;; Rust in org-babel
 (use-package ob-rust)
 
 ;;;; C
-;;;;;; Built in c-ts-mode 
+;;;;; c-ts-mode
+;; Built-in
 (use-package c-ts-mode
   :ensure nil
   :if
@@ -887,15 +880,17 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   :hook
   (eshell-load . eat-eshell-mode)
   :custom
-  (eshell-visual-commands nil))
+  (eshell-visual-commands nil)
+  (eat-tram-shells (("docker" . "/bin/sh")
+		    ("ssh" . "/bin/bash"
+		     "sudo" . "/bin/bash"))))
 
 ;;;;; fish-completion
 ;; Allow eshell to use any fish completions
 (use-package fish-completion
   :ensure
   (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
-  :ensure-system-package
-  fish
+  :ensure-system-package fish
   :config
   (global-fish-completion-mode))
 
@@ -966,7 +961,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 
 ;;;; IRC
 ;;;;;; circe
-
+;; IRC in Emacs
 (use-package circe
   :custom
   (circe-network-optionsp
@@ -985,12 +980,24 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
     "Insert a pound sterling symbol (£) at the current cursor position."
     (interactive)
     (insert "£"))
-
   :bind
   (:map ledger-mode-map
 	("C-c C-4" . insert-pound-sterling)))
 
 ;;; Academic
+
+;;;; Custom Functions
+
+(defun my/toggle-writing-zen ()
+  "Disable language improvement tools to allow for dumping text on the page."
+  (interactive)
+  (if (bound-and-true-p jinx-mode)
+      (progn
+	(jinx-mode -1)
+	(flymake-mode -1))
+    (progn
+      (jinx-mode 1)
+      (flymake-mode 1))))
 
 ;;;; auctex
 ;; AucTeX improved Tex experience
@@ -1045,7 +1052,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 (use-package citar
   :demand t ;; Make sure embark options are available
   :after
-  tex latex
+  tex
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
@@ -1073,25 +1080,11 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-vale-load))
 
-
 ;;;; powerthesaurus
 ;; Powerthesaurus integration
 (use-package powerthesaurus
   :bind
   ("C-$" . powerthesaurus-transient))
-
-;;;; Custom Functions
-
-(defun my/toggle-writing-zen ()
-  "Disable language improvement tools to allow for dumping text on the page."
-  (interactive)
-  (if (bound-and-true-p jinx-mode)
-      (progn
-	(jinx-mode -1)
-	(flymake-mode -1))
-    (progn
-      (jinx-mode 1)
-      (flymake-mode 1))))
 
 ;; Local Variables:
 ;; jinx-local-words: "Dabbrev Powerthesaurus"
