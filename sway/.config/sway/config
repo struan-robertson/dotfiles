@@ -8,7 +8,9 @@ set $down n
 set $up p
 set $right f
 # Terminal emulator
-set $term foot
+# set $term foot
+set $term $HOME/.local/bin/eshell-term
+
 # Menu (use swaymsg to exec for applications to launch in correct workspaced)
 set $menu tofi-drun --terminal foot | xargs swaymsg exec --
 

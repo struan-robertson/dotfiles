@@ -278,8 +278,8 @@
           "Output\\*$"
           "\\*Async Shell Command\\*"
           compilation-mode
-	  "eshell.*\\*$" eshell-mode
-          "eat\\*" eat-mode
+	  "eshell.*\\*$" ;; eshell-mode
+          "eat\\*" ;; eat-mode
 	  "ielm\\*" ielm-mode
 	  "Python\\*" inferior-python-mode
 	  "shell\\*" shell-mode)
