@@ -889,9 +889,9 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   (eshell-load . eat-eshell-mode)
   :custom
   (eshell-visual-commands nil)
-  (eat-tram-shells (("docker" . "/bin/sh")
-		    ("ssh" . "/bin/bash"
-		     "sudo" . "/bin/bash"))))
+  (eat-tramp-shells '(("docker" . "/bin/sh")
+		      ("ssh" . "/bin/bash")
+		      ("sudo" . "/bin/bash"))))
 
 ;;;;; fish-completion
 ;; Allow eshell to use any fish completions
