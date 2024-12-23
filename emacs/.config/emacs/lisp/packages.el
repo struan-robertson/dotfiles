@@ -976,9 +976,8 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 
   ;;Aliases
   (setq eshell-command-aliases-list '(
-				      '("ll" "ls -l")
-				      '("la" "ls -al")
-				      '("paru" "/bin/sh -c /usr/bin/paru") ;; Force use of eat terminal
+				      ("ll" "ls -l")
+				      ("la" "ls -al")
 				      )))
 
 
