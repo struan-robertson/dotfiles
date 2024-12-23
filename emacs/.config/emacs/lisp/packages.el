@@ -89,9 +89,8 @@
 (use-package savehist
   :ensure nil
   :config
-  (savehist-mode)
-  (setq savehist-additional-variables '(extended-command-history)))
-  
+  (savehist-mode))
+
 
 ;;;;;; recentf
 ;; Built in
