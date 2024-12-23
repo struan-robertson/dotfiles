@@ -893,14 +893,14 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 		      ("ssh" . "/bin/bash")
 		      ("sudo" . "/bin/bash"))))
 
-;; ;;;;; fish-completion
-;; ;; Allow eshell to use any fish completions
-;; (use-package fish-completion
-;;   :ensure
-;;   (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
-;;   :ensure-system-package fish
-;;   :config
-;;   (global-fish-completion-mode))
+;;;;; fish-completion
+;; Allow eshell to use any fish completions
+(use-package fish-completion
+  :ensure
+  (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
+  :ensure-system-package fish
+  :config
+  (global-fish-completion-mode))
 
 ;;;;; eshell
 
@@ -936,8 +936,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 	 (mapcar (lambda (s)
 		   (substring s 0 2))
 		 (split-string status "\0" t))))))
-
-
   (defun my/eshell-prompt-function ()
     (concat
      "\n"
@@ -963,7 +961,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 		   "")
 		 'face `(:foreground "#b48ead"))
      (propertize " λ " 'face 'default)))
-
   (setq eshell-prompt-function #'my/eshell-prompt-function
 	eshell-prompt-regexp ".* λ "))
 
