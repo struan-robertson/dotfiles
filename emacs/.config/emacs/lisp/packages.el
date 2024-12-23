@@ -992,6 +992,16 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   (:map ledger-mode-map
 	("C-c C-4" . insert-pound-sterling)))
 
+;;;; Files
+;;;;; dired-rsync
+(use-package dired-rsync
+  :bind (:map dired-mode-map
+	      ("C-c C-r" . dired-resync)))
+
+(use-package dired-rsync-transient
+  :bind (:map dired-mode-map
+              ("C-c C-x" . dired-rsync-transient)))
+
 ;;; Academic
 
 ;;;; Custom Functions
