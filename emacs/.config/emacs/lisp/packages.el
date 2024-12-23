@@ -73,7 +73,9 @@
   :ensure nil
   :hook
   (ibuffer-mode . ibuffer-auto-mode)
-  (ibuffer-mode . hl-line-mode))
+  (ibuffer-mode . hl-line-mode)
+  :bind
+  ("C-x C-b" . ibuffer))
 
 ;;;;;; info
 ;; Built in info reader
@@ -86,8 +88,10 @@
 ;; Built in
 (use-package savehist
   :ensure nil
-  :init
-  (savehist-mode))
+  :config
+  (savehist-mode)
+  (setq savehist-additional-variables '(extended-command-history)))
+  
 
 ;;;;;; recentf
 ;; Built in
