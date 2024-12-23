@@ -893,14 +893,14 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 		      ("ssh" . "/bin/bash")
 		      ("sudo" . "/bin/bash"))))
 
-;;;;; fish-completion
-;; Allow eshell to use any fish completions
-(use-package fish-completion
-  :ensure
-  (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
-  :ensure-system-package fish
-  :config
-  (global-fish-completion-mode))
+;; ;;;;; fish-completion
+;; ;; Allow eshell to use any fish completions
+;; (use-package fish-completion
+;;   :ensure
+;;   (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
+;;   :ensure-system-package fish
+;;   :config
+;;   (global-fish-completion-mode))
 
 ;;;;; eshell
 
