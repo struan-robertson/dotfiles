@@ -889,12 +889,20 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;; Eat is a full terminal emulator written in elisp
 (use-package eat
   :hook
-  (eshell-load . eat-eshell-mode)
+  (eshell-mode . eat-eshell-mode)
   :custom
   (eshell-visual-commands nil)
   (eat-tramp-shells '(("docker" . "/bin/sh")
 		      ("ssh" . "/bin/bash")
-		      ("sudo" . "/bin/bash"))))
+		      ("sudo" . "/bin/bash")))
+  :config
+  (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
+   'eat-semi-char-non-bound-keys
+   (append
+    (list (vector meta-prefix-char ?o)   ;; Ace window
+	  (vector meta-prefix-char ?`))  ;; Popper
+    eat-semi-char-non-bound-keys))
+  )
 
 ;; ;;;;; fish-completion
 ;; ;; Allow eshell to use any fish completions
