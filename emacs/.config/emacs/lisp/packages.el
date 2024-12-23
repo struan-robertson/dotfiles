@@ -915,7 +915,6 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   :ensure nil
   :after
   (vc-git magit)
-  :demand t
   :config
   (defun my/vc-git-state (file)
     "`vc-state' which does not include ignored files."
@@ -1068,7 +1067,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 (use-package citar
   :demand t ;; Make sure embark options are available
   :after
-  tex
+  tex latex
   :custom
   (citar-bibliography '("~/Sync/Roam/biblio.bib"))
   :hook
