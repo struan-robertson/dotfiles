@@ -972,7 +972,14 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 		 'face `(:foreground "#b48ead"))
      (propertize " λ " 'face 'default)))
   (setq eshell-prompt-function #'my/eshell-prompt-function
-	eshell-prompt-regexp ".* λ "))
+	eshell-prompt-regexp ".* λ ")
+
+  ;;Aliases
+  (setq eshell-command-aliases-list '(
+				      '("ll" "ls -l")
+				      '("la" "ls -al")
+				      '("paru" "/bin/sh -c /usr/bin/paru") ;; Force use of eat terminal
+				      )))
 
 
 ;;;; IRC
