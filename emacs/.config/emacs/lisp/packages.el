@@ -902,69 +902,70 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 ;;   :config
 ;;   (global-fish-completion-mode))
 
-;; ;;;;; eshell
+;;;;; eshell
 
-;; ;; Need to demand vc-git and magit so that the custom eshell prompt works
-;; ;; Somewhat expensive but not the end of the word since I use daemon mode
-;; (use-package vc-git
-;;   :demand t
-;;   :ensure nil)
+;; Need to demand vc-git and magit so that the custom eshell prompt works
+;; Somewhat expensive but not the end of the word since I use daemon mode
+(use-package vc-git
+  :demand t
+  :ensure nil)
 
-;; (use-package eshell
-;;   :ensure nil
-;;   :after
-;;   (vc-git magit)
-;;   :demand t
-;;   :config
-;;   (defun my/vc-git-state (file)
-;;     "`vc-state' which does not include ignored files."
-;;     (let* ((args
-;; 	    `("status" "--porcelain" "-z"
-;; 	      ;; Just to be explicit, it's the default anyway.
-;; 	      "--untracked-files"
-;; 	      "--"))
-;; 	   (status (apply #'vc-git--run-command-string file args)))
-;;       (if (null status)
-;; 	  ;; If status is nil, there was an error calling git, likely because
-;; 	  ;; the file is not in a git repo.
-;; 	  'unregistered
-;; 	;; If this code is adapted to parse 'git status' for a directory,
-;; 	;; note that a renamed file takes up two null values and needs to be
-;; 	;; treated slightly more carefully.
-;; 	(vc-git--git-status-to-vc-state
-;; 	 (mapcar (lambda (s)
-;; 		   (substring s 0 2))
-;; 		 (split-string status "\0" t))))))
+(use-package eshell
+  :demand t
+  :ensure nil
+  :after
+  (vc-git magit)
+  :demand t
+  :config
+  (defun my/vc-git-state (file)
+    "`vc-state' which does not include ignored files."
+    (let* ((args
+	    `("status" "--porcelain" "-z"
+	      ;; Just to be explicit, it's the default anyway.
+	      "--untracked-files"
+	      "--"))
+	   (status (apply #'vc-git--run-command-string file args)))
+      (if (null status)
+	  ;; If status is nil, there was an error calling git, likely because
+	  ;; the file is not in a git repo.
+	  'unregistered
+	;; If this code is adapted to parse 'git status' for a directory,
+	;; note that a renamed file takes up two null values and needs to be
+	;; treated slightly more carefully.
+	(vc-git--git-status-to-vc-state
+	 (mapcar (lambda (s)
+		   (substring s 0 2))
+		 (split-string status "\0" t))))))
 
 
-;;   (defun my/eshell-prompt-function ()
-;;     (concat
-;;      "\n"
-;;      (propertize (replace-regexp-in-string
-;; 		  (getenv "HOME")
-;; 		  "~"
-;; 		  (eshell/pwd))
-;; 		 'face `(:foreground "#5e81ac"))
-;;      " "
-;;      (propertize (concat (let
-;; 			     ((git-tag (magit-get-current-tag))
-;; 			      (git-branch (magit-get-current-branch)))
-;; 			   (if git-tag
-;; 			       git-tag
-;; 			     (if git-branch
-;; 				 git-branch)))
-;; 			 (if (eq (my/vc-git-state (eshell/pwd)) 'edited)
-;; 			     "*"))
-;; 		 'face 'default)	    
-;;      "\n"
-;;      (propertize (if (bound-and-true-p python-shell-virtualenv-root)
-;; 		     ".venv"
-;; 		   "")
-;; 		 'face `(:foreground "#b48ead"))
-;;      (propertize " λ " 'face 'default)))
+  (defun my/eshell-prompt-function ()
+    (concat
+     "\n"
+     (propertize (replace-regexp-in-string
+		  (getenv "HOME")
+		  "~"
+		  (eshell/pwd))
+		 'face `(:foreground "#5e81ac"))
+     " "
+     (propertize (concat (let
+			     ((git-tag (magit-get-current-tag))
+			      (git-branch (magit-get-current-branch)))
+			   (if git-tag
+			       git-tag
+			     (if git-branch
+				 git-branch)))
+			 (if (eq (my/vc-git-state (eshell/pwd)) 'edited)
+			     "*"))
+		 'face 'default)	    
+     "\n"
+     (propertize (if (bound-and-true-p python-shell-virtualenv-root)
+		     ".venv"
+		   "")
+		 'face `(:foreground "#b48ead"))
+     (propertize " λ " 'face 'default)))
 
-;;   (setq eshell-prompt-function #'my/eshell-prompt-function
-;; 	eshell-prompt-regexp ".* λ "))
+  (setq eshell-prompt-function #'my/eshell-prompt-function
+	eshell-prompt-regexp ".* λ "))
 
 
 ;;;; IRC
