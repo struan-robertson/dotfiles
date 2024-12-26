@@ -1,2 +1,10 @@
 #!/bin/sh
-emacsclient -c -n -e "(let ((eshell-buffer-name \"terminal\") (current-prefix-arg '(4))) (call-interactively 'eshell))"
+
+case "${1:-}" in
+    --new)
+	emacsclient -c -n -e "(let ((eshell-buffer-name \"terminal\") (current-prefix-arg '(4))) (call-interactively 'eshell))"        
+        ;;
+    ""|*)
+	emacsclient -c -n -e "(let ((eshell-buffer-name \"terminal\")) (eshell))"        
+        ;;
+esac
