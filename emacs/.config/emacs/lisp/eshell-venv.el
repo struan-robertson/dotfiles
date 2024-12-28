@@ -41,6 +41,7 @@ at the `default-directory'."
 	    (setq-local python-shell-virtualenv-root venv
 			python-shell-virtualenv-bin (expand-file-name "bin" venv))
 	    (eshell-set-path (cons (eshell-venv-get-local-file-path python-shell-virtualenv-bin) (eshell-get-path t)))
+	    (eshell-reset)
 	    (message "Activated venv %s" python-shell-virtualenv-root)))
     (message "No venv found.")))
 
