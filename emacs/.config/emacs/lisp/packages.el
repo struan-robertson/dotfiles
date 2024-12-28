@@ -797,31 +797,11 @@ If so, return path to .venv/bin"
 
 ;;;;; flymake-ruff
 (use-package flymake-ruff
-  :config
-
-  (defun my/flymake-ruff--check-buffer-closure (venv)
-    (lambda ()
-      (my/execute-with-venv-vars
-       (flymake-ruff--check-buffer)
-       venv)))
-
-  (defun my/flymake-ruff--run-checker-closure (venv)
-    (lambda (report-fn &rest _args)
-      ;; Execute the closure and pass its result to report-fn
-      (funcall report-fn (funcall (my/flymake-ruff--check-buffer-closure venv)))))
-  
-  (defun my/flymake-ruff-load-advice ()
-    "Load hook for the current buffer to tell flymake to run checker."
-    (interactive)
-    (when (derived-mode-p 'python-mode 'python-ts-mode)
-      (if-let ((venv (my/detect-venv default-directory)))
-	  (add-hook 'flymake-diagnostic-functions (my/flymake-ruff--run-checker-closure venv) nil t)
-	(add-hook 'flymake-diagnostic-functions #'flymake-ruff--run-checker nil t))
-      ))
-
-  (advice-add 'flymake-ruff-load :override #'my/flymake-ruff-load-advice)
-
-  (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
+  :ensure
+  (:host github :repo "erickgnavar/flymake-ruff"
+	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"))
+  :hook
+  (eglot-managed-mode flymake-ruff-load))
 
 ;;;; Julia
 ;;;;; julia-mode
