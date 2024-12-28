@@ -659,23 +659,19 @@ If so, return path to .venv/bin"
 	venv
       nil)))
 
-(defmacro my/execute-with-venv-vars (sexp venv setenv)
-  "Execute SEXP with virtual environment at VENV.
-If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variables."
+(defmacro my/execute-with-venv-vars (sexp venv)
+  "Execute SEXP with virtual environment at VENV and set appropriate variables."
   `(let* ((venv-bin (file-name-concat ,venv "bin"))
+	  (local-venv-bin (tramp-file-local-name venv-bin))
           (exec-path (cons venv-bin exec-path))
-          (python-shell-virtualenv-root ,venv))
-     (if (not ,setenv)
-         ,sexp
-       (let ((old-path (getenv "PATH")))
-         (unwind-protect
-             (progn
-	       (setenv "PATH" (concat venv-bin path-separator old-path))
-	       (setenv "VIRTUAL_ENV" ,venv)
-	       ,sexp)
-           (progn
-	     (setenv "PATH" old-path)
-	     (setenv "VIRTUAL_ENV" nil)))))))
+          (python-shell-virtualenv-root ,venv)
+	  (process-environment (append (list
+					(format "PATH=%s:%s" local-venv-bin (getenv "PATH"))
+					(format "VIRTUAL_ENV=%s" local-venv-bin))
+				       process-environment))
+	  (tramp-remote-path (cons local-venv-bin tramp-remote-path))
+	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" local-venv-bin) tramp-remote-process-environment)))
+     ,sexp))
 
 ;;;;; eglot
 ;; :ensure-system-package doesn't work with python packages as they are not in the PATH
@@ -707,11 +703,12 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
 	(when-let ((venv (my/detect-venv default-directory)))
 	  (my/execute-with-venv-vars
 	   (apply fn args)
-	   venv
-	   t))
+	   venv))
       (apply fn args)))
-
+  
   (advice-add 'eglot--connect :around #'my/eglot--connect-advice))
+
+
 
 ;;;;; eglot-booster
 ;; Boost emacs using emacs-lsp-booster
@@ -806,8 +803,7 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
     (lambda ()
       (my/execute-with-venv-vars
        (flymake-ruff--check-buffer)
-       venv
-       nil)))
+       venv)))
 
   (defun my/flymake-ruff--run-checker-closure (venv)
     (lambda (report-fn &rest _args)
