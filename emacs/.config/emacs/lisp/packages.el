@@ -285,6 +285,7 @@
           "eat\\*" ;; eat-mode
 	  "ielm\\*" ielm-mode
 	  "Python\\*" inferior-python-mode
+	  "julia\\*"
 	  "shell\\*" shell-mode)
 	;; popper-group-function #'popper-group-by-directory
 	)
@@ -825,6 +826,22 @@ If SETENV is non-nil, temporarily modify PATH and VIRTUAL_ENV environment variab
   (advice-add 'flymake-ruff-load :override #'my/flymake-ruff-load-advice)
 
   (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
+
+;;;; Julia
+;;;;; julia-mode
+;; Official mode for Julia language
+(use-package julia-mode)
+
+;;;;; julia-snail
+;; An Emacs development environment for Julia 
+(use-package julia-snail
+  :ensure t
+  :custom
+  (julia-snail-terminal-type :eat)
+  (julia-snail-use-emoji-mode-lighter nil)
+  (julia-snail-extra-args "--threads=auto")
+  :hook
+  (julia-mode . julia-snail-mode))
 
 ;;;; Shell
 ;;;;; emacs-fish
