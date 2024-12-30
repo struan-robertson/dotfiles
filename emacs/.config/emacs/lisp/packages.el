@@ -835,8 +835,8 @@ If so, return path to .venv/bin"
   :ensure
   (:host github :repo "erickgnavar/flymake-ruff"
 	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"))
-  :hook
-  (eglot-managed-mode flymake-ruff-load))
+  :config
+  (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
 
 ;;;; Julia
 ;;;;; julia-mode
