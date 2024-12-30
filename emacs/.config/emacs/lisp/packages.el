@@ -53,7 +53,13 @@
   (save-place-mode t)
 
   ;; Use box cursor
-  (setq-default cursor-type 'box))
+  (setq-default cursor-type 'box)
+
+  :custom
+  ;; Improve performance by decreasing the number of garbage collections
+  ;; This increases memory pressure, but I have plenty RAM
+  ;; Do not increase the original value (800000) by a factor of more than 100
+  (gc-cons-threshold (* 800000 50)))
 
 
 ;;;;; Built In
