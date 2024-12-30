@@ -672,26 +672,29 @@ If so, return path to .venv/bin"
 (defmacro my/execute-with-venv-vars (sexp venv)
   "Execute SEXP with virtual environment at VENV and set appropriate variables."
   `(let* ((venv-bin (file-name-concat ,venv "bin"))
+	  (remote-host (file-remote-p default-directory))
 	  (local-venv-bin (tramp-file-local-name venv-bin))
-	  (local-bin (if (file-remote-p default-directory)
-			 (tramp-handle-expand-file-name "~/.local/bin")
-		       (expand-file-name "~/.local/bin")))
-	  (cargo-bin (if (file-remote-p default-directory)
-			 (tramp-handle-expand-file-name "~/.cargo/bin")
-		       (expand-file-name "~/.cargo/bin")))
+	  (local-local-bin (tramp-file-local-name
+			    (if remote-host
+				(tramp-handle-expand-file-name (concat remote-host "~/.local/bin"))
+			      (expand-file-name "~/.local/bin"))))
+	  (local-cargo-bin (tramp-file-local-name
+			    (if remote-host
+				(tramp-handle-expand-file-name (concat remote-host "~/.cargo/bin"))
+			      (expand-file-name "~/.cargo/bin"))))
           (exec-path (cons venv-bin exec-path))
           (python-shell-virtualenv-root ,venv)
 	  (process-environment (append (list
 					(format "PATH=%s:%s:%s:%s"
 						local-venv-bin
-						local-bin
-						cargo-bin
+						local-local-bin
+						local-cargo-bin
 						(getenv "PATH"))
 					(format "VIRTUAL_ENV=%s" venv))
 				       process-environment))
 	  (tramp-remote-path (append local-venv-bin
-				     local-bin
-				     cargo-bin
+				     local-local-bin
+				     local-cargo-bin
 				     tramp-remote-path))
 	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" venv) tramp-remote-process-environment)))
      ,sexp))
