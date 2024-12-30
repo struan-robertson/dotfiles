@@ -673,14 +673,27 @@ If so, return path to .venv/bin"
   "Execute SEXP with virtual environment at VENV and set appropriate variables."
   `(let* ((venv-bin (file-name-concat ,venv "bin"))
 	  (local-venv-bin (tramp-file-local-name venv-bin))
+	  (local-bin (if (file-remote-p default-directory)
+			 (tramp-handle-expand-file-name "~/.local/bin")
+		       (expand-file-name "~/.local/bin")))
+	  (cargo-bin (if (file-remote-p default-directory)
+			 (tramp-handle-expand-file-name "~/.cargo/bin")
+		       (expand-file-name "~/.cargo/bin")))
           (exec-path (cons venv-bin exec-path))
           (python-shell-virtualenv-root ,venv)
 	  (process-environment (append (list
-					(format "PATH=%s:%s" local-venv-bin (getenv "PATH"))
-					(format "VIRTUAL_ENV=%s" local-venv-bin))
+					(format "PATH=%s:%s:%s:%s"
+						local-venv-bin
+						local-bin
+						cargo-bin
+						(getenv "PATH"))
+					(format "VIRTUAL_ENV=%s" venv))
 				       process-environment))
-	  (tramp-remote-path (cons local-venv-bin tramp-remote-path))
-	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" local-venv-bin) tramp-remote-process-environment)))
+	  (tramp-remote-path (append local-venv-bin
+				     local-bin
+				     cargo-bin
+				     tramp-remote-path))
+	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" venv) tramp-remote-process-environment)))
      ,sexp))
 
 ;;;;; eglot
