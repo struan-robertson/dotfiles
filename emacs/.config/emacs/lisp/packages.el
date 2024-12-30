@@ -573,7 +573,7 @@
    ("C-'" . embark-dwim)
    ("C-h B" . embark-bindings)
    :map embark-file-map
-   ("S" . sudo-find-file))
+   ("S" . doas-find-file))
   :init
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -589,17 +589,17 @@
 	  embark-highlight-indicator
 	  embark-isearch-highlight-indicator)
 	embark-mixed-indicator-delay 2)
-  (defun sudo-find-file (file)
+  (defun doas-find-file (file)
     "Open FILE as root."
     (interactive "FOpen file as root: ")
     (when (file-writable-p file)
-      (user-error "File is user writeable, aborting sudo"))
+      (user-error "File is user writeable, aborting doas"))
     (find-file (if (file-remote-p file)
 		   (concat "/" (file-remote-p file 'method) ":"
 			   (file-remote-p file 'user) "@" (file-remote-p file 'host)
-			   "|sudo:root@"
+			   "|doas:root@"
 			   (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-		 (concat "/sudo:root@localhost:" file)))))
+		 (concat "/doas:root@localhost:" file)))))
 
 ;; Support for embark-{collect|export} with consult buffers
 (use-package embark-consult
@@ -922,7 +922,7 @@ If so, return path to .venv/bin"
   (eshell-visual-commands nil)
   (eat-tramp-shells '(("docker" . "/bin/sh")
 		      ("ssh" . "/bin/bash")
-		      ("sudo" . "/bin/bash")))
+		      ("doas" . "/bin/bash")))
   :config
   (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
    'eat-semi-char-non-bound-keys
