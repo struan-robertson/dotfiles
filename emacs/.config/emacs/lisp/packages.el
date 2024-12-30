@@ -825,7 +825,9 @@ If so, return path to .venv/bin"
   :ensure nil
   :config
   (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs")
+	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs"
+	python-indent-offset 4
+	python-indent-guess-indent-offset-verbose nil)
   (indent-tabs-mode nil)
 
   ;; python.el has its own code for setting exec path etc., I just need to set python-shell-virtualenv-root.
