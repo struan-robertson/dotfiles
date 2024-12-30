@@ -908,6 +908,12 @@ If so, return path to .venv/bin"
   (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
   (add-to-list 'org-src-lang-modes '("C" . c-ts)))
 
+;;;; Toml
+;;;;; toml-ts-mode
+(use-package toml-ts-mode
+  :ensure nil
+  :custom
+  (toml-ts-mode-indent-offset 4))
 ;;; External Tools
 
 ;;;; Git
