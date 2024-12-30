@@ -132,6 +132,10 @@
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
 
+;;;;;; jsonrpc
+;; Built in version is too low for upstream packages that depend on it
+(use-package jsonrpc)
+
 ;;;;; External
 
 ;;;;;; exec-path-from-shell
@@ -770,6 +774,31 @@ If so, return path to .venv/bin"
 	'(ruff-isort ruff))
   :hook
   (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
+
+;;;;; dape
+;; Debug Adapter Protocol for Emacs
+(use-package dape
+  :preface
+  (setq dape-key-prefix nil)
+  :config
+  (setq dape-buffer-window-arrangement 'right)
+  (setq dape-inlay-hints t)
+  (add-hook 'dape-compile-hook 'kill-buffer)
+
+  (add-to-list 'dape-configs
+	       `(debugpy-remote-attach
+		 modes (python-mode python-ts-mode)
+		 host (lambda () (read-string "Host: " "localhost"))
+		 port (lambda () (read-number "Port: "))
+		 :request "attach"
+		 :type "python"
+		 :pathMappings [(:localRoot (lambda ()
+					      (read-directory-name "Local source directory: "
+								   (funcall dape-cwd-fn)))
+					    :remoteRoot (lambda ()
+							  (read-string "Remote source directory: ")))]
+		 :justMyCode nil
+		 :showReturnValue t)))
 
 ;;;; CSV
 
