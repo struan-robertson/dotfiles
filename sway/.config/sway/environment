@@ -1,12 +1,10 @@
-# Application compatibility
-_JAVA_AWT_WM_NONREPARENTING=1
-
 # QT Theming
 QT_QPA_PLATFORMTHEME=qt5ct
 
 # GTK Theming
 GTK_THEME=Nordic
 ICON_THEME=NovaOS-nord
+XCURSOR_SIZE=24
 
 XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
 
@@ -18,3 +16,12 @@ VISUAL="emacsclient -c"
 
 # hledger file
 LEDGER_FILE="$HOME/Documents/Keys/Financial/2024.ledger"
+
+# runit user service directory
+SVDIR=$HOME/.local/service
+
+# Update PATH
+PATH=$HOME/.local/bin:$HOME/.cargo/bin:$PATH
+
+# Flatpak dirs
+# XDG_DATA_DIRS=/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS 

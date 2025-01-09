@@ -19,24 +19,31 @@ output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
 # Use VRR on desktop widescreen 
 output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
 # Smaller scale on oldlaptop
-output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.6
+output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.5
 
-# SSH_AUTH_SOCK is set in environment
-# Would like to run this as a SystemD service but currently crashes KeePassXC if not run like this
-exec ssh-agent -D -a $XDG_RUNTIME_DIR/ssh-agent.socket
+# Update dbus environment
+exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+# Pipewire
+exec /usr/libexec/pipewire-launcher
+
+# Desktop Portals
+exec /usr/libexec/xdg-desktop-portal-gtk
+exec /usr/libexec/xdg-desktop-portal-wlr
 
 ### Includes
-# Provided sway includes for setting environment variables
-include /etc/sway/config.d/*
 # Extra configuration
 include ~/.config/sway/config.d/*
+
+# Run user services
+exec runsvdir ~/.local/service/ 
 
 # Exec KeePassXC as it will need to be unlocked for most things
 exec keepassxc
 
-# Somewhat nicer to run Emacs daemon from here rather than a SystemD service as it will inherit all environment variables
-# Just makes it all a bit more cohesive with the system
+# Emacs daemon is better managed by emacs than sv
 exec emacs --daemon
 
-# Start sway-session SystemD target
-exec_always systemctl --user start sway-session.target
+# Pipe fifo to wob bar
+exec mkfifo $XDG_RUNTIME_DIR/wob.sock
+exec wob < $XDG_RUNTIME_DIR/wob.sock  > $XDG_RUNTIME_DIR/wob.sock

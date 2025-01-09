@@ -48,7 +48,7 @@
 
 ;;; Faces
 (set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light)
-(set-face-attribute 'default nil :font "RobotoMono Nerd Font" :height 130)
+(set-face-attribute 'default nil :font "Roboto Mono" :height 130)
 
 ;;; Custom Variables 
 (custom-set-variables
@@ -141,23 +141,3 @@
 (setenv "HSA_OVERRIDE_GFX_VERSION" "10.3.0")
 
 (message "init.el loaded successfully")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

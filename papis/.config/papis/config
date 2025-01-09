@@ -1,0 +1,19 @@
+[settings]
+default-library = Papis
+
+[Papis]
+dir = /home/struan/Documents/Papis
+opentool = xdg-open
+editor = emacsclient -c
+use-git = True
+notes-name = notes.tex
+database-backend = papis
+bibtex-unicode = False
+ref-format = {doc[title]:.18} {doc[author]:.9} {doc[year]}
+add-folder-name = {doc[year]} / {doc[author]:.25}-{doc[title]:.25}
+add-file-name = {doc[title]:.50} {doc[author]:.20} {doc[year]}
+multiple-authors-format = {au[family]}, {au[given]}
+citations-file-name = citations.yaml
+bibtex-export-file = True
+
+

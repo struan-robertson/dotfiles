@@ -138,11 +138,6 @@
 
 ;;;;; External
 
-;;;;;; exec-path-from-shell
-;; Load PATH from fish config
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
 
 ;;;;;; no-littering
 ;; Dont litter folders with autosave or backup files
@@ -220,7 +215,8 @@
   :bind
   ("M-o" . ace-window)
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+	aw-scope 'frame))
 
 ;;; Help
 
@@ -352,7 +348,9 @@
   (add-to-list 'jinx-exclude-faces
 	       '(LaTeX-mode font-lock-constant-face))
   (add-to-list 'jinx-exclude-faces
-	       '(prog-mode font-lock-string-face)))
+	       '(prog-mode font-lock-string-face))
+  :custom
+  (jinx-languages "en_GB"))
 
 ;;;; Monad Stack
 
@@ -946,15 +944,14 @@ If so, return path to .venv/bin"
   (eshell-visual-commands nil)
   (eat-tramp-shells '(("docker" . "/bin/sh")
 		      ("ssh" . "/bin/bash")
-		      ("doas" . "/bin/bash")))
+		      ("doas" . "/bin/sh")))
   :config
   (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
    'eat-semi-char-non-bound-keys
    (append
     (list (vector meta-prefix-char ?o)   ;; Ace window
 	  (vector meta-prefix-char ?`))  ;; Popper
-    eat-semi-char-non-bound-keys))
-  )
+    eat-semi-char-non-bound-keys)))
 
 ;; ;;;;; fish-completion
 ;; ;; Allow eshell to use any fish completions
@@ -1027,10 +1024,12 @@ If so, return path to .venv/bin"
 	eshell-prompt-regexp ".* λ ")
 
   ;;Aliases
-  (setq eshell-command-aliases-list '(
-				      ("ll" "ls -l")
-				      ("la" "ls -al")
-				      )))
+  (setq eshell-command-aliases-list '(("ll" "ls -l")
+				      ("la" "ls -al")))
+  (add-to-list 'eshell-modules-list 'eshell-tramp)
+
+  :hook
+  (kill-emacs . eshell-save-some-history))
 
 
 ;;;; IRC

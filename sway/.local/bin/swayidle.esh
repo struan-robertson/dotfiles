@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 swayidle -w \
 <% if [ $(hostname) = "archlaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
         timeout 300  'swaylock -f' \
