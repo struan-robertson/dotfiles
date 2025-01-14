@@ -30,4 +30,4 @@ fi
 # shellcheck disable=SC2086 # quoted expansion of EXTRA_ARGS can produce empty field
 exec dbus-run-session -- $_SWAY_COMMAND "$@" 2>&1 | logger -t "sway"
 
-tuigreet -r --cmd /home/struan/.local/bin/start-sway
+
