@@ -814,6 +814,12 @@ If so, return path to .venv/bin"
 		 :justMyCode nil
 		 :showReturnValue t)))
 
+;;;;; comint-mime
+;; Display graphics and other MIME attachments in Emacs shells
+(use-package comint-mime
+  :hook
+  (inferior-python-mode . comint-mime-setup))
+
 ;;;; CSV
 
 ;;;;; csv-mode
