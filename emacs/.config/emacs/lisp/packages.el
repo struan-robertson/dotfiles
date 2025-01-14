@@ -842,7 +842,10 @@ If so, return path to .venv/bin"
     (let ((python-shell-virtualenv-root (my/detect-venv default-directory)))
       (apply fn args)))
   
-  (advice-add 'run-python :around #'my/python-wrap-venv-advice))
+  (advice-add 'run-python :around #'my/python-wrap-venv-advice)
+  :bind (:map python-mode-map
+	      ("C-c C-c" . python-shell-send-statement)
+	      ("C-c C-b" . python-shell-send-buffer)))
 
 
 ;;;;; eshell-venv
