@@ -976,6 +976,13 @@ If so, return path to .venv/bin"
   :demand t
   :ensure nil)
 
+(use-package em-hist
+  :demand t
+  :ensure nil
+  :after eshell
+  :hook
+  (kill-emacs . eshell-save-some-history))
+
 (use-package eshell
   :demand t
   :ensure nil
@@ -1032,10 +1039,9 @@ If so, return path to .venv/bin"
   ;;Aliases
   (setq eshell-command-aliases-list '(("ll" "ls -l")
 				      ("la" "ls -al")))
-  (add-to-list 'eshell-modules-list 'eshell-tramp)
+  (add-to-list 'eshell-modules-list 'eshell-tramp))
 
-  :hook
-  (kill-emacs . eshell-save-some-history))
+
 
 
 ;;;; IRC
