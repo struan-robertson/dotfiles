@@ -852,7 +852,7 @@ If so, return path to .venv/bin"
 (use-package flymake-ruff
   :ensure
   (:host github :repo "erickgnavar/flymake-ruff"
-	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"))
+	 :remotes ("fork" :repo "struan-robertson/flymake-ruff" :protocol ssh))
   :config
   (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
 
