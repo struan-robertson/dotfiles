@@ -3,7 +3,7 @@ bar:
   
 <% if [ $(hostname) = "arch" ]; then -%>
   height: 25
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
   height: 45
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
   height: 45
@@ -16,7 +16,7 @@ bar:
 
 <% if [ $(hostname) = "arch" ]; then -%>
   font: Roboto Mono:pixelsize=20
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
   font: Roboto Mono:pixelsize=32
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
   font: Roboto Mono:pixelsize=32
@@ -33,7 +33,7 @@ bar:
                    text: "{name}"
 <% if [ $(hostname) = "arch" ]; then -%>
                    margin: 5
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
                    margin: 8
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
                    margin: 8
@@ -47,7 +47,7 @@ bar:
                      text: "{name}"
 <% if [ $(hostname) = "arch" ]; then -%>
                      margin: 5
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
                      margin: 8
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
                      margin: 8
@@ -95,7 +95,7 @@ bar:
 
               - string: {text: "┃", margin: 16}
 
-<% if [ $(hostname) = "archlaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
+<% if [ $(hostname) = "alpinelaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
     - battery:
         name: BAT0
         poll-interval: 30000
