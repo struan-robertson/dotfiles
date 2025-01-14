@@ -20,6 +20,8 @@ output * bg /home/struan/Pictures/Wallpapers/wallpaper.jpg fill
 output 'LG Electronics LG HDR WQHD 111NTPCAZ232' adaptive_sync on
 # Smaller scale on oldlaptop
 output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.5
+# Laptop colour profile
+output "Samsung Display Corp. 0x4163 Unknown" color_profile icc ~/.config/sway/color_profiles/xps13.icm
 
 # Update dbus environment
 exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
@@ -36,7 +38,7 @@ exec /usr/libexec/xdg-desktop-portal-wlr
 include ~/.config/sway/config.d/*
 
 # Run user services
-exec runsvdir ~/.local/service/ 
+exec runsvdir ~/.local/service/
 
 # Exec KeePassXC as it will need to be unlocked for most things
 exec keepassxc
