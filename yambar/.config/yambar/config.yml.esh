@@ -1,7 +1,7 @@
 
 bar:
   
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
   height: 25
 <% elif [ $(hostname) = "alpinelaptop" ]; then -%>
   height: 45
@@ -14,7 +14,7 @@ bar:
   background: 2e344000
   foreground: eceff4ff
 
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
   font: Roboto Mono:pixelsize=20
 <% elif [ $(hostname) = "alpinelaptop" ]; then -%>
   font: Roboto Mono:pixelsize=32
@@ -31,7 +31,7 @@ bar:
                default:
                  string:
                    text: "{name}"
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
                    margin: 5
 <% elif [ $(hostname) = "alpinelaptop" ]; then -%>
                    margin: 8
@@ -45,7 +45,7 @@ bar:
                  state == focused: 
                    string:
                      text: "{name}"
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
                      margin: 5
 <% elif [ $(hostname) = "alpinelaptop" ]; then -%>
                      margin: 8
