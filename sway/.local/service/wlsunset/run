@@ -1,0 +1,2 @@
+#!/bin/ash
+exec /usr/bin/wlsunset -l 56.5 -L -3.0

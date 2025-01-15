@@ -138,11 +138,6 @@
 
 ;;;;; External
 
-;;;;;; exec-path-from-shell
-;; Load PATH from fish config
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
 
 ;;;;;; no-littering
 ;; Dont litter folders with autosave or backup files
@@ -220,7 +215,8 @@
   :bind
   ("M-o" . ace-window)
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+	aw-scope 'frame))
 
 ;;; Help
 
@@ -352,7 +348,9 @@
   (add-to-list 'jinx-exclude-faces
 	       '(LaTeX-mode font-lock-constant-face))
   (add-to-list 'jinx-exclude-faces
-	       '(prog-mode font-lock-string-face)))
+	       '(prog-mode font-lock-string-face))
+  :custom
+  (jinx-languages "en_GB"))
 
 ;;;; Monad Stack
 
@@ -816,6 +814,12 @@ If so, return path to .venv/bin"
 		 :justMyCode nil
 		 :showReturnValue t)))
 
+;;;;; comint-mime
+;; Display graphics and other MIME attachments in Emacs shells
+(use-package comint-mime
+  :hook
+  (inferior-python-mode . comint-mime-setup))
+
 ;;;; CSV
 
 ;;;;; csv-mode
@@ -838,7 +842,10 @@ If so, return path to .venv/bin"
     (let ((python-shell-virtualenv-root (my/detect-venv default-directory)))
       (apply fn args)))
   
-  (advice-add 'run-python :around #'my/python-wrap-venv-advice))
+  (advice-add 'run-python :around #'my/python-wrap-venv-advice)
+  :bind (:map python-mode-map
+	      ("C-c C-c" . python-shell-send-statement)
+	      ("C-c C-b" . python-shell-send-buffer)))
 
 
 ;;;;; eshell-venv
@@ -946,15 +953,14 @@ If so, return path to .venv/bin"
   (eshell-visual-commands nil)
   (eat-tramp-shells '(("docker" . "/bin/sh")
 		      ("ssh" . "/bin/bash")
-		      ("doas" . "/bin/bash")))
+		      ("doas" . "/bin/sh")))
   :config
   (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
    'eat-semi-char-non-bound-keys
    (append
     (list (vector meta-prefix-char ?o)   ;; Ace window
 	  (vector meta-prefix-char ?`))  ;; Popper
-    eat-semi-char-non-bound-keys))
-  )
+    eat-semi-char-non-bound-keys)))
 
 ;; ;;;;; fish-completion
 ;; ;; Allow eshell to use any fish completions
@@ -972,6 +978,13 @@ If so, return path to .venv/bin"
 (use-package vc-git
   :demand t
   :ensure nil)
+
+(use-package em-hist
+  :demand t
+  :ensure nil
+  :after eshell
+  :hook
+  (kill-emacs . eshell-save-some-history))
 
 (use-package eshell
   :demand t
@@ -1027,10 +1040,11 @@ If so, return path to .venv/bin"
 	eshell-prompt-regexp ".* λ ")
 
   ;;Aliases
-  (setq eshell-command-aliases-list '(
-				      ("ll" "ls -l")
-				      ("la" "ls -al")
-				      )))
+  (setq eshell-command-aliases-list '(("ll" "ls -l")
+				      ("la" "ls -al")))
+  (add-to-list 'eshell-modules-list 'eshell-tramp))
+
+
 
 
 ;;;; IRC

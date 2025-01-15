@@ -1,2 +1,5 @@
 .out
 bubblejail/.local/share/bubblejail/instances/*/home/
+*/.local/service/*/supervise/
+*/.local/service/*/log/supervise/
+*/.local/service/*/log/main

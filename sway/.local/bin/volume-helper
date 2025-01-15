@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 # Adapted from volume helper script supplied with Fedora
 
 if ! command -v pactl >/dev/null; then
@@ -78,4 +78,4 @@ case $(pactl get-sink-mute "$SINK") in
         ;;
 esac
 
-echo $VOLUME > $XDG_RUNTIME_DIR/wob.sock
+echo "$VOLUME" > "$XDG_RUNTIME_DIR/wob.sock"

@@ -1,9 +1,9 @@
 
 bar:
   
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
   height: 25
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
   height: 45
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
   height: 45
@@ -14,14 +14,12 @@ bar:
   background: 2e344000
   foreground: eceff4ff
 
-  #font: Roboto Mono Nerd Font:pixelsize=30:weight=bold
-
-<% if [ $(hostname) = "arch" ]; then -%>
-  font: RobotoMono Nerd Font:pixelsize=20
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
-  font: RobotoMono Nerd Font:pixelsize=32
+<% if [ $(hostname) = "alpine" ]; then -%>
+  font: Roboto Mono:pixelsize=20
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
+  font: Roboto Mono:pixelsize=32
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
-  font: RobotoMono Nerd Font:pixelsize=32
+  font: Roboto Mono:pixelsize=32
 <% fi -%>
     
   left:
@@ -33,9 +31,9 @@ bar:
                default:
                  string:
                    text: "{name}"
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
                    margin: 5
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
                    margin: 8
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
                    margin: 8
@@ -47,9 +45,9 @@ bar:
                  state == focused: 
                    string:
                      text: "{name}"
-<% if [ $(hostname) = "arch" ]; then -%>
+<% if [ $(hostname) = "alpine" ]; then -%>
                      margin: 5
-<% elif [ $(hostname) = "archlaptop" ]; then -%>
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
                      margin: 8
 <% elif [ $(hostname) = "oldlaptop" ]; then -%>
                      margin: 8
@@ -89,7 +87,6 @@ bar:
               - map:
                   conditions:
                     type == "sink":
-                    
                       string: {text: "VOL "}
                     type == "source":
                       string: {text: "MIC "}
@@ -98,7 +95,7 @@ bar:
 
               - string: {text: "┃", margin: 16}
 
-<% if [ $(hostname) = "archlaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
+<% if [ $(hostname) = "alpinelaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
     - battery:
         name: BAT0
         poll-interval: 30000
@@ -109,12 +106,12 @@ bar:
                   default:
                     string:
                       text: "BAT {capacity:03}"
-                      on-click: "auto-cpufreq-gtk"   
+                      on-click: "foot watch tlp-stat -s"   
                   conditions:
                     capacity <= 10 && state != charging && state != full:
                       string:
                         text: "BAT {capacity:03}"
-                        on-click: "auto-cpufreq-gtk"   
+                        on-click: "foot watch tlp-stat -s"   
                         foreground: bf616aff                      
               - map:
                   conditions:

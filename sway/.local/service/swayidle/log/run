@@ -1,0 +1,3 @@
+#!/bin/ash
+mkdir -p ./main
+exec svlogd -tt ./main
