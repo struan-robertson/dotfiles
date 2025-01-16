@@ -741,8 +741,7 @@ If so, return path to .venv/bin"
   :ensure
   (:host github :repo "jdtsmith/eglot-booster" :branch "main")
   :after eglot
-  :config (eglot-booster-mode)
-  )
+  :config (eglot-booster-mode))
 
 ;;;;; jupyter
 (use-package org-src
