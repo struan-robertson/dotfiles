@@ -15,7 +15,7 @@ EDITOR="mg"
 VISUAL="emacsclient -c"
 
 # hledger file
-LEDGER_FILE="$HOME/Documents/Keys/Financial/2024.ledger"
+LEDGER_FILE="$HOME/Documents/Keys/Financial/2025.ledger"
 
 # runit user service directory
 SVDIR=$HOME/.local/service
