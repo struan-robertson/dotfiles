@@ -831,7 +831,7 @@ If so, return path to .venv/bin"
   :ensure nil
   :config
   (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs"
+	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs --classic"
 	python-indent-offset 4
 	python-indent-guess-indent-offset-verbose nil)
   (indent-tabs-mode nil)
