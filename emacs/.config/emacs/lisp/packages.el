@@ -416,7 +416,6 @@
 	  (consult-flymake buffer)
 	  (consult-line buffer)
 	  (consult-line-multi buffer)
-	  (consult-buffer unobtrusive)
 	  (consult-outline buffer)
 	  ))
   (vertico-multiform-mode)
