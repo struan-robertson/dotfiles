@@ -126,6 +126,7 @@
  '(jupyter-repl-traceback ((t nil)))
  '(lui-button-face ((t (:foreground "#88c0d0" :underline t))))
  '(lui-time-stamp-face ((t (:foreground "#5E81AC" :weight bold))))
+ '(transient-argument ((t (:inherit bold :weight bold))))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
  '(wgrep-delete-face ((t (:foreground "#bf616a"))))
