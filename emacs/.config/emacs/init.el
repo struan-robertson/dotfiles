@@ -124,6 +124,7 @@
  '(jupyter-repl-input-prompt ((t (:foreground "#a3be8c"))))
  '(jupyter-repl-output-prompt ((t (:foreground "#bf616a"))))
  '(jupyter-repl-traceback ((t nil)))
+ '(ledger-font-payee-uncleared-face ((t (:inherit bold))))
  '(lui-button-face ((t (:foreground "#88c0d0" :underline t))))
  '(lui-time-stamp-face ((t (:foreground "#5E81AC" :weight bold))))
  '(nano-critical ((t (:foreground "#bf616a" :weight normal))) t)
