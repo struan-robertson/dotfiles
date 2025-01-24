@@ -125,7 +125,9 @@
 (use-package flymake
   :ensure nil
   :hook
-  ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
+  ((LaTeX-mode org-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode)
+  :config
+  (setq flymake-diagnostic-functions '()))
 
 ;;;;;; jsonrpc
 ;; Built in version is too low for upstream packages that depend on it
@@ -1191,7 +1193,7 @@ If so, return path to .venv/bin"
   :ensure
   (:host github :repo "tpeacock19/flymake-vale" :branch "main")
   :hook
-  ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-vale-load))
+  ((LaTeX-mode org-mode markdown-mode) . flymake-vale-load))
 
 ;;;; powerthesaurus
 ;; Powerthesaurus integration
