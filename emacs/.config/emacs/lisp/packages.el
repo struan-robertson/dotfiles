@@ -7,11 +7,6 @@
   (elpaca-use-package-mode)
   (setq elpaca-use-package-by-default t))
 
-;; ;; Allows for ensuring a system package is present and installing if not
-(use-package use-package-ensure-system-package
-  :ensure nil
-  :demand t)
-
 ;;; Emacs Configuration
 
 ;;;;; emacs
@@ -703,7 +698,6 @@ If so, return path to .venv/bin"
      ,sexp))
 
 ;;;;; eglot
-;; :ensure-system-package doesn't work with python packages as they are not in the PATH
 ;; Requires
 (use-package eglot
   :ensure nil
@@ -759,8 +753,6 @@ If so, return path to .venv/bin"
 (use-package jupyter
   :after
   org-src
-  :ensure-system-package
-  jupyterlab
   :init
   ;; TODO extract extra languages somehow from jupyter settings
   (setq org-babel-load-languages '((emacs-lisp . t)
@@ -966,12 +958,12 @@ If so, return path to .venv/bin"
 	  (vector meta-prefix-char ?`))  ;; Popper
     eat-semi-char-non-bound-keys)))
 
+
 ;; ;;;;; fish-completion
 ;; ;; Allow eshell to use any fish completions
 ;; (use-package fish-completion
 ;;   :ensure
 ;;   (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
-;;   :ensure-system-package fish
 ;;   :config
 ;;   (global-fish-completion-mode))
 
@@ -1177,8 +1169,6 @@ If so, return path to .venv/bin"
 (use-package flymake-vale
   :ensure
   (:host github :repo "tpeacock19/flymake-vale" :branch "main")
-  :ensure-system-package
-  vale
   :hook
   ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-vale-load))
 
