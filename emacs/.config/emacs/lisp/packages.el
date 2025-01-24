@@ -308,6 +308,9 @@
 	       (unless (eq ibuffer-sorting-mode 'alphabetic)
 		 (ibuffer-do-sort-by-alphabetic)))))
 
+;;;; diminish
+;; Hide specific minor-modes from the modeline
+(use-package diminish)
 ;;;; hl-todo
 ;; Highlight reminders
 (use-package hl-todo
@@ -571,7 +574,9 @@
    ("C-'" . embark-dwim)
    ("C-h B" . embark-bindings)
    :map embark-file-map
-   ("S" . doas-find-file))
+   ("S" . doas-find-file)
+   :map org-mode-map
+   ("C-'" . embark-dwim))
   :init
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -587,6 +592,7 @@
 	  embark-highlight-indicator
 	  embark-isearch-highlight-indicator)
 	embark-mixed-indicator-delay 2)
+  
   (defun doas-find-file (file)
     "Open FILE as root."
     (interactive "FOpen file as root: ")
@@ -1144,25 +1150,40 @@ If so, return path to .venv/bin"
 ;;;; citar
 ;; reference management 
 (use-package citar
-  :demand t ;; Make sure embark options are available
-  :after
-  tex latex
   :custom
-  (citar-bibliography '("~/Sync/Roam/biblio.bib"))
+  (org-cite-global-bibliography '("~/Sync/Notes/library.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-bibliography org-cite-global-bibliography)
   :hook
-  ((LaTeX-mode TeX-mode org-mode) . citar-capf-setup)
+  ((org-mode tex) . citar-capf-setup)
+  :bind (("C-c b" . citar-open)
+	 :map org-mode-map
+	 ("C-c c" . org-cite-insert)
+	 :map TeX-mode-map
+	 ("C-c c" . citar-insert-citation)))
+
+;; LaTeX setup is a bit more complex because LaTeX-mode-map is initialised after
+;; AucTeX is initialised
+(use-package citar
+  :ensure nil
+  :after
+  latex
+  :hook
+  (LaTeX-mode . citar-capf-setup)
   :bind
   (:map LaTeX-mode-map
-	("C-c c" . citar-insert-citation)
-	:map TeX-mode-map
 	("C-c c" . citar-insert-citation)))
 
 ;; embark actions
 (use-package citar-embark
   :after
-  citar embark
-  :hook 
-  ((LaTeX-mode org-mode) . citar-embark-mode))
+  (citar embark)
+  :diminish citar-embark-mode
+  :config
+  (citar-embark-mode)
+  :no-require)
 
 ;;;; flymake-vale
 ;; Use vale prose linter with Flymake
