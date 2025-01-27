@@ -650,7 +650,7 @@
   (interactive)
   "Change the function called from M-<tab> depending on the active minor modes."
   (cond
-   ;; Code folding
+   (current-prefix-arg (lisp-complete-symbol))
    ((bound-and-true-p outline-minor-mode) (outline-cycle))
    (t (backward-button 1))))
 
