@@ -7,11 +7,6 @@
   (elpaca-use-package-mode)
   (setq elpaca-use-package-by-default t))
 
-;; ;; Allows for ensuring a system package is present and installing if not
-(use-package use-package-ensure-system-package
-  :ensure nil
-  :demand t)
-
 ;;; Emacs Configuration
 
 ;;;;; emacs
@@ -130,7 +125,9 @@
 (use-package flymake
   :ensure nil
   :hook
-  ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-mode))
+  ((LaTeX-mode org-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode)
+  :config
+  (setq flymake-diagnostic-functions '()))
 
 ;;;;;; jsonrpc
 ;; Built in version is too low for upstream packages that depend on it
@@ -313,6 +310,9 @@
 	       (unless (eq ibuffer-sorting-mode 'alphabetic)
 		 (ibuffer-do-sort-by-alphabetic)))))
 
+;;;; diminish
+;; Hide specific minor-modes from the modeline
+(use-package diminish)
 ;;;; hl-todo
 ;; Highlight reminders
 (use-package hl-todo
@@ -416,7 +416,6 @@
 	  (consult-flymake buffer)
 	  (consult-line buffer)
 	  (consult-line-multi buffer)
-	  (consult-buffer unobtrusive)
 	  (consult-outline buffer)
 	  ))
   (vertico-multiform-mode)
@@ -577,7 +576,9 @@
    ("C-'" . embark-dwim)
    ("C-h B" . embark-bindings)
    :map embark-file-map
-   ("S" . doas-find-file))
+   ("S" . doas-find-file)
+   :map org-mode-map
+   ("C-'" . embark-dwim))
   :init
   ;; Press a prefix and then C-h to pull up minibuffer completion of prefix with keybindings
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -593,6 +594,7 @@
 	  embark-highlight-indicator
 	  embark-isearch-highlight-indicator)
 	embark-mixed-indicator-delay 2)
+  
   (defun doas-find-file (file)
     "Open FILE as root."
     (interactive "FOpen file as root: ")
@@ -648,7 +650,7 @@
   (interactive)
   "Change the function called from M-<tab> depending on the active minor modes."
   (cond
-   ;; Code folding
+   (current-prefix-arg (lisp-complete-symbol))
    ((bound-and-true-p outline-minor-mode) (outline-cycle))
    (t (backward-button 1))))
 
@@ -704,7 +706,6 @@ If so, return path to .venv/bin"
      ,sexp))
 
 ;;;;; eglot
-;; :ensure-system-package doesn't work with python packages as they are not in the PATH
 ;; Requires
 (use-package eglot
   :ensure nil
@@ -760,8 +761,6 @@ If so, return path to .venv/bin"
 (use-package jupyter
   :after
   org-src
-  :ensure-system-package
-  jupyterlab
   :init
   ;; TODO extract extra languages somehow from jupyter settings
   (setq org-babel-load-languages '((emacs-lisp . t)
@@ -967,12 +966,12 @@ If so, return path to .venv/bin"
 	  (vector meta-prefix-char ?`))  ;; Popper
     eat-semi-char-non-bound-keys)))
 
+
 ;; ;;;;; fish-completion
 ;; ;; Allow eshell to use any fish completions
 ;; (use-package fish-completion
 ;;   :ensure
 ;;   (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
-;;   :ensure-system-package fish
 ;;   :config
 ;;   (global-fish-completion-mode))
 
@@ -1153,35 +1152,48 @@ If so, return path to .venv/bin"
 ;;;; citar
 ;; reference management 
 (use-package citar
-  :demand t ;; Make sure embark options are available
-  :after
-  tex latex
   :custom
-  (citar-bibliography '("~/Sync/Roam/biblio.bib"))
+  (org-cite-global-bibliography '("~/Sync/Notes/library.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-bibliography org-cite-global-bibliography)
   :hook
-  ((LaTeX-mode TeX-mode org-mode) . citar-capf-setup)
+  ((org-mode tex) . citar-capf-setup)
+  :bind (("C-c b" . citar-open)
+	 :map org-mode-map
+	 ("C-c c" . org-cite-insert)
+	 :map TeX-mode-map
+	 ("C-c c" . citar-insert-citation)))
+
+;; LaTeX setup is a bit more complex because LaTeX-mode-map is initialised after
+;; AucTeX is initialised
+(use-package citar
+  :ensure nil
+  :after
+  latex
+  :hook
+  (LaTeX-mode . citar-capf-setup)
   :bind
   (:map LaTeX-mode-map
-	("C-c c" . citar-insert-citation)
-	:map TeX-mode-map
 	("C-c c" . citar-insert-citation)))
 
 ;; embark actions
 (use-package citar-embark
   :after
-  citar embark
-  :hook 
-  ((LaTeX-mode org-mode) . citar-embark-mode))
+  (citar embark)
+  :diminish citar-embark-mode
+  :config
+  (citar-embark-mode)
+  :no-require)
 
 ;;;; flymake-vale
 ;; Use vale prose linter with Flymake
 (use-package flymake-vale
   :ensure
   (:host github :repo "tpeacock19/flymake-vale" :branch "main")
-  :ensure-system-package
-  vale
   :hook
-  ((LaTeX-mode text-mode org-mode markdown-mode message-mode) . flymake-vale-load))
+  ((LaTeX-mode org-mode markdown-mode) . flymake-vale-load))
 
 ;;;; powerthesaurus
 ;; Powerthesaurus integration

@@ -1,13 +1,16 @@
+;; init.el  -*- lexical-binding: t; -*-
 (add-to-list 'load-path "~/.config/emacs/lisp")
+
 ;;; Packages
 
 ;;;;; elpaca
-(defvar elpaca-installer-version 0.8)
+
+(defvar elpaca-installer-version 0.9)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1
+                              :ref nil :depth 1 :inherit ignore
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
@@ -124,8 +127,14 @@
  '(jupyter-repl-input-prompt ((t (:foreground "#a3be8c"))))
  '(jupyter-repl-output-prompt ((t (:foreground "#bf616a"))))
  '(jupyter-repl-traceback ((t nil)))
+ '(ledger-font-payee-uncleared-face ((t (:inherit bold))))
  '(lui-button-face ((t (:foreground "#88c0d0" :underline t))))
  '(lui-time-stamp-face ((t (:foreground "#5E81AC" :weight bold))))
+ '(nano-critical ((t (:foreground "#bf616a" :weight normal))) t)
+ '(nano-critical-i ((t (:background "#bf616a" :foreground "#2E3440" :weight normal))) t)
+ '(nano-popout ((t (:foreground "#ebcb8b"))) t)
+ '(nano-popout-i ((t (:background "#ebcb8b" :foreground "#2E3440"))) t)
+ '(transient-argument ((t (:inherit bold :weight bold))))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
  '(wgrep-delete-face ((t (:foreground "#bf616a"))))

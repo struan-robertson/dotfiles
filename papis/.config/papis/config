@@ -2,7 +2,7 @@
 default-library = Papis
 
 [Papis]
-dir = /home/struan/Documents/Papis
+dir = /home/struan/Sync/Papis
 opentool = xdg-open
 editor = emacsclient -c
 use-git = True
