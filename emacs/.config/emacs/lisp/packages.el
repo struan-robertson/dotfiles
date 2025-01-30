@@ -717,12 +717,10 @@ If so, return path to .venv/bin"
   :hook
   (((python-base-mode c-ts-mode) . eglot-ensure))
   :config
-  (setq-default eglot-workspace-configuration
-		'(:basedpyright (:disableOrganizeImports t)))
   (setq enable-remote-dir-locals t)
   (add-to-list 'eglot-server-programs
 	       '((python-mode python-ts-mode)
-		 "basedpyright-langserver" "--stdio"))
+		 "pyright-langserver" "--stdio"))
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
