@@ -1,0 +1,20 @@
+IMAPStore purelymail-remote
+Host imap.purelymail.com
+Port 993
+User contact@struan.tech
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/mail/purelymail.gpg"
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore purelymail-local
+Path ~/.local/share/mail/purelymail/
+Inbox ~/.local/share/mail/purelymail/Inbox
+SubFolders Verbatim
+
+Channel purelymail
+Far :purelymail-remote:
+Near :purelymail-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *

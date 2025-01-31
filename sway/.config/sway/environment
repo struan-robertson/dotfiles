@@ -25,3 +25,6 @@ PATH=$HOME/.local/bin:$HOME/.cargo/bin:$PATH
 
 # Flatpak dirs
 # XDG_DATA_DIRS=/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS 
+
+# mbsync config file path
+MBSYNCRC="$HOME/.config/emacs/mail/mbsyncrc"
