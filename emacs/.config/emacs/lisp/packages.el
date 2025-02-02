@@ -133,6 +133,16 @@
 ;; Built in version is too low for upstream packages that depend on it
 (use-package jsonrpc)
 
+;;;;;; project
+(use-package project
+  :ensure nil
+  :config
+  (setq project-switch-commands '((project-find-file "Find file")
+				  (project-find-regexp "Find regexp")
+				  (project-find-dir "Find directory")
+				  (magit-project-status "Magit" ?m)
+				  (project-eshell "Eshell"))))
+
 ;;;;; External
 
 
@@ -931,8 +941,7 @@ If so, return path to .venv/bin"
 ;; The best git porcelain
 (use-package magit
   :demand t ;; Required for custom eshell prompt
-  :config
-  (setq magit-keep-region-overlay t))
+  )
 
 ;;;;; diff-hl
 ;; Highlight git diff in gutter
