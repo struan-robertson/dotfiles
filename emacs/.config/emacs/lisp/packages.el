@@ -1093,6 +1093,34 @@ If so, return path to .venv/bin"
   :bind (:map dired-mode-map
               ("C-c C-x" . dired-rsync-transient)))
 
+;;;; Email
+;;;;; mu4e
+;; Read mail based on the mu mail indexing system
+(use-package mu4e
+  :ensure nil
+  :load-path "/usr/share/emacs/site-lisp/mu4e/"
+  :config
+  (setq mu4e-maildir "~/.local/share/mail/purelymail/"
+	mu4e-sent-folder "/Sent"
+	mu4e-drafts-folder "/Drafts"
+	mu4e-trash-folder "/Trash"
+	mu4e-refile-folder "/Archive")
+
+  ;; Enable HTML rendering
+  (setq mu4e-view-show-images t
+	mu4e-view-show-addresses t)
+
+  ;; Enable threading
+  (setq mu4e-headers-show-threads t)
+
+  ;; Use fancy chars
+  ;; (setq mu4e-use-fancy-chars t)
+
+  ;; Save attachments to Downloads
+  (setq mu4e-attachment-dir "~/Downloads")
+
+  ;; TODO setup sending
+  )
 ;;; Academic
 
 ;;;; Custom Functions
