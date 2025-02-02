@@ -130,6 +130,8 @@
  '(ledger-font-payee-uncleared-face ((t (:inherit bold))))
  '(lui-button-face ((t (:foreground "#88c0d0" :underline t))))
  '(lui-time-stamp-face ((t (:foreground "#5E81AC" :weight bold))))
+ '(magit-diff-added-highlight ((t (:inherit (highlight nano-salient nano-strong) :extend t :background "#3B4252" :foreground "#81A1C1"))))
+ '(magit-diff-context-highlight ((t (:inherit (highlight nano-faded) :extend t :background "#2e3440" :foreground "#FFFFFF"))))
  '(nano-critical ((t (:foreground "#bf616a" :weight normal))) t)
  '(nano-critical-i ((t (:background "#bf616a" :foreground "#2E3440" :weight normal))) t)
  '(nano-popout ((t (:foreground "#ebcb8b"))) t)

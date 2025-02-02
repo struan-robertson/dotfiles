@@ -933,8 +933,7 @@ If so, return path to .venv/bin"
 ;; The best git porcelain
 (use-package magit
   :demand t ;; Required for custom eshell prompt
-  :config
-  (setq magit-keep-region-overlay t))
+  )
 
 ;;;;; diff-hl
 ;; Highlight git diff in gutter
