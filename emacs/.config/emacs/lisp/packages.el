@@ -1152,7 +1152,10 @@ If so, return path to .venv/bin"
   (with-eval-after-load "mm-decode"
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext")
-  (add-to-list 'mm-discouraged-alternatives "multipart/related")))
+  (add-to-list 'mm-discouraged-alternatives "multipart/related"))
+
+  :bind (("C-x m" . mu4e-compose-new)))
+
 ;;;;; mu4e-alert
 ;; Desktop notifications for mu4e
 (use-package mu4e-alert
