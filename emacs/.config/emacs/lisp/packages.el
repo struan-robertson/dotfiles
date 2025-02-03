@@ -1218,8 +1218,14 @@ If so, return path to .venv/bin"
 				 (shell-quote-argument (expand-file-name file-name))))))))
 
 ;;;; citar
-;; reference management 
+;; reference management
+(use-package bibtex
+  :ensure nil
+  :demand t)
+
 (use-package citar
+  :after
+  bibtex
   :custom
   (org-cite-global-bibliography '("~/Sync/Notes/library.bib"))
   (org-cite-insert-processor 'citar)
