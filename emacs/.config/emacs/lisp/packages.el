@@ -1106,21 +1106,53 @@ If so, return path to .venv/bin"
 	mu4e-trash-folder "/Trash"
 	mu4e-refile-folder "/Archive")
 
+  ;; Update index automatically
+  (setq mu4e-update-interval 300
+	mu4e-get-mail-command "mbsync -c ~/.config/emacs/mail/mbsyncrc -a"
+	mu4e-change-filenames-when-moving t)
+
+  ;; Compose settings
+  (setq user-mail-address "contact@struan.tech"
+	user-full-name "Struan Robertson")
+
+  ;; Use msmtp for sending mail
+  (setq message-send-mail-function 'message-send-mail-with-sendmail
+	sendmail-program "msmtp"
+	message-sendmail-envelope-from 'header)
+
+  ;; Delete email buffer on exit
+  (setq message-kill-buffer-on-exit t)
+  
   ;; Enable HTML rendering
   (setq mu4e-view-show-images t
 	mu4e-view-show-addresses t)
-
+  
   ;; Enable threading
   (setq mu4e-headers-show-threads t)
+  
+  ;; Shortcuts
+  (setq mu4e-maildir-shortcuts
+	'((:maildir "/Inbox" :key ?i)
+          (:maildir "/Sent" :key ?s)
+          (:maildir "/Trash" :key ?t)
+          (:maildir "/Drafts" :key ?d)
+          (:maildir "/Archive" :key ?a)))
 
-  ;; Use fancy chars
-  ;; (setq mu4e-use-fancy-chars t)
-
+  ;; Bookmarks
+  (setq mu4e-bookmarks
+	'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?u)
+          (:name "Today's messages" :query "date:today..now" :key ?t)
+          (:name "Last 7 days" :query "date:7d..now" :key ?w)))
+  
   ;; Save attachments to Downloads
   (setq mu4e-attachment-dir "~/Downloads")
 
-  ;; TODO setup sending
-  )
+  ;; Prefer plaintext in multi-mime emails
+  (with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext")
+  (add-to-list 'mm-discouraged-alternatives "multipart/related")))
+
 ;;; Academic
 
 ;;;; Custom Functions

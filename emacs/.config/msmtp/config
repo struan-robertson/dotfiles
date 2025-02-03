@@ -1,0 +1,17 @@
+# ~/.config/msmtp/config
+defaults
+auth on
+tls on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile ~/.local/share/log/msmtp.log
+
+account purelymail
+host smtp.purelymail.com
+port 465
+from contact@struan.tech
+user contact@struan.tech
+passwordeval "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/mail/purelymail.gpg"
+tls_starttls off
+
+# Set as default account
+account default : purelymail
