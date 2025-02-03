@@ -1153,6 +1153,13 @@ If so, return path to .venv/bin"
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext")
   (add-to-list 'mm-discouraged-alternatives "multipart/related")))
+;;;;; mu4e-alert
+;; Desktop notifications for mu4e
+(use-package mu4e-alert
+  :config
+  (mu4e-alert-set-default-style 'libnotify)
+  :hook
+  (after-init . mu4e-alert-enable-notifications))
 
 ;;; Academic
 
