@@ -214,7 +214,8 @@
   :config
   (openwith-mode)
   (setq openwith-associations
-	'(("\\.pdf\\'" "sioyek" (file)))))
+	'(("\\.pdf\\'" "sioyek" (file))))
+  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler))
 
 ;;;;;; ace-window
 ;; More efficient window selection
