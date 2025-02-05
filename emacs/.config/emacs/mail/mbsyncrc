@@ -18,3 +18,25 @@ Patterns *
 Create Both
 Expunge Both
 SyncState *
+
+IMAPStore dundee-remote
+Host localhost
+Port 1143
+User sjyrobertson@dundee.ac.uk
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/mail/dundee.gpg"
+TLSType None
+PipelineDepth 1
+AuthMechs LOGIN
+
+MaildirStore dundee-local
+Path ~/.local/share/mail/dundee/
+Inbox ~/.local/share/mail/dundee/Inbox
+SubFolders Verbatim
+
+Channel dundee
+Far :dundee-remote:
+Near :dundee-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *
