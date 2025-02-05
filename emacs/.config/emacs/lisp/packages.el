@@ -1099,6 +1099,7 @@ If so, return path to .venv/bin"
 ;; Read mail based on the mu mail indexing system
 (use-package mu4e
   :ensure nil
+  :demand t
   :load-path "/usr/share/emacs/site-lisp/mu4e/"
   :config
   (setq mu4e-maildir "~/.local/share/mail/purelymail/"
@@ -1154,7 +1155,12 @@ If so, return path to .venv/bin"
   (add-to-list 'mm-discouraged-alternatives "text/richtext")
   (add-to-list 'mm-discouraged-alternatives "multipart/related"))
 
-  :bind (("C-x m" . mu4e-compose-new)))
+  (define-prefix-command 'my-mu4e-map)
+  (define-key my-mu4e-map (kbd "m") 'mu4e)
+  (define-key my-mu4e-map (kbd "c") 'mu4e-compose-new)
+
+  :bind-keymap ("C-x m" . my-mu4e-map))
+
 
 ;;;;; mu4e-alert
 ;; Desktop notifications for mu4e
@@ -1162,7 +1168,7 @@ If so, return path to .venv/bin"
   :config
   (mu4e-alert-set-default-style 'libnotify)
   :hook
-  (after-init . mu4e-alert-enable-notifications))
+  (elpaca-after-init . mu4e-alert-enable-notifications))
 
 ;;; Academic
 
