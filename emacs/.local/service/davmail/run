@@ -1,0 +1,2 @@
+#!/bin/ash
+exec davmail ~/.config/emacs/mail/davmail.properties
