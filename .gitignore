@@ -6,3 +6,4 @@ bubblejail/.local/share/bubblejail/instances/*/home/
 */.local/service/*/log/main
 
 /emacs/.config/emacs/mail/davmail.properties
+/emacs/.local/service/davmail/log/
