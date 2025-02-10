@@ -428,6 +428,7 @@
 	  (consult-line buffer)
 	  (consult-line-multi buffer)
 	  (consult-outline buffer)
+	  (mu4e-context-switch flat)
 	  ))
   (vertico-multiform-mode)
   
@@ -1139,6 +1140,11 @@ If so, return path to .venv/bin"
   ;; Compose settings
   (setq user-full-name "Struan Robertson")
 
+  ;; Use vertico instead of built in mu4e completing read functions
+  (setq mu4e-completing-read-function 'completing-read
+	mu4e-read-option-use-builtin nil)
+  
+  
   ;; Use msmtp for sending mail
   (setq message-send-mail-function 'message-send-mail-with-sendmail
 	sendmail-program "msmtp"
