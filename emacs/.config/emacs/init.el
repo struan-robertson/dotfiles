@@ -136,6 +136,7 @@
  '(nano-critical-i ((t (:background "#bf616a" :foreground "#2E3440" :weight normal))) t)
  '(nano-popout ((t (:foreground "#ebcb8b"))) t)
  '(nano-popout-i ((t (:background "#ebcb8b" :foreground "#2E3440"))) t)
+ '(shr-text ((t (:inherit \#4c566a))))
  '(transient-argument ((t (:inherit bold :weight bold))))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))

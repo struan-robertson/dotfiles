@@ -1102,20 +1102,42 @@ If so, return path to .venv/bin"
   :demand t
   :load-path "/usr/share/emacs/site-lisp/mu4e/"
   :config
-  (setq mu4e-maildir "~/.local/share/mail/purelymail/"
-	mu4e-sent-folder "/Sent"
-	mu4e-drafts-folder "/Drafts"
-	mu4e-trash-folder "/Trash"
-	mu4e-refile-folder "/Archive")
+  (setq mu4e-maildir "~/.local/share/mail")
 
+  (setq mu4e-contexts
+	(list
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Personal"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/purelymail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "contact@struan.tech")
+		  (mu4e-sent-folder . "/purelymail/Sent")
+		  (mu4e-drafts-folder . "/purelymail/Drafts")
+		  (mu4e-trash-folder . "/purelymail/Trash")
+		  (mu4e-refile-folder . "/purelymail/Archive")))
+	 ;; University outlook account
+	 (make-mu4e-context
+	  :name "University"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/dundee" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "s.j.y.robertson@dundee.ac.uk")
+		  (mu4e-sent-folder . "/dundee/Sent")
+		  (mu4e-drafts-folder . "/dundee/Drafts")
+		  (mu4e-trash-folder . "/dundee/Trash")
+		  (mu4e-refile-folder . "/dundee/Archive")))))
+  
   ;; Update index automatically
   (setq mu4e-update-interval 300
 	mu4e-get-mail-command "mbsync -c ~/.config/emacs/mail/mbsyncrc -a"
 	mu4e-change-filenames-when-moving t)
 
   ;; Compose settings
-  (setq user-mail-address "contact@struan.tech"
-	user-full-name "Struan Robertson")
+  (setq user-full-name "Struan Robertson")
 
   ;; Use msmtp for sending mail
   (setq message-send-mail-function 'message-send-mail-with-sendmail
@@ -1133,12 +1155,12 @@ If so, return path to .venv/bin"
   (setq mu4e-headers-show-threads t)
   
   ;; Shortcuts
-  (setq mu4e-maildir-shortcuts
-	'((:maildir "/Inbox" :key ?i)
-          (:maildir "/Sent" :key ?s)
-          (:maildir "/Trash" :key ?t)
-          (:maildir "/Drafts" :key ?d)
-          (:maildir "/Archive" :key ?a)))
+  ;; (setq mu4e-maildir-shortcuts
+  ;; 	'((:maildir "/Inbox" :key ?i)
+  ;;         (:maildir "/Sent" :key ?s)
+  ;;         (:maildir "/Trash" :key ?t)
+  ;;         (:maildir "/Drafts" :key ?d)
+  ;;         (:maildir "/Archive" :key ?a)))
 
   ;; Bookmarks
   (setq mu4e-bookmarks
@@ -1164,11 +1186,11 @@ If so, return path to .venv/bin"
 
 ;;;;; mu4e-alert
 ;; Desktop notifications for mu4e
-(use-package mu4e-alert
-  :config
-  (mu4e-alert-set-default-style 'libnotify)
-  :hook
-  (elpaca-after-init . mu4e-alert-enable-notifications))
+;; (use-package mu4e-alert
+;;   :config
+;;   (mu4e-alert-set-default-style 'libnotify)
+;;   :hook
+;;   (elpaca-after-init . mu4e-alert-enable-notifications))
 
 ;;; Academic
 

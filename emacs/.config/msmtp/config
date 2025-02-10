@@ -13,5 +13,15 @@ user contact@struan.tech
 passwordeval "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/mail/purelymail.gpg"
 tls_starttls off
 
+account dundee
+tls off
+tls_starttls off
+host localhost
+port 1025
+from s.j.y.robertson@dundee.ac.uk
+user sjyrobertson@dundee.ac.uk
+passwordeval "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/mail/dundee.gpg"
+auth plain
+
 # Set as default account
 account default : purelymail
