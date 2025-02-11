@@ -430,6 +430,8 @@
 	  (consult-outline buffer)
 	  (mu4e-context-switch flat)
 	  (mu4e flat)
+	  (mu4e-view-action flat)
+	  (mu4e-compose-new flat)
 	  ))
   (vertico-multiform-mode)
   
