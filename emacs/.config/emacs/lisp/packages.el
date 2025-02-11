@@ -1123,16 +1123,18 @@ If so, return path to .venv/bin"
 		  (mu4e-trash-folder . "/purelymail/Trash")
 		  (mu4e-refile-folder . "/purelymail/Archive")
 		  (mu4e-maildir-shortcuts . ((:maildir "/purelymail/Inbox" :key ?i)
-					    (:maildir "/purelymail/Sent" :key ?s)
-					    (:maildir "/purelymail/Trash" :key ?t)
-					    (:maildir "/purelymail/Drafts" :key ?d)
-					    (:maildir "/purelymail/Archive" :key ?a)))))
+					     (:maildir "/purelymail/Sent" :key ?s)
+					     (:maildir "/purelymail/Trash" :key ?t)
+					     (:maildir "/purelymail/Drafts" :key ?d)
+					     (:maildir "/purelymail/Archive" :key ?a))))
+	  :enter-func '(lambda () (when (bound-and-true-p org-msg-mode) (org-msg-mode -1))))
 	 ;; University outlook account
 	 (make-mu4e-context
 	  :name "University"
 	  :match-func
 	  (lambda (msg)
 	    (when msg
+
 	      (string-prefix-p "/dundee" (mu4e-message-field msg :maildir))))
 	  :vars '((user-mail-address . "s.j.y.robertson@dundee.ac.uk")
 		  (mu4e-sent-folder . "/dundee/Sent")
@@ -1140,12 +1142,14 @@ If so, return path to .venv/bin"
 		  (mu4e-trash-folder . "/dundee/Trash")
 		  (mu4e-refile-folder . "/dundee/Archive")
 		  (mu4e-maildir-shortcuts . ((:maildir "/dundee/Inbox" :key ?i)
-					    (:maildir "/dundee/Sent" :key ?s)
-					    (:maildir "/dundee/Trash" :key ?t)
-					    (:maildir "/dundee/Drafts" :key ?d)
-					    (:maildir "/dundee/Archive" :key ?a)))
-		  ))))
-    
+					     (:maildir "/dundee/Sent" :key ?s)
+					     (:maildir "/dundee/Trash" :key ?t)
+					     (:maildir "/dundee/Drafts" :key ?d)
+					     (:maildir "/dundee/Archive" :key ?a)))
+		  )
+	  :enter-func '(lambda () (unless (bound-and-true-p org-msg-mode) (org-msg-mode 1)))
+	  )))
+  
   ;; Update index automatically
   (setq mu4e-update-interval 300
 	mu4e-get-mail-command "mbsync -c ~/.config/emacs/mail/mbsyncrc -a"
@@ -1187,9 +1191,9 @@ If so, return path to .venv/bin"
 
   ;; Prefer plaintext in multi-mime emails
   (with-eval-after-load "mm-decode"
-  (add-to-list 'mm-discouraged-alternatives "text/html")
-  (add-to-list 'mm-discouraged-alternatives "text/richtext")
-  (add-to-list 'mm-discouraged-alternatives "multipart/related"))
+    (add-to-list 'mm-discouraged-alternatives "text/html")
+    (add-to-list 'mm-discouraged-alternatives "text/richtext")
+    (add-to-list 'mm-discouraged-alternatives "multipart/related"))
 
   (define-prefix-command 'my-mu4e-map)
   (define-key my-mu4e-map (kbd "m") 'mu4e)
@@ -1198,6 +1202,20 @@ If so, return path to .venv/bin"
   :bind-keymap ("C-x m" . my-mu4e-map))
 
 
+;;;;; org-msg
+;; Use org-mode to compose HTML emails
+(use-package org-msg
+  :ensure
+  (:host github :repo "jeremy-compostella/org-msg"
+	 :remotes ("pull-request" :repo "spencerjackson/org-msg"))
+  :config
+  (setq mail-user-agent 'mu4e-user-agent
+	org-msg-default-alternatives '((new		. (text html))
+				       (reply-to-html	. (text html))
+				       (reply-to-text	. (text)))
+	org-msg-convert-citation t)
+  (org-msg-mode))
+  
 ;;; Academic
 
 ;;;; Custom Functions
