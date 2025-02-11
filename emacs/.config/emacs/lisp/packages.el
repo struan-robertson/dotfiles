@@ -429,6 +429,7 @@
 	  (consult-line-multi buffer)
 	  (consult-outline buffer)
 	  (mu4e-context-switch flat)
+	  (mu4e flat)
 	  ))
   (vertico-multiform-mode)
   
@@ -1118,7 +1119,12 @@ If so, return path to .venv/bin"
 		  (mu4e-sent-folder . "/purelymail/Sent")
 		  (mu4e-drafts-folder . "/purelymail/Drafts")
 		  (mu4e-trash-folder . "/purelymail/Trash")
-		  (mu4e-refile-folder . "/purelymail/Archive")))
+		  (mu4e-refile-folder . "/purelymail/Archive")
+		  (mu4e-maildir-shortcuts . ((:maildir "/purelymail/Inbox" :key ?i)
+					    (:maildir "/purelymail/Sent" :key ?s)
+					    (:maildir "/purelymail/Trash" :key ?t)
+					    (:maildir "/purelymail/Drafts" :key ?d)
+					    (:maildir "/purelymail/Archive" :key ?a)))))
 	 ;; University outlook account
 	 (make-mu4e-context
 	  :name "University"
@@ -1130,8 +1136,14 @@ If so, return path to .venv/bin"
 		  (mu4e-sent-folder . "/dundee/Sent")
 		  (mu4e-drafts-folder . "/dundee/Drafts")
 		  (mu4e-trash-folder . "/dundee/Trash")
-		  (mu4e-refile-folder . "/dundee/Archive")))))
-  
+		  (mu4e-refile-folder . "/dundee/Archive")
+		  (mu4e-maildir-shortcuts . ((:maildir "/dundee/Inbox" :key ?i)
+					    (:maildir "/dundee/Sent" :key ?s)
+					    (:maildir "/dundee/Trash" :key ?t)
+					    (:maildir "/dundee/Drafts" :key ?d)
+					    (:maildir "/dundee/Archive" :key ?a)))
+		  ))))
+    
   ;; Update index automatically
   (setq mu4e-update-interval 300
 	mu4e-get-mail-command "mbsync -c ~/.config/emacs/mail/mbsyncrc -a"
@@ -1160,13 +1172,7 @@ If so, return path to .venv/bin"
   ;; Enable threading
   (setq mu4e-headers-show-threads t)
   
-  ;; Shortcuts
-  ;; (setq mu4e-maildir-shortcuts
-  ;; 	'((:maildir "/Inbox" :key ?i)
-  ;;         (:maildir "/Sent" :key ?s)
-  ;;         (:maildir "/Trash" :key ?t)
-  ;;         (:maildir "/Drafts" :key ?d)
-  ;;         (:maildir "/Archive" :key ?a)))
+  
 
   ;; Bookmarks
   (setq mu4e-bookmarks
@@ -1189,14 +1195,6 @@ If so, return path to .venv/bin"
 
   :bind-keymap ("C-x m" . my-mu4e-map))
 
-
-;;;;; mu4e-alert
-;; Desktop notifications for mu4e
-;; (use-package mu4e-alert
-;;   :config
-;;   (mu4e-alert-set-default-style 'libnotify)
-;;   :hook
-;;   (elpaca-after-init . mu4e-alert-enable-notifications))
 
 ;;; Academic
 
