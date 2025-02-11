@@ -1201,6 +1201,11 @@ If so, return path to .venv/bin"
 
   :bind-keymap ("C-x m" . my-mu4e-map))
 
+(use-package mu4e-icalendar
+  :ensure nil
+  :config
+  (gnus-icalendar-setup)
+  (setq mu4e-icalendar-trash-after-reply t))
 
 ;;;;; org-msg
 ;; Use org-mode to compose HTML emails
