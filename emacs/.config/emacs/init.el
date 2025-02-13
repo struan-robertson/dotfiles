@@ -50,8 +50,8 @@
 (load "keybindings")
 
 ;;; Faces
-(set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light)
-(set-face-attribute 'default nil :font "Roboto Mono" :height 130)
+(set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light :foreground "#a8aebb")
+(set-face-attribute 'default nil :font "Roboto Mono" :height 130 :foreground "#a8aebb")
 
 ;;; Custom Variables 
 (custom-set-variables
@@ -134,10 +134,14 @@
  '(magit-diff-context-highlight ((t (:inherit (highlight nano-faded) :extend t :background "#2e3440" :foreground "#FFFFFF"))))
  '(nano-critical ((t (:foreground "#bf616a" :weight normal))) t)
  '(nano-critical-i ((t (:background "#bf616a" :foreground "#2E3440" :weight normal))) t)
+ '(nano-default ((t (:foreground "#a8aebb"))) t)
+ '(nano-default-i ((t (:background "#a8aebb" :foreground "#2E3440"))) t)
  '(nano-popout ((t (:foreground "#ebcb8b"))) t)
  '(nano-popout-i ((t (:background "#ebcb8b" :foreground "#2E3440"))) t)
+ '(nano-strong ((t (:foreground "#9da4b3" :weight bold))) t)
+ '(nano-strong-i ((t (:background "#a8aebb" :foreground "#2E3440" :weight normal))) t)
  '(show-paren-match ((t (:inherit nano-strong :foreground "#b48ead"))))
- '(shr-text ((t (:inherit \#4c566a))))
+ '(shr-text ((t (:inherit nano-default))))
  '(transient-argument ((t (:inherit bold :weight bold))))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
