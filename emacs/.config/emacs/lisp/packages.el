@@ -163,7 +163,9 @@
   :ensure
   (:host github :repo "rougier/nano-theme" :branch "master")
   :config
-  (load-theme 'nano-dark t))
+  (nano-dark)
+  :custom
+  (nano-dark-foreground "#bbc6d9"))
 
 ;;;;;; eros
 ;; Display eval result (including for debug) in popup instead of echo area.

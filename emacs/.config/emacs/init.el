@@ -50,8 +50,8 @@
 (load "keybindings")
 
 ;;; Faces
-(set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light :foreground "#a8aebb")
-(set-face-attribute 'default nil :font "Roboto Mono" :height 130 :foreground "#a8aebb")
+(set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light :foreground "#bbc6d9")
+(set-face-attribute 'default nil :font "Roboto Mono" :height 130 :foreground "#bbc6d9")
 
 ;;; Custom Variables 
 (custom-set-variables
@@ -86,9 +86,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#2E3440" :foreground "#bbc6d9" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 128 :width normal :foundry "GOOG" :family "Roboto Mono"))))
  '(avy-lead-face ((t (:background "#bf616a" :foreground "white"))))
  '(avy-lead-face-0 ((t (:background "#5e81ac" :foreground "white"))))
- '(avy-lead-face-1 ((t (:background "#d8dee9" :foreground "white"))))
+ '(avy-lead-face-1 ((t (:background "#bbc6d9" :foreground "white"))))
  '(avy-lead-face-2 ((t (:background "#b48ead" :foreground "white"))))
  '(circe-highlight-nick-face ((t (:foreground "#8FBCBB" :weight bold))))
  '(circe-prompt-face ((t (:background "#5E81AC" :foreground "#2E3440" :weight bold))))
@@ -113,7 +114,7 @@
  '(font-latex-italic-face ((t (:inherit italic :foreground "#a3be8c"))))
  '(font-latex-sectioning-5-face ((t (:inherit variable-pitch :foreground "#ECEFF4" :weight normal))))
  '(font-latex-sedate-face ((t (:foreground "#81a1c1"))))
- '(font-latex-string-face ((t (:foreground "#d8dee9"))))
+ '(font-latex-string-face ((t (:foreground "#bbc6d9"))))
  '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a"))))
  '(hi-aquamarine ((t (:background "#8fbcbb" :foreground "#2e3440"))))
  '(hi-blue ((t (:background "#88c0d0" :foreground "#2e3440"))))
@@ -134,12 +135,14 @@
  '(magit-diff-context-highlight ((t (:inherit (highlight nano-faded) :extend t :background "#2e3440" :foreground "#FFFFFF"))))
  '(nano-critical ((t (:foreground "#bf616a" :weight normal))) t)
  '(nano-critical-i ((t (:background "#bf616a" :foreground "#2E3440" :weight normal))) t)
- '(nano-default ((t (:foreground "#a8aebb"))) t)
- '(nano-default-i ((t (:background "#a8aebb" :foreground "#2E3440"))) t)
+ '(nano-default ((t (:foreground "#bbc6d9"))) t)
+ '(nano-default-i ((t (:background "#bbc6d9" :foreground "#2E3440"))) t)
  '(nano-popout ((t (:foreground "#ebcb8b"))) t)
  '(nano-popout-i ((t (:background "#ebcb8b" :foreground "#2E3440"))) t)
- '(nano-strong ((t (:foreground "#9da4b3" :weight bold))) t)
- '(nano-strong-i ((t (:background "#a8aebb" :foreground "#2E3440" :weight normal))) t)
+ '(nano-strong ((t (:foreground "#bbc6d9" :weight bold))) t)
+ '(nano-strong-i ((t (:background "#bbc6d9" :foreground "#2E3440" :weight normal))) t)
+ '(pulse-highlight-face ((t (:foreground "#5e81ac"))))
+ '(pulse-highlight-start-face ((t (:foreground "#5e81ac"))))
  '(show-paren-match ((t (:inherit nano-strong :foreground "#b48ead"))))
  '(shr-text ((t (:inherit nano-default))))
  '(transient-argument ((t (:inherit bold :weight bold))))
