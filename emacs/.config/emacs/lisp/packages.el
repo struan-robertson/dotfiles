@@ -1344,7 +1344,7 @@ If so, return path to .venv/bin"
   ("C-$" . powerthesaurus-transient))
 
 ;;;; third-time
-Time tracking, not sure if this is the best place for this
+;; Time tracking, not sure if this is the best place for this
 (use-package third-time
   :demand t
   :config
