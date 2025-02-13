@@ -629,6 +629,30 @@
   :hook
   (embark-collect . consult-preview-at-point-mode))
 
+;;;; gptel
+;; LLM support in emacs
+(use-package gptel
+  :config
+  ;; Together.ai offers an OpenAI compatible API
+  (setq
+   gptel-model   'deepseek-ai/DeepSeek-V3
+   gptel-default-mode 'org-mode
+   gptel-backend (gptel-make-openai "DeepSeek"         ;Any name you want
+		   :host "api.together.xyz"
+		   :key (shell-command-to-string "gpg -dq ~/.config/emacs/together_api_key.gpg")                   ;can be a function that returns the key
+		   :stream t
+		   :models '(;; has many more, check together.ai
+			     codellama/CodeLlama-34b-Instruct-hf
+			     deepseek-ai/DeepSeek-R1
+			     deepseek-ai/DeepSeek-V3))
+   gptel--openai-models '()
+   pulse-flag t
+   gptel-prompt-prefix-alist '((markdown-mode . "# ")
+			       (org-mode . "* ")
+			       (text-mode . "# ")))
+  :bind
+  ("C-x c" . gptel))
+
 ;;; Languages
 
 ;;;; Meta
