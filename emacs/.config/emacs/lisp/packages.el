@@ -1207,8 +1207,8 @@ If so, return path to .venv/bin"
 (use-package org-msg
   :ensure
   (:host github :repo "jeremy-compostella/org-msg"
-	 :remotes ("pull-request" :repo "spencerjackson/org-msg")
-	 :branch "pull-request/remove_forbidden_properties")
+	 :remotes ("pull_request" :repo "spencerjackson/org-msg"
+		   :branch "remove_forbidden_properties"))
   :config
   (setq mail-user-agent 'mu4e-user-agent
 	org-msg-default-alternatives '((new		. (text html))
