@@ -650,8 +650,12 @@
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
 			       (text-mode . "# ")))
-  :bind
-  ("C-x c" . gptel))
+
+  (define-prefix-command 'my-gptel-map)
+  (define-key my-gptel-map (kbd "c") 'gptel)
+  (define-key my-gptel-map (kbd "m") 'gptel-menu)
+
+  :bind-keymap ("C-x c" . my-gptel-map))
 
 ;;; Org
 ;;;; org
