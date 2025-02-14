@@ -653,6 +653,15 @@
   :bind
   ("C-x c" . gptel))
 
+;;; Org
+;;;; org
+;; Organisational fun
+(use-package org
+  :ensure nil
+  :config
+  (plist-put org-format-latex-options :scale 0.66)
+  (setq org-preview-latex-default-process 'dvisvgm))
+
 ;;; Languages
 
 ;;;; Meta
