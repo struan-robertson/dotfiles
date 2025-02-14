@@ -42,19 +42,19 @@ ring-ver-color=5e81acff
 ring-wrong-color=bf616aff
 
 # Sets the color of key press highlight segments
-key-hl-color=d8dee9ff
+key-hl-color=bbc6d9ff
 # Sets the color of backspace highlight segments
-bs-hl-color=d8dee9ff
+bs-hl-color=bbc6d9ff
 # Sets the color of the lines that separate highlight segments
 separator-color=3b4252ff
 
 # Sets the color of the text
-text-color=eceff4ff
+text-color=bbc6d9ff
 # Sets the color of the text when cleared
-text-clear-color=eceff4ff
+text-clear-color=bbc6d9ff
 # Sets the color of the text when Caps Lock is active
-text-caps-lock-color=eceff4ff
+text-caps-lock-color=bbc6d9ff
 # Sets the color of the text when verifying
-text-ver-color=eceff4ff
+text-ver-color=bbc6d9ff
 # Sets the color of the text when invalid
-text-wrong-color=eceff4ff
+text-wrong-color=bbc6d9ff

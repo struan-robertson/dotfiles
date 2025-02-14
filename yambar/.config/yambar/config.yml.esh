@@ -12,7 +12,7 @@ bar:
   location: top
 
   background: 2e344000
-  foreground: eceff4ff
+  foreground: bbc6d9ff
 
 <% if [ $(hostname) = "alpine" ]; then -%>
   font: Roboto Mono:pixelsize=20
@@ -39,7 +39,7 @@ bar:
                    margin: 8
 <% fi -%>
 
-                   foreground: eceff44d
+                   foreground: bbc6d94d
                    on-click: "swaymsg --quiet workspace {name}"
                conditions:
                  state == focused: 
