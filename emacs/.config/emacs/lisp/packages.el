@@ -637,9 +637,9 @@
   (setq
    gptel-model   'deepseek-ai/DeepSeek-V3
    gptel-default-mode 'org-mode
-   gptel-backend (gptel-make-openai "DeepSeek"         ;Any name you want
+   gptel-backend (gptel-make-openai "DeepSeek"         ; Any name you want
 		   :host "api.together.xyz"
-		   :key (shell-command-to-string "gpg -dq ~/.config/emacs/together_api_key.gpg")                   ;can be a function that returns the key
+		   :key (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg")                   ; Can be a function that returns the key
 		   :stream t
 		   :models '(;; has many more, check together.ai
 			     codellama/CodeLlama-34b-Instruct-hf

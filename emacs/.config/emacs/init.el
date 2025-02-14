@@ -116,6 +116,7 @@
  '(font-latex-sedate-face ((t (:foreground "#81a1c1"))))
  '(font-latex-string-face ((t (:foreground "#bbc6d9"))))
  '(font-latex-warning-face ((t (:inherit bold :foreground "#bf616a"))))
+ '(gptel-context-highlight-face ((t (:extend t :background "#4c566a"))))
  '(hi-aquamarine ((t (:background "#8fbcbb" :foreground "#2e3440"))))
  '(hi-blue ((t (:background "#88c0d0" :foreground "#2e3440"))))
  '(hi-green ((t (:background "#a3be8c" :foreground "#2e3440"))))
