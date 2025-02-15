@@ -125,7 +125,7 @@
 (use-package flymake
   :ensure nil
   :hook
-  ((LaTeX-mode org-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode)
+  ((LaTeX-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode)
   :config
   (setq flymake-diagnostic-functions '()))
 
