@@ -634,6 +634,7 @@
 (use-package gptel
   :config
   ;; Together.ai offers an OpenAI compatible API
+  (setf (gptel-get-backend "ChatGPT") nil)
   (setq
    gptel-model   'deepseek-ai/DeepSeek-V3
    gptel-default-mode 'org-mode
@@ -645,7 +646,6 @@
 			     codellama/CodeLlama-34b-Instruct-hf
 			     deepseek-ai/DeepSeek-R1
 			     deepseek-ai/DeepSeek-V3))
-   gptel--openai-models '()
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
