@@ -656,6 +656,36 @@
   (define-key my-gptel-map (kbd "m") 'gptel-menu)
   (define-key my-gptel-map (kbd "a") 'gptel-context-add)
 
+  (defun my-gptel-deepseek-wrap-think-block (beg end)
+    "Wrap '<think>' blocks in an Org-mode drawer if not already wrapped."
+    (when (derived-mode-p 'org-mode)
+      (save-excursion
+	(goto-char beg)
+	;; Find all occurrences of <think> blocks
+	(while (re-search-forward "^<think>" end t)
+          (let ((start (line-beginning-position)))
+            ;; Check if the block is already wrapped
+            (unless (save-excursion
+                      (forward-line -1)
+                      (looking-at "^:THINKING:$"))
+              ;; Insert Org-mode drawer start
+              (goto-char start)
+              (insert-and-inherit ":THINKING:\n")
+              (forward-line 1)
+              ;; Find the closing tag again after insertion
+              (when (re-search-forward "</think>" end t)
+		(end-of-line)
+		;; Ensure we don't add duplicate :END:
+		(unless (looking-at "\n:END:")
+                  (insert-and-inherit "\n:END:\n"))
+		;; Move back to the start of the drawer for org-cycle
+		(goto-char start)
+		(org-cycle)))))))
+    (message "Think blocks wrapped and folded."))
+  (add-hook
+   'gptel-post-response-functions
+   #'my-gptel-deepseek-wrap-think-block)
+
   :bind-keymap ("C-x c" . my-gptel-map))
 
 ;;; Org
