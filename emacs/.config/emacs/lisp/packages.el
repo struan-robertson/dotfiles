@@ -654,6 +654,7 @@
   (define-prefix-command 'my-gptel-map)
   (define-key my-gptel-map (kbd "c") 'gptel)
   (define-key my-gptel-map (kbd "m") 'gptel-menu)
+  (define-key my-gptel-map (kbd "a") 'gptel-context-add)
 
   :bind-keymap ("C-x c" . my-gptel-map))
 
