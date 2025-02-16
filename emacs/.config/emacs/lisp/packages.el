@@ -1264,8 +1264,7 @@ If so, return path to .venv/bin"
 	org-msg-default-alternatives '((new		. (text html))
 				       (reply-to-html	. (text html))
 				       (reply-to-text	. (text)))
-	org-msg-convert-citation t)
-  (org-msg-mode))
+	org-msg-convert-citation t))
   
 ;;; Academic
 
