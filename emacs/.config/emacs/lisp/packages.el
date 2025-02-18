@@ -707,9 +707,7 @@
 
 ;;; Languages
 
-;;;; Meta
-
-;;;;; treesit-auto
+-auto
 ;; Automatically install treesitter languages if available
 (use-package treesit-auto
   :custom
@@ -881,8 +879,10 @@ If so, return path to .venv/bin"
 	'(ruff-isort ruff))
   (setf (alist-get 'python-ts-mode apheleia-mode-alist)
 	'(ruff-isort ruff))
+  (setq apheleia-remote-algorithm 'local)
   :hook
   (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
+
 
 ;;;;; dape
 ;; Debug Adapter Protocol for Emacs
@@ -954,7 +954,9 @@ If so, return path to .venv/bin"
 (use-package flymake-ruff
   :ensure
   (:host github :repo "erickgnavar/flymake-ruff"
-	 :remotes ("fork" :repo "struan-robertson/flymake-ruff" :protocol ssh))
+	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"
+		   :protocol ssh
+		   :branch "master"))
   :config
   (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
 
@@ -1299,8 +1301,7 @@ If so, return path to .venv/bin"
 	org-msg-default-alternatives '((new		. (text html))
 				       (reply-to-html	. (text html))
 				       (reply-to-text	. (text)))
-	org-msg-convert-citation t)
-  (org-msg-mode))
+	org-msg-convert-citation t))
 
 ;;; Academic
 
