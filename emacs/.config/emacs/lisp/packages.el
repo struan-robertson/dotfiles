@@ -657,7 +657,7 @@
   (define-prefix-command 'my-gptel-map)
   (define-key my-gptel-map (kbd "c") 'gptel)
   (define-key my-gptel-map (kbd "m") 'gptel-menu)
-  (define-key my-gptel-map (kbd "a") 'gptel-context-add)
+  (define-key my-gptel-map (kbd "a") 'gptel-add)
 
   (defun my-gptel-deepseek-wrap-think-block (beg end)
     "Wrap '<think>' blocks in an Org-mode drawer if not already wrapped."
