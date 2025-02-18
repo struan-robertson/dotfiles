@@ -654,12 +654,12 @@
 			       (org-mode . "* ")
 			       (text-mode . "# ")))
 
-  (define-prefix-command 'my-gptel-map)
-  (define-key my-gptel-map (kbd "c") 'gptel)
-  (define-key my-gptel-map (kbd "m") 'gptel-menu)
-  (define-key my-gptel-map (kbd "a") 'gptel-add)
+  (define-prefix-command 'my/gptel-map)
+  (define-key my/gptel-map (kbd "c") 'gptel)
+  (define-key my/gptel-map (kbd "m") 'gptel-menu)
+  (define-key my/gptel-map (kbd "a") 'gptel-add)
 
-  (defun my-gptel-deepseek-wrap-think-block (beg end)
+  (defun my/gptel-deepseek-wrap-think-block (beg end)
     "Wrap '<think>' blocks in an Org-mode drawer if not already wrapped."
     (when (derived-mode-p 'org-mode)
       (save-excursion
@@ -687,9 +687,9 @@
     (message "Think blocks wrapped and folded."))
   (add-hook
    'gptel-post-response-functions
-   #'my-gptel-deepseek-wrap-think-block)
+   #'my/gptel-deepseek-wrap-think-block)
 
-  :bind-keymap ("C-x c" . my-gptel-map))
+  :bind-keymap ("C-x c" . my/gptel-map))
 
 ;;; Org
 ;;;; org
@@ -1277,11 +1277,11 @@ If so, return path to .venv/bin"
     (add-to-list 'mm-discouraged-alternatives "text/richtext")
     (add-to-list 'mm-discouraged-alternatives "multipart/related"))
 
-  (define-prefix-command 'my-mu4e-map)
-  (define-key my-mu4e-map (kbd "m") 'mu4e)
-  (define-key my-mu4e-map (kbd "c") 'mu4e-compose-new)
+  (define-prefix-command 'my/mu4e-map)
+  (define-key my/mu4e-map (kbd "m") 'mu4e)
+  (define-key my/mu4e-map (kbd "c") 'mu4e-compose-new)
 
-  :bind-keymap ("C-x m" . my-mu4e-map))
+  :bind-keymap ("C-x m" . my/mu4e-map))
 
 (use-package mu4e-icalendar
   :ensure nil
