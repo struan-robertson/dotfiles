@@ -877,8 +877,10 @@ If so, return path to .venv/bin"
 	'(ruff-isort ruff))
   (setf (alist-get 'python-ts-mode apheleia-mode-alist)
 	'(ruff-isort ruff))
+  (setq apheleia-remote-algorithm 'local)
   :hook
   (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
+
 
 ;;;;; dape
 ;; Debug Adapter Protocol for Emacs
@@ -1296,7 +1298,7 @@ If so, return path to .venv/bin"
 				       (reply-to-html	. (text html))
 				       (reply-to-text	. (text)))
 	org-msg-convert-citation t))
-  
+
 ;;; Academic
 
 ;;;; Custom Functions
