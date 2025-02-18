@@ -707,7 +707,6 @@
 
 ;;; Languages
 
--auto
 ;; Automatically install treesitter languages if available
 (use-package treesit-auto
   :custom
