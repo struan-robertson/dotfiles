@@ -54,7 +54,11 @@
   ;; Improve performance by decreasing the number of garbage collections
   ;; This increases memory pressure, but I have plenty RAM
   ;; Do not increase the original value (800000) by a factor of more than 100
-  (gc-cons-threshold (* 800000 50)))
+  (gc-cons-threshold (* 800000 50))
+
+  ;; Set date style
+  (calendar-date-style 'european)
+  )
 
 
 ;;;;; Built In
@@ -1182,6 +1186,8 @@ If so, return path to .venv/bin"
   :config
   (setq mu4e-maildir "~/.local/share/mail")
 
+  (setq mu4e-headers-date-format "%d/%m/%y")
+  
   (setq mu4e-contexts
 	(list
 	 ;; Personal account
@@ -1295,7 +1301,7 @@ If so, return path to .venv/bin"
 				       (reply-to-text	. (text)))
 	org-msg-convert-citation t)
   (org-msg-mode))
-  
+
 ;;; Academic
 
 ;;;; Custom Functions
