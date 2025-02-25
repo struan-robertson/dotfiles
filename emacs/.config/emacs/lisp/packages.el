@@ -670,6 +670,8 @@
   (define-key my/gptel-map (kbd "m") 'gptel-menu)
   (define-key my/gptel-map (kbd "a") 'gptel-add)
 
+  (setq gptel-api-key (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg"))
+
   (defun my/gptel-deepseek-wrap-think-block (beg end)
     "Wrap '<think>' blocks in an Org-mode drawer if not already wrapped."
     (when (derived-mode-p 'org-mode)
