@@ -1314,7 +1314,16 @@ If so, return path to .venv/bin"
 	org-msg-default-alternatives '((new		. (text html))
 				       (reply-to-html	. (text html))
 				       (reply-to-text	. (text)))
-	org-msg-convert-citation t))
+	org-msg-convert-citation t)
+
+  ;; Fix issue with message being saved to drafts
+  (defun org-msg-edit-mode-mu4e ()
+    "Setup mu4e faces, addresses completion and run mu4e."
+    (org-msg--mu4e-fun-call "compose-remap-faces")
+    (unless (mu4e-running-p)
+      (org-msg--mu4e-fun-call "start"))
+    (when mu4e-compose-complete-addresses
+      (org-msg--mu4e-fun-call "compose-setup-completion"))))
 
 ;;; Academic
 
