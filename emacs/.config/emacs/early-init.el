@@ -11,9 +11,6 @@
 ;; Disable the menu bar
 (menu-bar-mode -1)
 
-;; Pixel scrolling
-(pixel-scroll-precision-mode 1)
-
 (column-number-mode)
 
 (message "early-init.el loaded successfully")

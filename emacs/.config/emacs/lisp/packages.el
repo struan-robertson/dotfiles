@@ -232,6 +232,17 @@
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
 	aw-scope 'frame))
 
+;;;;;; ultra-scroll
+;; Smoother scrolling
+(use-package ultra-scroll
+  :ensure
+  (:host github :repo "jdtsmith/ultra-scroll" :branch "main") 
+  :init
+  (setq scroll-conservatively 101 ; important!
+        scroll-margin 0) 
+  :config
+  (ultra-scroll-mode 1))
+
 ;;; Help
 
 ;;;; which-key
