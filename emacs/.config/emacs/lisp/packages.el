@@ -714,7 +714,9 @@
 	 (plist-put org-format-latex-options :scale 0.66))
 	((string= (shell-command-to-string "hostname") "alpine\n")
 	 (plist-put org-format-latex-options :scale 1.5)))
-  (setq org-preview-latex-default-process 'dvisvgm)
+  (setq org-preview-latex-default-process 'dvisvgm
+	org-startup-folded t
+	org-startup-with-latex-preview t)
   :hook
   (org-mode . visual-line-mode))
 
