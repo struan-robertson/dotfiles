@@ -61,25 +61,35 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(safe-local-variable-values
-   '((python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa-gui/.venv/")
-     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/santa/.venv/")
+   '((python-shell-virtualenv-root
+      . "/home/struan/Development/Doctorate/santa-gui/.venv/")
+     (python-shell-virtualenv-root
+      . "/home/struan/Development/Doctorate/santa/.venv/")
      (python-shell-virtualenv-root . "/home/srobertson/santa/.venv/")
-     (python-shell-virtualenv-root . "/home/srobertson/StyleGAN/.venv/")
-     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/sefa/.venv/")
+     (python-shell-virtualenv-root
+      . "/home/srobertson/StyleGAN/.venv/")
+     (python-shell-virtualenv-root
+      . "/home/struan/Development/Doctorate/sefa/.venv/")
      (citar-bibliography . "biblio.bib")
-     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/dataset-similarities/.venv/")
-     (python-shell-process-environment "HSA_OVERRIDE_GFX_VERSION=10.3.0")
-     (python-shell-virtualenv-root . "/home/struan/Development/Doctorate/shoeprint-image-retrieval/.venv/")
-     (python-shell-interpreter . "/home/srobertson/Template Matching/.venv/bin/python")
-     (python-shell-virtualenv-root . "/home/srobertson/Template Matching/.venv/")
+     (python-shell-virtualenv-root
+      . "/home/struan/Development/Doctorate/dataset-similarities/.venv/")
+     (python-shell-process-environment
+      "HSA_OVERRIDE_GFX_VERSION=10.3.0")
+     (python-shell-virtualenv-root
+      . "/home/struan/Development/Doctorate/shoeprint-image-retrieval/.venv/")
+     (python-shell-interpreter
+      . "/home/srobertson/Template Matching/.venv/bin/python")
+     (python-shell-virtualenv-root
+      . "/home/srobertson/Template Matching/.venv/")
      (python-shell-process-environment quote
 				       ("HSA_OVERRIDE_GFX_VERSION=10.3.0"))
-     (python-shell-virtualenv-root . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/")
-     (python-shell-interpreter . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/bin/python")
+     (python-shell-virtualenv-root
+      . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/")
+     (python-shell-interpreter
+      . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/bin/python")
      (python-shell-virtualenv-root . ".venv/")
      (python-shell-interpreter . ".venv/bin/python")
-     (eshell-toggle-use-git-root . t)
-     (eval outline-hide-sublevels 2))))
+     (eshell-toggle-use-git-root . t) (eval outline-hide-sublevels 2))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
