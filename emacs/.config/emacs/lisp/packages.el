@@ -1405,7 +1405,7 @@ If so, return path to .venv/bin"
   (citar-bibliography org-cite-global-bibliography)
   :hook
   ((org-mode tex) . citar-capf-setup)
-  :bind (("C-c b" . citar-open)
+  :bind (("C-x M-b" . citar-open)
 	 :map org-mode-map
 	 ("C-c c" . org-cite-insert)
 	 :map TeX-mode-map
