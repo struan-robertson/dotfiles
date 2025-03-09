@@ -646,6 +646,12 @@
 
 ;;;; gptel
 ;; LLM support in emacs
+
+(defmacro my/execute-locally (sexp)
+  "Execute SEXP on the local machine, even when the buffer is associated with a remote TRAMP host."
+  `(let ((default-directory "~/"))
+     ,sexp))
+
 (use-package gptel
   :config
   ;; Together.ai offers an OpenAI compatible API
@@ -655,7 +661,7 @@
    gptel-default-mode 'org-mode
    gptel-backend (gptel-make-openai "DeepSeek"         ; Any name you want
 		   :host "api.together.xyz"
-		   :key (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg")                   ; Can be a function that returns the key
+		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg"))                   ; Can be a function that returns the key
 		   :stream t
 		   :models '(;; has many more, check together.ai
 			     deepseek-ai/DeepSeek-R1
@@ -663,44 +669,15 @@
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
-			       (text-mode . "# ")))
+			       (text-mode . "# "))
+   gptel-include-reasoning nil)
 
   (define-prefix-command 'my/gptel-map)
   (define-key my/gptel-map (kbd "c") 'gptel)
   (define-key my/gptel-map (kbd "m") 'gptel-menu)
   (define-key my/gptel-map (kbd "a") 'gptel-add)
 
-  (setq gptel-api-key (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg"))
-
-  (defun my/gptel-deepseek-wrap-think-block (beg end)
-    "Wrap '<think>' blocks in an Org-mode drawer if not already wrapped."
-    (when (derived-mode-p 'org-mode)
-      (save-excursion
-	(goto-char beg)
-	;; Find all occurrences of <think> blocks
-	(while (re-search-forward "^<think>" end t)
-          (let ((start (line-beginning-position)))
-            ;; Check if the block is already wrapped
-            (unless (save-excursion
-                      (forward-line -1)
-                      (looking-at "^:THINKING:$"))
-              ;; Insert Org-mode drawer start
-              (goto-char start)
-              (insert-and-inherit ":THINKING:\n")
-              (forward-line 1)
-              ;; Find the closing tag again after insertion
-              (when (re-search-forward "</think>" end t)
-		(end-of-line)
-		;; Ensure we don't add duplicate :END:
-		(unless (looking-at "\n:END:")
-                  (insert-and-inherit "\n:END:\n"))
-		;; Move back to the start of the drawer for org-cycle
-		(goto-char start)
-		(org-cycle)))))))
-    (message "Think blocks wrapped and folded."))
-  (add-hook
-   'gptel-post-response-functions
-   #'my/gptel-deepseek-wrap-think-block)
+  (setq gptel-api-key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg")))
 
   :bind-keymap ("C-x c" . my/gptel-map))
 
