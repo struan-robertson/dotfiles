@@ -127,3 +127,5 @@ Upsamples
 upsampling
 Downsamples
 Convolve
+stateful
+StyleGAN
