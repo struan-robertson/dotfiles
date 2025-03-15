@@ -652,12 +652,18 @@
   `(let ((default-directory "~/"))
      ,sexp))
 
+(defmacro my/execute-interactively-locally (sexp)
+  `(lambda ()
+     (interactive)
+     (my/execute-locally
+      (call-interactively ,sexp))))
+
 (use-package gptel
   :config
   ;; Together.ai offers an OpenAI compatible API
   (setf (gptel-get-backend "ChatGPT") nil)
   (setq
-   gptel-model   'deepseek-ai/DeepSeek-V3
+   gptel-model   'deepseek-ai/DeepSeek-R1
    gptel-default-mode 'org-mode
    gptel-backend (gptel-make-openai "DeepSeek"         ; Any name you want
 		   :host "api.together.xyz"
@@ -673,9 +679,10 @@
    gptel-include-reasoning nil)
 
   (define-prefix-command 'my/gptel-map)
-  (define-key my/gptel-map (kbd "c") 'gptel)
-  (define-key my/gptel-map (kbd "m") 'gptel-menu)
-  (define-key my/gptel-map (kbd "a") 'gptel-add)
+  ;; Org latex previews get messed up if `default-directory' of a buffer is on a remote machine
+  (define-key my/gptel-map (kbd "c") (my/execute-interactively-locally 'gptel))
+  (define-key my/gptel-map (kbd "m") (my/execute-interactively-locally 'gptel-menu))
+  (define-key my/gptel-map (kbd "a") (my/execute-interactively-locally 'gptel-add))
 
   (setq gptel-api-key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg")))
 
@@ -1025,10 +1032,7 @@ If so, return path to .venv/bin"
 (use-package diff-hl
   :hook
   ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-   (magit-post-refresh . diff-hl-magit-post-refresh))
-  :config
-  (diff-hl-mode)
-  (global-diff-hl-mode))
+   (magit-post-refresh . diff-hl-magit-post-refresh)))
 
 ;;;; Terminal
 
