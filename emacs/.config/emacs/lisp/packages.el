@@ -292,6 +292,7 @@
 	("C-c C-p" . (lambda () (interactive) (outline-back-to-heading))))
   :hook
   ((prog-mode text-mode) . outli-mode)
+  (outli-mode . (lambda () (outline-hide-sublevels 2)))
   :config
   (setq outli-blend nil))
 
@@ -1446,7 +1447,3 @@ If so, return path to .venv/bin"
                             (nil . "OFF")))))))
   :bind ("C-x M-t" . third-time-mode))
 
-;; Local Variables:
-;; jinx-local-words: "Dabbrev Powerthesaurus"
-;; eval: (outline-hide-sublevels 2)
-;; End:
