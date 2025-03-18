@@ -701,9 +701,13 @@
 	 (plist-put org-format-latex-options :scale 1.5)))
   (setq org-preview-latex-default-process 'dvisvgm
 	org-startup-folded t
-	org-startup-with-latex-preview t)
+	org-startup-with-latex-preview t
+	org-preview-latex-image-directory ".ltximg/"
+	org-agenda-files '("~/Sync/Notes/todo.org"))
   :hook
-  (org-mode . visual-line-mode))
+  (org-mode . visual-line-mode)
+  :bind
+  ("C-x M-a" . org-agenda))
 
 ;;; Languages
 
