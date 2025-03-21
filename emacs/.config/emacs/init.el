@@ -154,6 +154,8 @@
  '(nano-strong ((t (:foreground "#bbc6d9" :weight normal))) t)
  '(nano-strong-i ((t (:background "#bbc6d9" :foreground "#2E3440" :weight normal))) t)
  '(org-level-1 ((t (:inherit nano-strong :extend nil :weight bold))))
+ '(org-scheduled ((t (:inherit nano-default))))
+ '(org-scheduled-today ((t (:inherit nano-salient))))
  '(outline-1 ((t (:inherit nano-strong :weight bold))))
  '(outline-2 ((t (:inherit outline-1))))
  '(outline-3 ((t (:inherit outline-1))))
