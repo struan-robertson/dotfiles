@@ -120,9 +120,9 @@
 (use-package tramp-sh
   :ensure nil
   :init
-  (setq tramp-use-ssh-controlmaster-options nil)
+  (setq tramp-use-connection-share nil)
   :config
-  (setq tramp-remote-path (append tramp-remote-path (list "~/.local/bin" "~/.cargo/bin"))))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 ;;;;;; flymake 
 ;; Flymake error checking
