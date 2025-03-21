@@ -705,7 +705,9 @@
 	org-preview-latex-image-directory ".ltximg/"
 	org-agenda-files '("~/Sync/Notes/todo.org")
 	org-todo-keywords '((sequence "TODO" "DOING" "|" "DONE"))
-	org-todo-keyword-faces '(("DOING" . org-warning)))
+	org-todo-keyword-faces '(("DOING" . org-warning))
+	org-startup-indented t
+	org-indent-mode-turns-on-hiding-stars nil)
   :hook
   (org-mode . visual-line-mode)
   :bind
