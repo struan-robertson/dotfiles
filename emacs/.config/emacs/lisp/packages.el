@@ -703,7 +703,9 @@
 	org-startup-folded t
 	org-startup-with-latex-preview t
 	org-preview-latex-image-directory ".ltximg/"
-	org-agenda-files '("~/Sync/Notes/todo.org"))
+	org-agenda-files '("~/Sync/Notes/todo.org")
+	org-todo-keywords '((sequence "TODO" "DOING" "|" "DONE"))
+	org-todo-keyword-faces '(("DOING" . org-warning)))
   :hook
   (org-mode . visual-line-mode)
   :bind
