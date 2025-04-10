@@ -1049,8 +1049,14 @@ If so, return path to .venv/bin"
    'eat-semi-char-non-bound-keys
    (append
     (list (vector meta-prefix-char ?o)   ;; Ace window
-	  (vector meta-prefix-char ?`))  ;; Popper
-    eat-semi-char-non-bound-keys)))
+	  (vector ?\e ?`))  ;; Popper
+    eat-semi-char-non-bound-keys))
+  (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
+   'eat-eshell-semi-char-non-bound-keys
+   (append
+    (list (vector meta-prefix-char ?o)   ;; Ace window
+	  (vector ?\e ?`))  ;; Popper
+    eat-eshell-semi-char-non-bound-keys)))
 
 
 ;; ;;;;; fish-completion
