@@ -929,15 +929,25 @@ If so, return path to .venv/bin"
 	python-indent-guess-indent-offset-verbose nil)
   (indent-tabs-mode nil)
 
-  ;; python.el has its own code for setting exec path etc., I just need to set python-shell-virtualenv-root.
-  (defun my/python-wrap-venv-advice (fn &rest args)
-    (let ((python-shell-virtualenv-root (my/detect-venv default-directory)))
+  (defun my/run-python-advice (fn &rest args)
+    (if (derived-mode-p 'python-base-mode)
+	(when-let ((venv (my/detect-venv default-directory)))
+	  (my/execute-with-venv-vars
+	   (apply fn args)
+	   venv))
       (apply fn args)))
-  
-  (advice-add 'run-python :around #'my/python-wrap-venv-advice)
+
+  (advice-add 'run-python :around #'my/run-python-advice)
   :bind (:map python-ts-mode-map
 	      ("C-c C-c" . python-shell-send-statement)
-	      ("C-c C-b" . python-shell-send-buffer)))
+	      ("C-c C-b" . python-shell-send-buffer))
+  :hook
+  (inferior-python-mode . (lambda () (setq-local electric-pair-inhibit-predicate (lambda
+										   (char)
+										   (if (char-equal ?\( char)
+										       t
+										     nil))))))
+
 
 
 ;;;;; eshell-venv
