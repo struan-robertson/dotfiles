@@ -7,6 +7,87 @@
   (elpaca-use-package-mode)
   (setq elpaca-use-package-by-default t))
 
+;;; Custom Functions
+
+(defun doas-find-file (file)
+  "Open FILE as root."
+  (interactive "FOpen file as root: ")
+  (when (file-writable-p file)
+    (user-error "File is user writeable, aborting doas"))
+  (find-file (if (file-remote-p file)
+		 (concat "/" (file-remote-p file 'method) ":"
+			 (file-remote-p file 'user) "@" (file-remote-p file 'host)
+			 "|doas:root@"
+			 (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+	       (concat "/doas:root@localhost:" file))))
+
+(defmacro my/execute-locally (sexp)
+  "Execute SEXP on the local machine, even when the buffer is associated with a remote TRAMP host."
+  `(let ((default-directory "~/"))
+     ,sexp))
+
+(defun my/conditional-toggle ()
+  (interactive)
+  "Change the function called from S-<tab> depending on the active minor modes"
+  (cond
+   ((bound-and-true-p treesit-fold-mode) (treesit-fold-toggle))
+   ((bound-and-true-p hs-minor-mode) (hs-toggle-hiding))
+   (t (message "No minor modes match for C-<tab>"))))
+(global-set-key (kbd "C-<tab>") 'my/conditional-toggle)
+
+(defun my/detect-venv (dir)
+  "Check if a .venv directory exists either at project root of DIR or at DIR.
+If so, return path to .venv/bin"
+  (let
+      ;; Expands to just $PWD/.venv/bin if not in a git repo
+      ((venv (expand-file-name ".venv" (vc-git-root dir))))
+    (if (file-directory-p venv)
+	venv
+      nil)))
+
+(defmacro my/execute-with-venv-vars (sexp venv)
+  "Execute SEXP with virtual environment at VENV and set appropriate variables."
+  `(let* ((venv-bin (file-name-concat ,venv "bin"))
+	  (remote-host (file-remote-p default-directory))
+	  (local-venv-bin (tramp-file-local-name venv-bin))
+	  (local-local-bin (tramp-file-local-name
+			    (if remote-host
+				(tramp-handle-expand-file-name (concat remote-host "~/.local/bin"))
+			      (expand-file-name "~/.local/bin"))))
+	  (local-cargo-bin (tramp-file-local-name
+			    (if remote-host
+				(tramp-handle-expand-file-name (concat remote-host "~/.cargo/bin"))
+			      (expand-file-name "~/.cargo/bin"))))
+          (exec-path (cons venv-bin exec-path))
+          (python-shell-virtualenv-root ,venv)
+	  (process-environment (append (list
+					(format "PATH=%s:%s:%s:%s"
+						local-venv-bin
+						local-local-bin
+						local-cargo-bin
+						(getenv "PATH"))
+					(format "VIRTUAL_ENV=%s" venv))
+				       process-environment))
+	  (tramp-remote-path (append local-venv-bin
+				     local-local-bin
+				     local-cargo-bin
+				     tramp-remote-path))
+	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" venv) tramp-remote-process-environment)))
+     ,sexp))
+
+
+(defun my/toggle-writing-zen ()
+  "Disable language improvement tools to allow for dumping text on the page."
+  (interactive)
+  (if (bound-and-true-p jinx-mode)
+      (progn
+	(jinx-mode -1)
+	(flymake-mode -1))
+    (progn
+      (jinx-mode 1)
+      (flymake-mode 1))))
+
+
 ;;; Emacs Configuration
 
 ;;;;; emacs
@@ -57,8 +138,7 @@
   (gc-cons-threshold (* 800000 50))
 
   ;; Set date style
-  (calendar-date-style 'european)
-  )
+  (calendar-date-style 'european))
 
 
 ;;;;; Built In
@@ -82,20 +162,12 @@
   :bind
   ("C-x C-b" . ibuffer))
 
-;;;;;; info
-;; Built in info reader
-(use-package info
-  :ensure nil
-  :hook
-  (Info-mode . hl-line-mode))
-
 ;;;;;; savehist
 ;; Built in
 (use-package savehist
   :ensure nil
   :config
   (savehist-mode))
-
 
 ;;;;;; recentf
 ;; Built in
@@ -129,9 +201,7 @@
 (use-package flymake
   :ensure nil
   :hook
-  ((LaTeX-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode)
-  :config
-  (setq flymake-diagnostic-functions '()))
+  ((LaTeX-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode))
 
 ;;;;;; jsonrpc
 ;; Built in version is too low for upstream packages that depend on it
@@ -145,7 +215,8 @@
 				  (project-find-regexp "Find regexp")
 				  (project-find-dir "Find directory")
 				  (magit-project-status "Magit" ?m)
-				  (project-eshell "Eshell"))))
+				  (project-eshell "Eshell")
+				  (eat-project "Shell" ?s))))
 
 ;;;;; External
 
@@ -261,7 +332,9 @@
    ("C-h x" . helpful-command)
    ("C-h F" . helpful-function)
    :map emacs-lisp-mode-map
-   ("C-c C-d" . helpful-at-point)))
+   ("C-c C-d" . helpful-at-point))
+  :hook
+  (helpful-mode . hl-line-mode))
 
 ;;; Editor
 
@@ -333,6 +406,8 @@
 ;;;; ibuffer-vc
 ;; Group buffers in ibuffer by project
 (use-package ibuffer-vc
+  :config
+  (setq ibuffer-vc-skip-if-remote nil)
   :hook
   (ibuffer . (lambda ()
 	       (ibuffer-vc-set-filter-groups-by-vc-root)
@@ -342,17 +417,12 @@
 ;;;; diminish
 ;; Hide specific minor-modes from the modeline
 (use-package diminish)
+
 ;;;; hl-todo
 ;; Highlight reminders
 (use-package hl-todo
   :config
   (global-hl-todo-mode))
-
-;;;; consult-todo
-;; Show todos in consult
-(use-package consult-todo
-  :bind
-  ("M-g t" . consult-todo))
 
 ;;;; mixed-pitch
 ;; Allow mixing of variable pitch and monospaced fonts
@@ -594,6 +664,12 @@
 
   (setq consult-preview-excluded-buffers 'buffer-remote-p))
 
+;;;;; consult-todo
+;; Show todos in consult
+(use-package consult-todo
+  :bind
+  ("M-g t" . consult-todo))
+
 ;;;;; wgrep
 ;; Allow editing grep buffers
 (use-package wgrep)
@@ -626,19 +702,15 @@
 	'(embark-mixed-indicator
 	  embark-highlight-indicator
 	  embark-isearch-highlight-indicator)
-	embark-mixed-indicator-delay 2)
-  
-  (defun doas-find-file (file)
-    "Open FILE as root."
-    (interactive "FOpen file as root: ")
-    (when (file-writable-p file)
-      (user-error "File is user writeable, aborting doas"))
-    (find-file (if (file-remote-p file)
-		   (concat "/" (file-remote-p file 'method) ":"
-			   (file-remote-p file 'user) "@" (file-remote-p file 'host)
-			   "|doas:root@"
-			   (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-		 (concat "/doas:root@localhost:" file)))))
+	embark-mixed-indicator-delay 2))
+
+
+;; Use helpful.el keybindings if installed
+(use-package embark
+  :ensure nil
+  :if (elpaca-installed-p 'helpful)
+  :bind
+  (:map embark-command-map ("h" . helpful-symbol)))
 
 ;; Support for embark-{collect|export} with consult buffers
 (use-package embark-consult
@@ -647,17 +719,6 @@
 
 ;;;; gptel
 ;; LLM support in emacs
-
-(defmacro my/execute-locally (sexp)
-  "Execute SEXP on the local machine, even when the buffer is associated with a remote TRAMP host."
-  `(let ((default-directory "~/"))
-     ,sexp))
-
-(defmacro my/execute-interactively-locally (sexp)
-  `(lambda ()
-     (interactive)
-     (my/execute-locally
-      (call-interactively ,sexp))))
 
 (use-package gptel
   :config
@@ -679,15 +740,30 @@
 			       (text-mode . "# "))
    gptel-include-reasoning nil)
 
-  (define-prefix-command 'my/gptel-map)
   ;; Org latex previews get messed up if `default-directory' of a buffer is on a remote machine
-  (define-key my/gptel-map (kbd "c") (my/execute-interactively-locally 'gptel))
-  (define-key my/gptel-map (kbd "m") (my/execute-interactively-locally 'gptel-menu))
-  (define-key my/gptel-map (kbd "a") (my/execute-interactively-locally 'gptel-add))
+  (defun my/local-gptel ()
+    (interactive)
+    "Run `gptel' command on local machine."
+    (my/execute-locally (call-interactively 'gptel)))
+
+  (defun my/local-gptel-menu ()
+    (interactive)
+    "run `gptel-menu' command on local machine"
+    (my/execute-locally (call-interactively 'gptel-menu)))
+
+  (defun my/local-gptel-add ()
+    (interactive)
+    "run `gptel-add' command on local machine"
+    (my/execute-locally (call-interactively 'gptel-add)))
 
   (setq gptel-api-key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg")))
 
-  :bind-keymap ("C-x c" . my/gptel-map))
+  (define-prefix-command 'my/gptel-map)
+  :bind-keymap ("C-x c" . my/gptel-map)
+  :bind (:map my/gptel-map
+	      ("c" . 'my/local-gptel)
+	      ("m" . 'my/local-gptel-menu)
+	      ("a" . 'my/local-gptel-add)))
 
 ;;;; move-text
 ;; Move text or region up or down using M-<up> or M-<down>
@@ -720,7 +796,9 @@
   ("C-x M-a" . org-agenda))
 
 ;;; Languages
+;;;; Meta
 
+;;;;; treesit-auto
 ;; Automatically install treesitter languages if available
 (use-package treesit-auto
   :custom
@@ -730,7 +808,7 @@
   (global-treesit-auto-mode))
 
 ;;;;; hideshow
-;; Code folding for non treesitter languages (elisp)
+;; Code folding for non treesitter languages (elisp etc)
 ;; Built in
 (use-package hideshow
   :ensure nil
@@ -746,60 +824,8 @@
   :config
   (global-treesit-fold-mode))
 
-;;;;; Custom Functions
-
-(defun my/conditional-small-toggle ()
-  (interactive)
-  "Change the function called from S-<tab> depending on the active minor modes"
-  (cond
-   ((bound-and-true-p treesit-fold-mode) (treesit-fold-toggle))
-   ((bound-and-true-p hs-minor-mode) (hs-toggle-hiding))
-   (t (message "No minor modes match for C-<tab>"))))
-
-(global-set-key (kbd "C-<tab>") 'my/conditional-small-toggle)
-
-(defun my/detect-venv (dir)
-  "Check if a .venv directory exists either at project root of DIR or at DIR.
-If so, return path to .venv/bin"
-  (let
-      ;; Expands to just $PWD/.venv/bin if not in a git repo
-      ((venv (expand-file-name ".venv" (vc-git-root dir))))
-    (if (file-directory-p venv)
-	venv
-      nil)))
-
-(defmacro my/execute-with-venv-vars (sexp venv)
-  "Execute SEXP with virtual environment at VENV and set appropriate variables."
-  `(let* ((venv-bin (file-name-concat ,venv "bin"))
-	  (remote-host (file-remote-p default-directory))
-	  (local-venv-bin (tramp-file-local-name venv-bin))
-	  (local-local-bin (tramp-file-local-name
-			    (if remote-host
-				(tramp-handle-expand-file-name (concat remote-host "~/.local/bin"))
-			      (expand-file-name "~/.local/bin"))))
-	  (local-cargo-bin (tramp-file-local-name
-			    (if remote-host
-				(tramp-handle-expand-file-name (concat remote-host "~/.cargo/bin"))
-			      (expand-file-name "~/.cargo/bin"))))
-          (exec-path (cons venv-bin exec-path))
-          (python-shell-virtualenv-root ,venv)
-	  (process-environment (append (list
-					(format "PATH=%s:%s:%s:%s"
-						local-venv-bin
-						local-local-bin
-						local-cargo-bin
-						(getenv "PATH"))
-					(format "VIRTUAL_ENV=%s" venv))
-				       process-environment))
-	  (tramp-remote-path (append local-venv-bin
-				     local-local-bin
-				     local-cargo-bin
-				     tramp-remote-path))
-	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" venv) tramp-remote-process-environment)))
-     ,sexp))
-
 ;;;;; eglot
-;; Requires
+;; LSP protocol for emacs
 (use-package eglot
   :ensure nil
   :bind
@@ -831,50 +857,18 @@ If so, return path to .venv/bin"
   (advice-add 'eglot--connect :around #'my/eglot--connect-advice))
 
 
-
 ;;;;; eglot-booster
-;; Boost emacs using emacs-lsp-booster
-;; Requires emacs-lsp-booster to be installed
+;; Faster processing of LSP JSON
+;; Requires emacs-lsp-booster executable to be installed
 (use-package eglot-booster
   :ensure
   (:host github :repo "jdtsmith/eglot-booster" :branch "main")
   :after eglot
   :config (eglot-booster-mode))
 
-;;;;; jupyter
-(use-package org-src
-  :ensure nil
-  :demand t
-  :config
-  (add-to-list 'org-src-lang-modes '("python" . python-ts))
-  (setq org-confirm-babel-evaluate nil)) ;; Fix issue with jupyter not working with ts python
-
-(use-package jupyter
-  :after
-  org-src
-  :init
-  ;; TODO extract extra languages somehow from jupyter settings
-  (setq org-babel-load-languages '((emacs-lisp . t)
-				   (C . t)
-				   (rust . t)
-				   (python . t)
-				   (jupyter . t)))
-  (if (boundp 'recentf-exclude)
-      (add-to-list 'recentf-exclude "^/tmp/jupyter")
-    (setq recentf-exclude '("^/tmp/jupyter")))
-  :bind
-  (:map jupyter-repl-interaction-mode-map
-	("C-c C-i" . jupyter-inspect-at-point)
-	("C-c I" . jupyter-repl-interrupt-kernel)
-	("M-i" . consult-imenu))
-  (:map jupyter-org-interaction-mode-map
-	("C-c C-i" . jupyter-inspect-at-point)
-	("C-c I" . jupyter-org-interrupt-kernel)
-	("M-i" . consult-imenu)))
-
-
 
 ;;;;; apheleia
+;; Auto format files on save
 (use-package apheleia
   :config
   (setf (alist-get 'python-mode apheleia-mode-alist)
@@ -885,46 +879,37 @@ If so, return path to .venv/bin"
   :hook
   (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
 
-
-;;;;; dape
-;; Debug Adapter Protocol for Emacs
-(use-package dape
-  :preface
-  (setq dape-key-prefix nil)
-  :config
-  (setq dape-buffer-window-arrangement 'right)
-  (setq dape-inlay-hints t)
-  (add-hook 'dape-compile-hook 'kill-buffer)
-
-  (add-to-list 'dape-configs
-	       `(debugpy-remote-attach
-		 modes (python-mode python-ts-mode)
-		 host (lambda () (read-string "Host: " "localhost"))
-		 port (lambda () (read-number "Port: "))
-		 :request "attach"
-		 :type "python"
-		 :pathMappings [(:localRoot (lambda ()
-					      (read-directory-name "Local source directory: "
-								   (funcall dape-cwd-fn)))
-					    :remoteRoot (lambda ()
-							  (read-string "Remote source directory: ")))]
-		 :justMyCode nil
-		 :showReturnValue t)))
-
 ;;;;; comint-mime
 ;; Display graphics and other MIME attachments in Emacs shells
 (use-package comint-mime
   :hook
   (inferior-python-mode . comint-mime-setup))
 
-;;;; CSV
+;;;;; eshell-venv
+;; Custom package to allow Eshell venv activation
+(use-package eshell-venv
+  :ensure nil
+  :hook
+  (eshell-mode . eshell-venv-mode))
 
-;;;;; csv-mode
+;;;;; flymake-ruff
+;; Allow ruff file checking using flymake
+(use-package flymake-ruff
+  :ensure
+  (:host github :repo "erickgnavar/flymake-ruff"
+	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"
+		   :protocol ssh
+		   :branch "master"))
+  :config
+  (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
+
+
+;;;; csv-mode
+;; Easier viewing of CSV files in Emacs
 (use-package csv-mode)
 
-;;;; Python
-;; Use IPython as interpreter
-
+;;;; python
+;; Built in python.el package
 (use-package python
   :ensure nil
   :config
@@ -954,25 +939,6 @@ If so, return path to .venv/bin"
 										       t
 										     nil))))))
 
-
-
-;;;;; eshell-venv
-;; Custom package to allow Eshell venv activation
-(use-package eshell-venv
-  :ensure nil
-  :hook
-  (eshell-mode . eshell-venv-mode))
-
-;;;;; flymake-ruff
-(use-package flymake-ruff
-  :ensure
-  (:host github :repo "erickgnavar/flymake-ruff"
-	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"
-		   :protocol ssh
-		   :branch "master"))
-  :config
-  (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
-
 ;;;; Julia
 ;;;;; julia-mode
 ;; Official mode for Julia language
@@ -989,11 +955,6 @@ If so, return path to .venv/bin"
   :hook
   (julia-mode . julia-snail-mode))
 
-;;;; Shell
-;;;;; emacs-fish
-;; Syntax for fish scripts
-(use-package fish-mode)
-
 ;;;; Rust
 ;;;;; rust-mode
 ;; Official Rust mode
@@ -1007,39 +968,40 @@ If so, return path to .venv/bin"
 
 ;;;; C
 ;;;;; c-ts-mode
-;; Built-in
+;; Built-in C ts-mode
 (use-package c-ts-mode
   :ensure nil
-  :if
-  (treesit-language-available-p 'c)
+  :if (treesit-language-available-p 'c)
   :custom
   (c-ts-mode-indent-offset 4)
   (c-ts-mode-indent-style 'linux)
-  ;; :config
-  ;; ;; Org mode compat
-  ;; (setq-default c-basic-offset 4)
-  ;; (add-to-list 'c-default-style '(c-mode . "linux"))
   :init
   ;; Remap the standard C mode
-  ;; If adding C++ modes, need to also add to org-babel-load-languages currently declared in jupyter settings
-  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode)))
+
+;; Ensure it is added to org babel
+(use-package c-ts-mode
+  :ensure nil
+  :if (treesit-language-available-p 'c)
+  :after org
+  :config
   (add-to-list 'org-src-lang-modes '("C" . c-ts)))
 
 ;;;; Toml
 ;;;;; toml-ts-mode
+;; Treesitter for TOML
 (use-package toml-ts-mode
   :ensure nil
   :custom
   (toml-ts-mode-indent-offset 4))
+
 ;;; External Tools
 
 ;;;; Git
 
 ;;;;; magit
 ;; The best git porcelain
-(use-package magit
-  :demand t ;; Required for custom eshell prompt
-  )
+(use-package magit)
 
 ;;;;; diff-hl
 ;; Highlight git diff in gutter
@@ -1075,22 +1037,9 @@ If so, return path to .venv/bin"
     eat-eshell-semi-char-non-bound-keys)))
 
 
-;; ;;;;; fish-completion
-;; ;; Allow eshell to use any fish completions
-;; (use-package fish-completion
-;;   :ensure
-;;   (:host github :repo "LemonBreezes/emacs-fish-completion" :branch "master")
-;;   :config
-;;   (global-fish-completion-mode))
-
-;;;;; eshell
-
-;; Need to demand vc-git and magit so that the custom eshell prompt works
-;; Somewhat expensive but not the end of the word since I use daemon mode
-(use-package vc-git
-  :demand t
-  :ensure nil)
-
+;;;;; EShell
+;;;;;; em-hist
+;; EShell history
 (use-package em-hist
   :demand t
   :ensure nil
@@ -1098,31 +1047,12 @@ If so, return path to .venv/bin"
   :hook
   (kill-emacs . eshell-save-some-history))
 
+;;;;;; eshell
+;; Elisp based emacs shell
 (use-package eshell
   :demand t
   :ensure nil
-  :after
-  (vc-git magit)
   :config
-  (defun my/vc-git-state (file)
-    "`vc-state' which does not include ignored files."
-    (let* ((args
-	    `("status" "--porcelain" "-z"
-	      ;; Just to be explicit, it's the default anyway.
-	      "--untracked-files"
-	      "--"))
-	   (status (apply #'vc-git--run-command-string file args)))
-      (if (null status)
-	  ;; If status is nil, there was an error calling git, likely because
-	  ;; the file is not in a git repo.
-	  'unregistered
-	;; If this code is adapted to parse 'git status' for a directory,
-	;; note that a renamed file takes up two null values and needs to be
-	;; treated slightly more carefully.
-	(vc-git--git-status-to-vc-state
-	 (mapcar (lambda (s)
-		   (substring s 0 2))
-		 (split-string status "\0" t))))))
   (defun my/eshell-prompt-function ()
     (concat
      "\n"
@@ -1131,17 +1061,6 @@ If so, return path to .venv/bin"
 		  "~"
 		  (eshell/pwd))
 		 'face `(:foreground "#5e81ac"))
-     " "
-     (propertize (concat (let
-			     ((git-tag (magit-get-current-tag))
-			      (git-branch (magit-get-current-branch)))
-			   (if git-tag
-			       git-tag
-			     (if git-branch
-				 git-branch)))
-			 (if (eq (my/vc-git-state (eshell/pwd)) 'edited)
-			     "*"))
-		 'face 'default)	    
      "\n"
      (propertize (if (bound-and-true-p python-shell-virtualenv-root)
 		     ".venv"
@@ -1156,19 +1075,20 @@ If so, return path to .venv/bin"
 				      ("la" "ls -al")))
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
-
-
-
 ;;;; IRC
 ;;;;;; circe
 ;; IRC in Emacs
 (use-package circe
   :custom
-  (circe-network-optionsp
+  (circe-network-options
    '(("Libera Chat"
       :tls t
-      :nick "StruanR"
-      :channels ("#emacs" "#emacs-til" "#archlinux-testing")))))
+      :nick "struan"
+      :channels ("#emacs" "#emacs-til"))
+     ("OFTC"
+      :tls t
+      :nick "struan"
+      :channels ("#alpine-linux" "#alpine-devel" "#alpine-offtopic")))))
 
 ;;;; Accounting
 
@@ -1188,11 +1108,12 @@ If so, return path to .venv/bin"
 ;;;;; dired-rsync
 (use-package dired-rsync
   :bind (:map dired-mode-map
-	      ("C-c C-r" . dired-resync)))
+	      ("C-c C-r" . dired-rsync)))
 
+;;;;; dired-rsync-transient
 (use-package dired-rsync-transient
   :bind (:map dired-mode-map
-              ("C-c C-x" . dired-rsync-transient)))
+	      ("C-c C-x" . dired-rsync-transient)))
 
 ;;;; Email
 ;;;;; mu4e
@@ -1202,90 +1123,83 @@ If so, return path to .venv/bin"
   :demand t
   :load-path "/usr/share/emacs/site-lisp/mu4e/"
   :config
-  (setq mu4e-maildir "~/.local/share/mail")
+  (setq mu4e-maildir "~/.local/share/mail"
+	mu4e-headers-date-format "%d/%m/%y"
+	mu4e-contexts (list
+		       ;; Personal account
+		       (make-mu4e-context
+			:name "Personal"
+			:match-func
+			(lambda (msg)
+			  (when msg
+			    (string-prefix-p "/purelymail" (mu4e-message-field msg :maildir))))
+			:vars '((user-mail-address . "contact@struan.tech")
+				(mu4e-sent-folder . "/purelymail/Sent")
+				(mu4e-drafts-folder . "/purelymail/Drafts")
+				(mu4e-trash-folder . "/purelymail/Trash")
+				(mu4e-refile-folder . "/purelymail/Archive")
+				(mu4e-maildir-shortcuts . ((:maildir "/purelymail/Inbox" :key ?i)
+							   (:maildir "/purelymail/Sent" :key ?s)
+							   (:maildir "/purelymail/Trash" :key ?t)
+							   (:maildir "/purelymail/Drafts" :key ?d)
+							   (:maildir "/purelymail/Archive" :key ?a))))
+			:enter-func '(lambda () (when (bound-and-true-p org-msg-mode) (org-msg-mode -1))))
+		       ;; University outlook account
+		       (make-mu4e-context
+			:name "University"
+			:match-func
+			(lambda (msg)
+			  (when msg
 
-  (setq mu4e-headers-date-format "%d/%m/%y")
-  
-  (setq mu4e-contexts
-	(list
-	 ;; Personal account
-	 (make-mu4e-context
-	  :name "Personal"
-	  :match-func
-	  (lambda (msg)
-	    (when msg
-	      (string-prefix-p "/purelymail" (mu4e-message-field msg :maildir))))
-	  :vars '((user-mail-address . "contact@struan.tech")
-		  (mu4e-sent-folder . "/purelymail/Sent")
-		  (mu4e-drafts-folder . "/purelymail/Drafts")
-		  (mu4e-trash-folder . "/purelymail/Trash")
-		  (mu4e-refile-folder . "/purelymail/Archive")
-		  (mu4e-maildir-shortcuts . ((:maildir "/purelymail/Inbox" :key ?i)
-					     (:maildir "/purelymail/Sent" :key ?s)
-					     (:maildir "/purelymail/Trash" :key ?t)
-					     (:maildir "/purelymail/Drafts" :key ?d)
-					     (:maildir "/purelymail/Archive" :key ?a))))
-	  :enter-func '(lambda () (when (bound-and-true-p org-msg-mode) (org-msg-mode -1))))
-	 ;; University outlook account
-	 (make-mu4e-context
-	  :name "University"
-	  :match-func
-	  (lambda (msg)
-	    (when msg
-
-	      (string-prefix-p "/dundee" (mu4e-message-field msg :maildir))))
-	  :vars '((user-mail-address . "s.j.y.robertson@dundee.ac.uk")
-		  (mu4e-sent-folder . "/dundee/Sent")
-		  (mu4e-drafts-folder . "/dundee/Drafts")
-		  (mu4e-trash-folder . "/dundee/Trash")
-		  (mu4e-refile-folder . "/dundee/Archive")
-		  (mu4e-maildir-shortcuts . ((:maildir "/dundee/Inbox" :key ?i)
-					     (:maildir "/dundee/Sent" :key ?s)
-					     (:maildir "/dundee/Trash" :key ?t)
-					     (:maildir "/dundee/Drafts" :key ?d)
-					     (:maildir "/dundee/Archive" :key ?a)))
-		  )
-	  :enter-func '(lambda () (unless (bound-and-true-p org-msg-mode) (org-msg-mode 1)))
-	  )))
-  
-  ;; Update index automatically
-  (setq mu4e-update-interval 300
+			    (string-prefix-p "/dundee" (mu4e-message-field msg :maildir))))
+			:vars '((user-mail-address . "s.j.y.robertson@dundee.ac.uk")
+				(mu4e-sent-folder . "/dundee/Sent")
+				(mu4e-drafts-folder . "/dundee/Drafts")
+				(mu4e-trash-folder . "/dundee/Trash")
+				(mu4e-refile-folder . "/dundee/Archive")
+				(mu4e-maildir-shortcuts . ((:maildir "/dundee/Inbox" :key ?i)
+							   (:maildir "/dundee/Sent" :key ?s)
+							   (:maildir "/dundee/Trash" :key ?t)
+							   (:maildir "/dundee/Drafts" :key ?d)
+							   (:maildir "/dundee/Archive" :key ?a)))
+				)
+			:enter-func '(lambda () (unless (bound-and-true-p org-msg-mode) (org-msg-mode 1)))
+			))
+	
+	mu4e-update-interval 300
 	mu4e-get-mail-command "mbsync -c ~/.config/emacs/mail/mbsyncrc -a"
-	mu4e-change-filenames-when-moving t)
+	mu4e-change-filenames-when-moving t
 
-  ;; Compose settings
-  (setq user-full-name "Struan Robertson")
+	;; Compose settings
+	user-full-name "Struan Robertson"
 
-  ;; Use vertico instead of built in mu4e completing read functions
-  (setq mu4e-completing-read-function 'completing-read
-	mu4e-read-option-use-builtin nil)
-  
-  
-  ;; Use msmtp for sending mail
-  (setq message-send-mail-function 'message-send-mail-with-sendmail
+	;; Use vertico instead of built in mu4e completing read functions
+	mu4e-completing-read-function 'completing-read
+	mu4e-read-option-use-builtin nil
+	
+	;; Use msmtp for sending mail
+	message-send-mail-function 'message-send-mail-with-sendmail
 	sendmail-program "msmtp"
-	message-sendmail-envelope-from 'header)
+	message-sendmail-envelope-from 'header
 
-  ;; Delete email buffer on exit
-  (setq message-kill-buffer-on-exit t)
-  
-  ;; Enable HTML rendering
-  (setq mu4e-view-show-images t
-	mu4e-view-show-addresses t)
-  
-  ;; Enable threading
-  (setq mu4e-headers-show-threads t)
-  
-  
+	;; Delete email buffer on exit
+	message-kill-buffer-on-exit t
+	
+	;; Enable HTML rendering
+	mu4e-view-show-images t
+	mu4e-view-show-addresses t
+	
+	;; Enable threading
+	mu4e-headers-show-threads t
 
-  ;; Bookmarks
-  (setq mu4e-bookmarks
+	;; Bookmarks
+	mu4e-bookmarks
 	'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?u)
           (:name "Today's messages" :query "date:today..now" :key ?t)
-          (:name "Last 7 days" :query "date:7d..now" :key ?w)))
-  
-  ;; Save attachments to Downloads
-  (setq mu4e-attachment-dir "~/Downloads")
+          (:name "Last 7 days" :query "date:7d..now" :key ?w))
+	
+	;; Save attachments to Downloads
+	mu4e-attachment-dir "~/Downloads")
 
   ;; Prefer plaintext in multi-mime emails
   (with-eval-after-load "mm-decode"
@@ -1294,11 +1208,13 @@ If so, return path to .venv/bin"
     (add-to-list 'mm-discouraged-alternatives "multipart/related"))
 
   (define-prefix-command 'my/mu4e-map)
-  (define-key my/mu4e-map (kbd "m") 'mu4e)
-  (define-key my/mu4e-map (kbd "c") 'mu4e-compose-new)
+  :bind-keymap ("C-x m" . my/mu4e-map)
+  :bind (:map my/mu4e-map
+	      ("m" . mu4e)
+	      ("c" . mu4e-compose-new)))
 
-  :bind-keymap ("C-x m" . my/mu4e-map))
-
+;;;;; mu4e-icalendar
+;; Accept icalendar invites with mu4e
 (use-package mu4e-icalendar
   :ensure nil
   :config
@@ -1329,19 +1245,6 @@ If so, return path to .venv/bin"
       (org-msg--mu4e-fun-call "compose-setup-completion"))))
 
 ;;; Academic
-
-;;;; Custom Functions
-
-(defun my/toggle-writing-zen ()
-  "Disable language improvement tools to allow for dumping text on the page."
-  (interactive)
-  (if (bound-and-true-p jinx-mode)
-      (progn
-	(jinx-mode -1)
-	(flymake-mode -1))
-    (progn
-      (jinx-mode 1)
-      (flymake-mode 1))))
 
 ;;;; auctex
 ;; AucTeX improved Tex experience
@@ -1426,6 +1329,7 @@ If so, return path to .venv/bin"
   (:map LaTeX-mode-map
 	("C-c c" . citar-insert-citation)))
 
+;;;; citar-embark
 ;; embark actions
 (use-package citar-embark
   :after
@@ -1459,7 +1363,7 @@ If so, return path to .venv/bin"
     "Format modeline entry for `third-time-mode'."
     (let ((elapsed-time (third-time-calculate-time-elapsed)))
       (format " ⅓[%s]"
-              (cdr (assoc third-time-state
+	      (cdr (assoc third-time-state
                           `((:working . ,(format "WRK %s" (third-time-seconds-to-hh-mm elapsed-time t)))
                             (:break . ,(format "BRK %s" (third-time-seconds-to-hh-mm (- third-time-break-secs elapsed-time) t)))
                             (:long-break . ,(format "LNG %s" (third-time-seconds-to-hh-mm (- third-time-break-secs elapsed-time) t)))

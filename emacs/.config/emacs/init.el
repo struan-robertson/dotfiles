@@ -3,7 +3,7 @@
 
 ;;; Packages
 
-;;;;; elpaca
+;;;; elpaca
 
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -44,6 +44,7 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+;;;; packages.el
 
 (load "packages")
 
