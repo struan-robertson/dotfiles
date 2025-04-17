@@ -689,6 +689,12 @@
 
   :bind-keymap ("C-x c" . my/gptel-map))
 
+;;;; move-text
+;; Move text or region up or down using M-<up> or M-<down>
+(use-package move-text
+  :config
+  (move-text-default-bindings))
+
 ;;; Org
 ;;;; org
 ;; Organisational fun
