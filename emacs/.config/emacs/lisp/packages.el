@@ -710,7 +710,10 @@ If so, return path to .venv/bin"
   :ensure nil
   :if (elpaca-installed-p 'helpful)
   :bind
-  (:map embark-command-map ("h" . helpful-symbol)))
+  (:map embark-command-map ("h" . helpful-symbol)
+	:map embark-function-map ("h" . helpful-symbol)
+	:map embark-symbol-map ("h" . helpful-symbol)
+	:map embark-variable-map ("h" . helpful-symbol)))
 
 ;; Support for embark-{collect|export} with consult buffers
 (use-package embark-consult
