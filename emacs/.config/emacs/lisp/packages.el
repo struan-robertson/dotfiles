@@ -894,6 +894,15 @@ If so, return path to .venv/bin"
   ("C-x M-c" . org-capture)
   ("C-x M-s" . org-switchb))
 
+;;;; org-pomodoro
+;; Work in 25 min blocks
+(use-package org-pomodoro
+  :custom
+  (org-pomodoro-time-format "%.2mm")
+  (org-pomodoro-format "Pom: %s")
+  (org-pomodoro-long-break-format "Pom LB: %s")
+  (org-pomodoro-short-break-format "Pom SB: %s"))
+
 ;;; Languages
 ;;;; Meta
 
