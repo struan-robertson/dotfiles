@@ -784,19 +784,115 @@ If so, return path to .venv/bin"
 	 (plist-put org-format-latex-options :scale 0.66))
 	((string= (shell-command-to-string "hostname") "alpine\n")
 	 (plist-put org-format-latex-options :scale 1.5)))
-  (setq org-preview-latex-default-process 'dvisvgm
-	org-startup-folded t
-	org-startup-with-latex-preview t
-	org-preview-latex-image-directory ".ltximg/"
-	org-agenda-files '("~/Sync/Notes/todo.org")
-	org-todo-keywords '((sequence "TODO" "DOING" "|" "DONE"))
-	org-todo-keyword-faces '(("DOING" . org-warning))
-	org-startup-indented t
-	org-indent-mode-turns-on-hiding-stars nil)
+
+  ;; Org TODOs
+  (defun my/org-agenda-skip-all-siblings-but-first ()
+    "Skip all but the first non-done entry."
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+	(setq should-skip-entry t))
+      (save-excursion
+	;; If previous sibling exists and is TODO,
+	;; skip this entry
+	(while (and (not should-skip-entry) (org-goto-sibling t))
+          (when (org-current-is-todo)
+            (setq should-skip-entry t))))
+      (let ((num-ancestors (org-current-level))
+            (ancestor-level 1))
+	(while (and (not should-skip-entry) (<= ancestor-level num-ancestors))
+          (save-excursion
+            ;; When ancestor (parent, grandparent, etc) exists
+            (when (ignore-errors (outline-up-heading ancestor-level t))
+              ;; If ancestor is WAITING, skip entry
+              (if (string= "WAITING" (org-get-todo-state))
+                  (setq should-skip-entry t)
+		;; Else if ancestor is TODO, check previous siblings of
+		;; ancestor ("uncles"); if any of them are TODO, skip
+		(when (org-current-is-todo)
+                  (while (and (not should-skip-entry) (org-goto-sibling t))
+                    (when (org-current-is-todo)
+                      (setq should-skip-entry t)))))))
+          (setq ancestor-level (1+ ancestor-level))
+          ))
+      (when should-skip-entry
+	(or (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))
+  
+  (add-to-list 'org-modules 'org-habit t)
+  :custom
+  ;; LaTeX
+  (org-preview-latex-default-process 'dvisvgm)
+  (org-startup-with-latex-preview t)
+  (org-preview-latex-image-directory ".ltximg/")
+
+  ;; Layout
+  (org-startup-folded t)
+  (org-startup-indented t)
+  (org-indent-mode-turns-on-hiding-stars nil)
+  
+  ;; TODOs
+  (org-agenda-custom-commands
+   '(("n" "Next Actions" ((tags-todo "@doctorate"
+				     ((org-agenda-overriding-header "Doctorate")
+				      (org-agenda-skip-function #'my/org-agenda-skip-all-siblings-but-first)))
+			  (tags-todo "@home"
+				     ((org-agenda-overriding-header "Home")
+				      (org-agenda-skip-function #'my/org-agenda-skip-all-siblings-but-first)))))
+     ("d" "Doctorate" tags-todo "@doctorate"
+      ((org-agenda-overriding-header "Doctorate")
+       (org-agenda-skip-function #'my/org-agenda-skip-all-siblings-but-first)))
+     ("h" "Home" tags-todo "@home"
+      ((org-agenda-overriding-header "Home")
+       (org-agenda-skip-function #'my/org-agenda-skip-all-siblings-but-first)))
+     ("p" "Personal" tags-todo "@personal"
+      ((org-agenda-overriding-header "Personal")
+       (org-agenda-skip-function #'my/org-agenda-skip-all-siblings-but-first)))
+     ("f" "First Action" tags-todo "@first"
+      ((org-agenda-overriding-header "First Action")))
+     ("W" "Waiting" todo "WAITING")))
+
+  (org-stuck-projects '("+LEVEL>=2+LEVEL<=3-@notstuck/-CANCELLED-DONE" ("TODO" "WAITING") nil ""))
+  
+  (org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
+			      (todo . " %i %-12:c%l")
+			      (tags . " %i %-12:c%l")
+			      (search . " %i %-12:c%l")))
+  (org-agenda-files '("~/Sync/Notes/Tasks/projects.org"
+		      "~/Sync/Notes/Tasks/inbox.org"
+		      "~/Sync/Notes/Tasks/ticker.org"))
+  (org-refile-targets '(("~/Sync/Notes/Tasks/projects.org" :maxlevel 2)
+			("~/Sync/Notes/Tasks/inbox.org" :level 1)
+			("~/Sync/Notes/Tasks/future.org" :maxlevel 2)))
+  (org-archive-location "~/Sync/Notes/Tasks/archive.org::datetree/* Finished Tasks")
+  (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")))
+  (org-todo-keyword-faces '(("WAITING" . org-warning)))
+  (org-tag-alist '(("@doctorate" . ?d)
+		   ("@home" . ?h)
+		   ("@personal" . ?p)))
+  (org-refile-use-outline-path 'file)
+  ;; Doesn't work with vertico yet
+  (org-outline-path-complete-in-steps nil)
+
+  (org-capture-templates '(("t" "Todo [inbox]" entry
+                            (file+headline "~/Sync/Notes/Tasks/inbox.org" "Unfiled")
+                            "* TODO %i%?" :empty-lines 2)
+			   ("l" "Todo [inbox] linked" entry
+			    (file+headline "~/Sync/Notes/Tasks/inbox.org" "Unfiled")
+			    "* TODO %i%?\n %a" :empty-lines 2)
+                           ("T" "Ticker" entry
+                            (file "~/Sync/Notes/Tasks/ticker.org")
+                            "* TODO %i%?" :empty-lines 2)))
+  
   :hook
   (org-mode . visual-line-mode)
   :bind
-  ("C-x M-a" . org-agenda))
+  ("C-x M-a" . org-agenda)
+  ("C-x M-l" . org-store-link)
+  ("C-x M-c" . org-capture)
+  ("C-x M-s" . org-switchb))
 
 ;;; Languages
 ;;;; Meta
