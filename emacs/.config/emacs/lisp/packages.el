@@ -1452,20 +1452,3 @@ If so, return path to .venv/bin"
   :bind
   ("C-$" . powerthesaurus-transient))
 
-;;;; third-time
-;; Time tracking, not sure if this is the best place for this
-(use-package third-time
-  :demand t
-  :config
-  ;; TODO upstream option to remove emoji
-  (defun third-time-modeline ()
-    "Format modeline entry for `third-time-mode'."
-    (let ((elapsed-time (third-time-calculate-time-elapsed)))
-      (format " ⅓[%s]"
-	      (cdr (assoc third-time-state
-                          `((:working . ,(format "WRK %s" (third-time-seconds-to-hh-mm elapsed-time t)))
-                            (:break . ,(format "BRK %s" (third-time-seconds-to-hh-mm (- third-time-break-secs elapsed-time) t)))
-                            (:long-break . ,(format "LNG %s" (third-time-seconds-to-hh-mm (- third-time-break-secs elapsed-time) t)))
-                            (nil . "OFF")))))))
-  :bind ("C-x M-t" . third-time-mode))
-
