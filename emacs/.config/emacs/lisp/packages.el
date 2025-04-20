@@ -540,7 +540,7 @@ If so, return path to .venv/bin"
 ;; Group buffers in ibuffer by project
 (use-package ibuffer-vc
   :config
-  (setq ibuffer-vc-skip-if-remote nil)
+  (setq ibuffer-vc-skip-if-remote t) ;; Takes too long
   :hook
   (ibuffer . (lambda ()
 	       (ibuffer-vc-set-filter-groups-by-vc-root)
