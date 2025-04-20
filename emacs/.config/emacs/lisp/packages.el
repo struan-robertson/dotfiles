@@ -165,7 +165,7 @@ If so, return path to .venv/bin"
        (org-agenda-skip-function #'my/org-agenda-skip-all-siblings-but-first)))
      ("f" "First Action" tags-todo "@first"
       ((org-agenda-overriding-header "First Action")))
-     ("W" "Waiting" todo "WAITING")))
+     ("w" "Waiting" todo "WAITING")))
 
   (org-stuck-projects '("+LEVEL>=2+LEVEL<=3-@notstuck/-CANCELLED-DONE" ("TODO" "WAITING") nil ""))
   
@@ -205,7 +205,8 @@ If so, return path to .venv/bin"
   ("C-x M-a" . org-agenda)
   ("C-x M-l" . org-store-link)
   ("C-x M-c" . org-capture)
-  ("C-x M-s" . org-switchb))
+  ("C-x M-s" . org-switchb)
+  ("C-x M-S" . org-save-all-org-buffers))
 
 (elpaca-wait)
 
