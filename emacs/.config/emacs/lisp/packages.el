@@ -969,13 +969,15 @@ If so, return path to .venv/bin"
   
   (defun my/eglot--connect-advice (fn &rest args)
     (if (derived-mode-p 'python-base-mode)
-	(when-let ((venv (my/detect-venv default-directory)))
-	  (my/execute-with-venv-vars
-	   (apply fn args)
-	   venv))
+	(if-let ((venv (my/detect-venv default-directory)))
+	    (my/execute-with-venv-vars
+	     (apply fn args)
+	     venv)
+	  (apply fn args))
       (apply fn args)))
   
-  (advice-add 'eglot--connect :around #'my/eglot--connect-advice))
+  (advice-add 'eglot--connect :around #'my/eglot--connect-advice)
+  )
 
 
 ;;;;; eglot-booster
