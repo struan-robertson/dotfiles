@@ -549,7 +549,14 @@ If so, return path to .venv/bin"
 
 ;;;; diminish
 ;; Hide specific minor-modes from the modeline
-(use-package diminish)
+(use-package diminish
+  :config
+  (diminish 'treesit-fold-mode)
+  (diminish 'hs-minor-mode)
+  (diminish 'jinx-mode)
+  (diminish 'eldoc-mode)
+  (diminish 'which-key-mode)
+  (diminish 'outline-minor-mode))
 
 ;;;; hl-todo
 ;; Highlight reminders
