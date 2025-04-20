@@ -103,6 +103,7 @@
  '(avy-lead-face-0 ((t (:background "#5e81ac" :foreground "white"))))
  '(avy-lead-face-1 ((t (:background "#bbc6d9" :foreground "white"))))
  '(avy-lead-face-2 ((t (:background "#b48ead" :foreground "white"))))
+ '(bold ((t (:inherit nano-strong :weight medium))))
  '(circe-highlight-nick-face ((t (:foreground "#8FBCBB" :weight bold))))
  '(circe-prompt-face ((t (:background "#5E81AC" :foreground "#2E3440" :weight bold))))
  '(circe-server-face ((t (:foreground "#81A1C1"))))
