@@ -947,6 +947,10 @@ If so, return path to .venv/bin"
   (global-treesit-fold-mode))
 
 ;;;;; eglot
+(use-package vc-git
+  :ensure nil
+  :demand t)
+
 ;; LSP protocol for emacs
 (use-package eglot
   :ensure nil
@@ -1045,14 +1049,14 @@ If so, return path to .venv/bin"
   (indent-tabs-mode nil)
 
   (defun my/run-python-advice (fn &rest args)
-    (if (derived-mode-p 'python-base-mode)
-	(when-let ((venv (my/detect-venv default-directory)))
-	  (my/execute-with-venv-vars
-	   (apply fn args)
-	   venv))
+    (if-let ((venv (my/detect-venv default-directory)))
+	(my/execute-with-venv-vars
+	 (apply fn args)
+	 venv)
       (apply fn args)))
 
   (advice-add 'run-python :around #'my/run-python-advice)
+  (advice-add 'python-shell-restart :around #'my/run-python-advice)
   :bind (:map python-ts-mode-map
 	      ("C-c C-c" . python-shell-send-statement)
 	      ("C-c C-b" . python-shell-send-buffer))
