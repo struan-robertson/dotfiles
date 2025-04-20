@@ -882,7 +882,8 @@ If so, return path to .venv/bin"
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
 			       (text-mode . "# "))
-   gptel-include-reasoning nil)
+   gptel-include-reasoning nil
+   gptel-max-tokens 3000)
 
   ;; Org latex previews get messed up if `default-directory' of a buffer is on a remote machine
   (defun my/local-gptel ()
