@@ -524,7 +524,8 @@ If so, return path to .venv/bin"
 	  "ielm\\*" ielm-mode
 	  "Python\\*" inferior-python-mode
 	  "julia\\*"
-	  "shell\\*" shell-mode)
+	  "shell\\*" shell-mode
+	  "\\*rsync @")
 	;; popper-group-function #'popper-group-by-directory
 	)
   ;; Set min popup height to 1/3 of frame height
