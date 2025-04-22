@@ -135,6 +135,7 @@ If so, return path to .venv/bin"
     (string= "TODO" (org-get-todo-state)))
   
   (add-to-list 'org-modules 'org-habit t)
+  
   :custom
   ;; LaTeX
   (org-preview-latex-default-process 'dvisvgm)
@@ -145,6 +146,8 @@ If so, return path to .venv/bin"
   (org-startup-folded t)
   (org-startup-indented t)
   (org-indent-mode-turns-on-hiding-stars nil)
+  (org-insert-heading-respect-content t)
+  (org-insert-todo-heading-respect-content t)
   
   ;; TODOs
   (org-agenda-custom-commands
@@ -419,14 +422,6 @@ If so, return path to .venv/bin"
   :config
   (persistent-scratch-setup-default))
 
-;;;;;; openwith
-;; Open file type with external program instead of Emacs
-(use-package openwith
-  :config
-  (openwith-mode)
-  (setq openwith-associations
-	'(("\\.pdf\\'" "sioyek" (file))))
-  (add-to-list 'mm-inhibit-file-name-handlers 'openwith-file-handler))
 
 ;;;;;; ace-window
 ;; More efficient window selection
@@ -1407,6 +1402,26 @@ any directory proferred by `consult-dir'."
 
 ;;; Academic
 
+;;;; pdf-tools
+;; Treat PDF documents like normal buffers
+(use-package pdf-tools
+  :init
+  (pdf-tools-install)
+  :config
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+	TeX-source-correlate-start-server t
+	pdf-view-use-scaling t
+	pdf-view-resize-factor 1.05)
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+  :hook
+  (Tex-after-compilation-finished-function . TeX-revert-document-buffer)
+  (pdf-view-mode-hook . (lambda ()
+			  (auto-revert-mode t)
+			  (pdf-view-themed-minor-mode t)))
+  :bind
+  (:map pdf-view-mode-map ("C" . pdf-view-center-in-window)))
+
 ;;;; auctex
 ;; AucTeX improved Tex experience
 (use-package tex
@@ -1421,9 +1436,7 @@ any directory proferred by `consult-dir'."
   :hook
   ((LaTeX-mode . reftex-mode))
   :config
-  (setq TeX-view-program-selection '((output-pdf "Sioyek")
-				     (output-html "xdg-open"))
-	TeX-auto-save t
+  (setq TeX-auto-save t
 	TeX-parse-self t
 	TeX-auto-regexp-list 'TeX-auto-full-regexp-list
 	TeX-auto-parse-length 999999

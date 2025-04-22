@@ -62,6 +62,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
+ '(pdf-annot-default-annotation-properties
+   '((t (label . "Struan Robertson"))
+     (text (color . "#bf616A") (icon . "Note"))
+     (highlight (color . "#81a1c1")) (underline (color . "#b48aed"))
+     (squiggly (color . "#d08770")) (strike-out (color . "#bf616A"))))
  '(safe-local-variable-values
    '((python-shell-virtualenv-root
       . "/home/struan/Development/Doctorate/santa-gui/.venv/")
