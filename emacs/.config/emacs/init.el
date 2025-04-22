@@ -185,6 +185,8 @@
  '(pulse-highlight-start-face ((t (:foreground "#5e81ac"))))
  '(show-paren-match ((t (:inherit nano-strong :foreground "#b48ead"))))
  '(shr-text ((t (:inherit nano-default))))
+ '(smerge-lower ((t (:extend t :foreground "#a3be8c"))))
+ '(smerge-upper ((t (:extend t :foreground "#bf616a"))))
  '(transient-argument ((t (:inherit bold :weight bold))))
  '(vundo-highlight ((t (:inherit vundo-node :foreground "#5e81ac" :weight bold))))
  '(vundo-saved ((t (:inherit vundo-node :foreground "#a3be8c"))))
