@@ -221,7 +221,9 @@ If so, return path to .venv/bin"
   (org-pomodoro-time-format "%.2mm")
   (org-pomodoro-format "Pom: %s")
   (org-pomodoro-long-break-format "Pom LB: %s")
-  (org-pomodoro-short-break-format "Pom SB: %s"))
+  (org-pomodoro-short-break-format "Pom SB: %s")
+  :bind (:map org-mode-map ("C-c C-x C-p" . org-pomodoro)
+	      :map org-agenda-mode-map ("C-c C-x C-p" . org-pomodoro)))
 
 
 
