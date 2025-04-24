@@ -213,6 +213,19 @@ If so, return path to .venv/bin"
 
 (elpaca-wait)
 
+;;;; ox-latex
+
+(use-package ox-latex
+  :ensure nil
+  :custom
+  (add-to-list 'org-latex-classes
+	       '("bmvc2k" "\\documentclass{bmvc2k}"
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
 ;;;; org-pomodoro
 ;; Work in 25 min blocks
 (use-package org-pomodoro
