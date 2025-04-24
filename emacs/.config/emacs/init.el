@@ -163,6 +163,7 @@
  '(nano-strong-i ((t (:background "#bbc6d9" :foreground "#2E3440" :weight normal))) t)
  '(org-habit-alert-face ((t (:background "#ebcb8b" :foreground "#2e3440"))))
  '(org-habit-alert-future-face ((t (:background "#d08770" :foreground "#2e3440"))))
+ '(org-habit-clear-face ((t (:background "#81a1c1"))))
  '(org-habit-clear-future-face ((t (:background "#5e81ac"))))
  '(org-habit-overdue-face ((t (:background "#bf616a" :foreground "#2e3440"))))
  '(org-habit-overdue-future-face ((t (:background "#bf616a" :foreground "#4c566a"))))
