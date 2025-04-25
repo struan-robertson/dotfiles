@@ -204,3 +204,4 @@
 (setenv "HSA_OVERRIDE_GFX_VERSION" "10.3.0")
 
 (message "init.el loaded successfully")
+(put 'dired-find-alternate-file 'disabled nil)
