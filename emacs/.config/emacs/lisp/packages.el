@@ -1243,7 +1243,8 @@ any directory proferred by `consult-dir'."
 
   ;;Aliases
   (setq eshell-command-aliases-list '(("ll" "ls -l")
-				      ("la" "ls -al")))
+				      ("la" "ls -al")
+				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")))
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
 ;;;; IRC
