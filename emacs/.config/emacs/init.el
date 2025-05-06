@@ -67,36 +67,7 @@
      (text (color . "#bf616A") (icon . "Note"))
      (highlight (color . "#81a1c1")) (underline (color . "#b48aed"))
      (squiggly (color . "#d08770")) (strike-out (color . "#bf616A"))))
- '(safe-local-variable-values
-   '((python-shell-virtualenv-root
-      . "/home/struan/Development/Doctorate/santa-gui/.venv/")
-     (python-shell-virtualenv-root
-      . "/home/struan/Development/Doctorate/santa/.venv/")
-     (python-shell-virtualenv-root . "/home/srobertson/santa/.venv/")
-     (python-shell-virtualenv-root
-      . "/home/srobertson/StyleGAN/.venv/")
-     (python-shell-virtualenv-root
-      . "/home/struan/Development/Doctorate/sefa/.venv/")
-     (citar-bibliography . "biblio.bib")
-     (python-shell-virtualenv-root
-      . "/home/struan/Development/Doctorate/dataset-similarities/.venv/")
-     (python-shell-process-environment
-      "HSA_OVERRIDE_GFX_VERSION=10.3.0")
-     (python-shell-virtualenv-root
-      . "/home/struan/Development/Doctorate/shoeprint-image-retrieval/.venv/")
-     (python-shell-interpreter
-      . "/home/srobertson/Template Matching/.venv/bin/python")
-     (python-shell-virtualenv-root
-      . "/home/srobertson/Template Matching/.venv/")
-     (python-shell-process-environment quote
-				       ("HSA_OVERRIDE_GFX_VERSION=10.3.0"))
-     (python-shell-virtualenv-root
-      . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/")
-     (python-shell-interpreter
-      . "~/Development/Doctorate/shoeprint-image-retrieval/.venv/bin/python")
-     (python-shell-virtualenv-root . ".venv/")
-     (python-shell-interpreter . ".venv/bin/python")
-     (eshell-toggle-use-git-root . t) (eval outline-hide-sublevels 2))))
+ '(safe-local-variable-values '((eshell-toggle-use-git-root . t))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -199,9 +170,6 @@
  '(writegood-duplicates-face ((t (:underline (:color "#b48ead" :style wave :position nil)))))
  '(writegood-passive-voice-face ((t (:underline (:color "#88c0d0" :style wave :position nil)))))
  '(writegood-weasels-face ((t (:underline (:color "#d08770" :style wave :position nil))))))
-
-;; Allow for using ROCM with my GPU
-(setenv "HSA_OVERRIDE_GFX_VERSION" "10.3.0")
 
 (message "init.el loaded successfully")
 (put 'dired-find-alternate-file 'disabled nil)
