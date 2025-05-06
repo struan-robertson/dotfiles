@@ -1449,7 +1449,6 @@ any directory proferred by `consult-dir'."
 ;;;; auctex
 ;; AucTeX improved Tex experience
 (use-package tex
-  :demand t
   :ensure
   (:repo "https://git.savannah.gnu.org/git/auctex.git"
 	 :branch "main"
@@ -1467,11 +1466,11 @@ any directory proferred by `consult-dir'."
 	TeX-source-correlate-mode t
 	TeX-source-correlate-start-server t
 	TeX-engine 'luatex
-	LaTeX-flymake-chktex-options '("-n1" "-n24" "-n35") ;; Disable warnings 
-	)
+	;; Disable warnings
+	LaTeX-flymake-chktex-options '("-n1" "-n24" "-n35"))
   (setq-default TeX-master "main") 
   ;; Word count that actually works
-  (defun latex-word-count ()
+  (defun latex-count-words ()
     (interactive)
     (let ((file-name
 	   ;; If region selected then count words in that
@@ -1488,8 +1487,8 @@ any directory proferred by `consult-dir'."
 		 (message "Not in LaTeX or TeX buffer.")
 		 nil)))))
       (if file-name
-	  (shell-command (concat "/usr/bin/texcount "
-				 "-inc "
+	  (shell-command (concat (executable-find "texcount")
+				 " -inc "
 				 (shell-quote-argument (expand-file-name file-name))))))))
 
 ;;;; citar
