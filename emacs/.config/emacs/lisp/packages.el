@@ -1250,7 +1250,8 @@ any directory proferred by `consult-dir'."
   ;;Aliases
   (setq eshell-command-aliases-list '(("ll" "ls -l")
 				      ("la" "ls -al")
-				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")))
+				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")
+				      ("papis_export" "rm ~/Sync/Notes/library.bib; papis export -a -o ~/Sync/Notes/library.bib -f bibtex")))
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
 ;;;; IRC
