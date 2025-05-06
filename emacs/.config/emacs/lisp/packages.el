@@ -1425,13 +1425,14 @@ any directory proferred by `consult-dir'."
 	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
 	TeX-source-correlate-start-server t
 	pdf-view-use-scaling t
-	pdf-view-resize-factor 1.05)
+	pdf-view-resize-factor 1.05
+	revert-without-query ".pdf")
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
   :hook
   (Tex-after-compilation-finished-function . TeX-revert-document-buffer)
-  (pdf-view-mode-hook . (lambda ()
-			  (auto-revert-mode t)
-			  (pdf-view-themed-minor-mode t)))
+  (pdf-view-mode . (lambda ()
+		     (auto-revert-mode t)
+		     (pdf-view-themed-minor-mode t)))
   :bind
   (:map pdf-view-mode-map ("C" . pdf-view-center-in-window)))
 
