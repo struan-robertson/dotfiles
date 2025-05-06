@@ -1499,6 +1499,8 @@ any directory proferred by `consult-dir'."
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
+  (citar-latex-prompt-for-cite-style nil)
+  (citar-latex-prompt-for-extra-arguments nil)
   :hook
   ((org-mode tex) . citar-capf-setup)
   :bind (("C-x M-b" . citar-open)
