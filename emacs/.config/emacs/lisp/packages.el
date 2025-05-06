@@ -142,6 +142,14 @@ If so, return path to .venv/bin"
   (org-startup-with-latex-preview t)
   (org-preview-latex-image-directory ".ltximg/")
 
+  ;; Export
+  (org-file-apps
+   (quote
+    ((auto-mode . emacs)
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . "/usr/bin/firefox %s")
+     ("\\.pdf\\'" . default))))
+
   ;; Layout
   (org-startup-folded t)
   (org-startup-indented t)
@@ -213,23 +221,12 @@ If so, return path to .venv/bin"
 
 (elpaca-wait)
 
-;;;; ox-latex
-
-(use-package ox-latex
-  :ensure nil
-  :custom
-  (add-to-list 'org-latex-classes
-	       '("bmvc2k" "\\documentclass{bmvc2k}"
-		 ("\\section{%s}" . "\\section*{%s}")
-		 ("\\subsection{%s}" . "\\subsection*{%s}")
-		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;;;; org-pomodoro
 ;; Work in 25 min blocks
 (use-package org-pomodoro
   :after org
+  :demand t
   :custom
   (org-pomodoro-time-format "%.2mm")
   (org-pomodoro-format "Pom: %s")
