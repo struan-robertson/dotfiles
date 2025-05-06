@@ -823,6 +823,7 @@ If so, return path to .venv/bin"
 ;; Allow inserting recently visited directories into the minibuffer
 (use-package consult-dir
   :ensure t
+  :demand t
   :bind (("C-x C-d" . consult-dir)
 	 :map vertico-map
 	 ("C-x C-d" . consult-dir)
