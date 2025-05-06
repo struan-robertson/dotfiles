@@ -482,6 +482,11 @@ If so, return path to .venv/bin"
 
 ;;; Editor
 
+;;;; alert
+(use-package alert
+  :custom
+  (alert-default-style 'libnotify))
+
 ;;;; avy
 ;; Tree based point selection
 (use-package avy
