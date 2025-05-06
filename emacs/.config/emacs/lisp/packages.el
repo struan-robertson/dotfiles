@@ -271,6 +271,9 @@ If so, return path to .venv/bin"
   ;; Minimum warning level
   (setq warning-minimum-level :error)
 
+  ;; Prefer newer byte compiled files
+  (setq load-prefer-newer t)
+
   ;; Dont resize echo area
   (setq message-truncate-lines t)
 
