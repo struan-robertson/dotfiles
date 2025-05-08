@@ -1256,6 +1256,14 @@ any directory proferred by `consult-dir'."
   (setq eshell-prompt-function #'my/eshell-prompt-function
 	eshell-prompt-regexp ".* λ ")
 
+  (defun eshell/enter (&rest args)
+    "Enter a distrobox"
+    (eshell/cd (format "/podman:%s@%s:%s" (user-real-login-name) (car args) (eshell/pwd))))
+
+  (defun eshell/leave (&rest args)
+    "Leave a distrobox"
+    (eshell/cd (tramp-file-local-name (eshell/pwd))))
+
   ;;Aliases
   (setq eshell-command-aliases-list '(("ll" "ls -l")
 				      ("la" "ls -al")
