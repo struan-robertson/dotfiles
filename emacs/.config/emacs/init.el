@@ -62,12 +62,18 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
+ '(org-agenda-files
+   '("~/Sync/Development/Julia/manual.org"
+     "/home/struan/Sync/Notes/Tasks/projects.org"
+     "/home/struan/Sync/Notes/Tasks/inbox.org"
+     "/home/struan/Sync/Notes/Tasks/ticker.org") nil nil "Customized with use-package org")
  '(pdf-annot-default-annotation-properties
    '((t (label . "Struan Robertson"))
      (text (color . "#bf616A") (icon . "Note"))
      (highlight (color . "#81a1c1")) (underline (color . "#b48aed"))
      (squiggly (color . "#d08770")) (strike-out (color . "#bf616A"))))
- '(safe-local-variable-values '((eshell-toggle-use-git-root . t))))
+ '(safe-local-variable-values
+   '((org-confirm-babel-evaluate) (eshell-toggle-use-git-root . t))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -1449,6 +1449,7 @@ any directory proferred by `consult-dir'."
 ;;;; auctex
 ;; AucTeX improved Tex experience
 (use-package tex
+  :demand t
   :ensure
   (:repo "https://git.savannah.gnu.org/git/auctex.git"
 	 :branch "main"
