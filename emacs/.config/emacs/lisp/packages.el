@@ -135,7 +135,13 @@ If so, return path to .venv/bin"
     (string= "TODO" (org-get-todo-state)))
   
   (add-to-list 'org-modules 'org-habit t)
-  
+
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((julia . t)
+     (emacs-lisp . t)))
+
   :custom
   ;; LaTeX
   (org-preview-latex-default-process 'dvisvgm)
@@ -1113,9 +1119,12 @@ any directory proferred by `consult-dir'."
 										     nil))))))
 
 ;;;; Julia
+
 ;;;;; julia-mode
 ;; Official mode for Julia language
-(use-package julia-mode)
+(use-package julia-ts-mode
+  :ensure t
+  :mode "\\.jl$")
 
 ;;;;; julia-snail
 ;; An Emacs development environment for Julia 
