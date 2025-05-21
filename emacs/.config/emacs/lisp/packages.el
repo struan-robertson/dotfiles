@@ -855,15 +855,8 @@ If so, return path to .venv/bin"
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
 
-  (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'"))
-
-  (defun buffer-remote-p (buf)
-    "Return t when BUF is remote."
-    (if-let ((fp (buffer-file-name buf)))
-	(file-remote-p fp)
-      nil))
-
-  (setq consult-preview-excluded-buffers 'buffer-remote-p))
+  (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'" "\\.gpg\\'"))
+  )
 
 ;;;;; consult-todo
 ;; Show todos in consult
