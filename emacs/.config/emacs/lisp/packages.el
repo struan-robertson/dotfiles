@@ -197,6 +197,8 @@ If so, return path to .venv/bin"
   (org-insert-todo-heading-respect-content t)
   
   ;; TODOs
+  (org-agenda-restore-windows-after-quit t)
+  
   (org-agenda-custom-commands
    '(("n" "Next Actions" ((tags-todo "@doctorate"
 				     ((org-agenda-overriding-header "Doctorate")
