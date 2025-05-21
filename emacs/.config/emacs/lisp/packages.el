@@ -87,6 +87,39 @@ If so, return path to .venv/bin"
       (jinx-mode 1)
       (flymake-mode 1))))
 
+(defun my/start-llama-server ()
+  (interactive)
+  "Start llama-server for use with gptel"
+  (if (bound-and-true-p llama-server-running)
+      (message "llama server already running")
+    (progn
+      (start-process "llama-server-process"
+		     "*llama-server*"
+		     "llama-server"
+		     "-m" "/home/struan/Development/Distroboxes/rocm/models/Qwen3-30B-A3B-Q4_K_M.gguf"
+		     "--jinja"
+		     "-ngl" "99"
+		     "-fa"
+		     "-sm" "row"
+		     "--temp" "0.6"
+		     "--top-k" "20"
+		     "--top-p" "0.95"
+		     "--min-p" "0"
+		     "-c" "40960"
+		     "-n" "32768"
+		     "--no-context-shift"
+		     "--port" "8989")
+      (setq llama-server-running t))))
+
+(defun my/stop-llama-server ()
+  (interactive)
+  (if (bound-and-true-p llama-server-running)
+      (progn
+	(message (shell-command-to-string "killall -SIGINT llama-server"))
+	(setq llama-server-running nil))
+    (message "llama server not running")))
+
+
 ;;; Org
 ;;;; org
 ;; Organisational fun
@@ -937,6 +970,12 @@ any directory proferred by `consult-dir'."
    gptel-include-reasoning nil
    gptel-max-tokens 3000)
 
+  (gptel-make-openai "llama-cpp"          ;Any name
+    :stream t                             ;Stream responses
+    :protocol "http"
+    :host "localhost:8989"                ;Llama.cpp server location
+    :models '(main))
+  
   ;; Org latex previews get messed up if `default-directory' of a buffer is on a remote machine
   (defun my/local-gptel ()
     (interactive)
