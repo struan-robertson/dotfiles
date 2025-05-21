@@ -1130,7 +1130,7 @@ any directory proferred by `consult-dir'."
   :ensure nil
   :config
   (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs --classic"
+	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs --ipython-dir=~/.config/ipython --classic"
 	python-indent-offset 4
 	python-indent-def-block-scale 1
 	python-indent-guess-indent-offset-verbose nil)
