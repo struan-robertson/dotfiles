@@ -112,6 +112,7 @@ If so, return path to .venv/bin"
       (setq llama-server-running t))))
 
 (defun my/stop-llama-server ()
+  "Stop all running llama-servers"
   (interactive)
   (if (bound-and-true-p llama-server-running)
       (progn
@@ -306,9 +307,6 @@ If so, return path to .venv/bin"
   ;; Pair specific chars
   (electric-pair-mode 1)
 
-  ;; Dired DWIM path selection
-  (setq dired-dwim-target t)
-
   ;; Minimum warning level
   (setq warning-minimum-level :error)
 
@@ -344,6 +342,21 @@ If so, return path to .venv/bin"
   (bookmark-save-flag 1)  ;; Save bookmark list after every change
   :hook
   (bookmark-bmenu-mode . hl-line-mode))
+
+;;;;;; dired
+(use-package dired
+  :ensure nil
+  :config
+  (defun my/toggle-dired-dwim ()
+    (interactive)
+    "Toggle `dired-dwim-target' in dired mode."
+    (if dired-dwim-target
+	(setq-local dired-dwim-target nil)
+      (setq-local dired-dwim-target t)))
+  :custom
+  (dired-dwim-target t)
+  :bind
+  (:map dired-mode-map ("W" . my/toggle-dired-dwim)))
 
 ;;;;;; ibuffer
 ;; Built in ibuffer package
