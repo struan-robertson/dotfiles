@@ -597,6 +597,11 @@ If so, return path to .venv/bin"
 (use-package ibuffer-vc
   :config
   (setq ibuffer-vc-skip-if-remote t) ;; Takes too long
+  (defun my/ibuffer-vc--include-file-p-advice (orig-fun file)
+    (or (string-equal "podman" (tramp-handle-file-remote-p file 'method))
+	(funcall orig-fun file)))
+
+  (advice-add 'ibuffer-vc--include-file-p :around #'my/ibuffer-vc--include-file-p-advice)
   :hook
   (ibuffer . (lambda ()
 	       (ibuffer-vc-set-filter-groups-by-vc-root)
