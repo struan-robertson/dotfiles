@@ -159,8 +159,7 @@ If so, return path to .venv/bin"
                   (while (and (not should-skip-entry) (org-goto-sibling t))
                     (when (org-current-is-todo)
                       (setq should-skip-entry t)))))))
-          (setq ancestor-level (1+ ancestor-level))
-          ))
+          (setq ancestor-level (1+ ancestor-level))))
       (when should-skip-entry
 	(or (outline-next-heading)
             (goto-char (point-max))))))
@@ -228,7 +227,8 @@ If so, return path to .venv/bin"
 			      (search . " %i %-12:c%l")))
   (org-agenda-files '("~/Sync/Notes/Tasks/projects.org"
 		      "~/Sync/Notes/Tasks/inbox.org"
-		      "~/Sync/Notes/Tasks/ticker.org"))
+		      "~/Sync/Notes/Tasks/ticker.org"
+		      "~/Sync/Notes/Tasks/ical/university.org"))
   (org-refile-targets '(("~/Sync/Notes/Tasks/projects.org" :maxlevel 2)
 			("~/Sync/Notes/Tasks/inbox.org" :level 1)
 			("~/Sync/Notes/Tasks/future.org" :maxlevel 2)))
@@ -277,7 +277,17 @@ If so, return path to .venv/bin"
   :bind (:map org-mode-map ("C-c C-x C-p" . org-pomodoro)
 	      :map org-agenda-mode-map ("C-c C-x C-p" . org-pomodoro)))
 
+;;;; org-ics-import
+;; My own package to import iCalendars to org
 
+(use-package org-ics-import
+  :ensure
+  (:repo "https://git.sr.ht/~struanr/org-ics-import.el")
+  :custom
+  (org-ics-import-update-interval 3600)
+  (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/Sync/Notes/Tasks/ical/university.org")))
+  (org-ics-import-exclude-strings '("DRV5" "Datavis" "Cancelled"))
+  (org-ics-import-exclude-passed-events t))
 
 ;;; Emacs Configuration
 
@@ -1228,6 +1238,14 @@ any directory proferred by `consult-dir'."
   :ensure nil
   :custom
   (toml-ts-mode-indent-offset 4))
+
+;;;; markdown-mode
+;; Mode for markdown files
+
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode)
+  :bind (:map markdown-mode-map
+              ("C-c C-e" . markdown-do)))
 
 ;;; External Tools
 

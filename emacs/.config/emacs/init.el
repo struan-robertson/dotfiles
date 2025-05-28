@@ -62,11 +62,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
- '(org-agenda-files
-   '("~/Sync/Development/Julia/manual.org"
-     "/home/struan/Sync/Notes/Tasks/projects.org"
-     "/home/struan/Sync/Notes/Tasks/inbox.org"
-     "/home/struan/Sync/Notes/Tasks/ticker.org") nil nil "Customized with use-package org")
+ '(org-ics-import-confirmed-overwrite '("~/Sync/Notes/Tasks/ical/university.org"))
  '(pdf-annot-default-annotation-properties
    '((t (label . "Struan Robertson"))
      (text (color . "#bf616A") (icon . "Note"))
