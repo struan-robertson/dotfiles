@@ -1,8 +1,8 @@
 ;;; eshell-venv.el --- Use emacs-pet to activate and deactivate python venvs in Eshell -*- lexical-binding: t; -*-
 
-;; Author: Struan Robertson contact@struanrobertson.co.uk
+;; Author: Struan Robertson contact@struan.tech
 ;; Version: 1.0
-;; Package-Requires: ((emacs "28.0") (vc-git) (eshell) (cl-lib))
+;; Package-Requires: ((emacs "28.0"))
 
 ;;; Commentary:
 ;; A simple package providing functions for activating and deactivating Python virtual environments in Eshell.
@@ -14,47 +14,54 @@
 (require 'eshell)
 (require 'cl-lib)
 
-(defvar python-shell-virtualenv-root)
-(defvar python-shell-virtualenv-bin)
+(defvar python-shell-virtualenv-root nil
+  "Variable to store the path to a Python virtual environment.")
+
+(defvar python-shell-virtualenv-bin nil
+  "Variable to store the path to the bin directory of a Python virtual
+environment.")
 
 (defun eshell-venv--remove-from-PATH (dir)
-  "Safely remove DIR from the current Eshell PATH."
-  (let ((current-path (eshell-get-path t)))
-    (if (member dir current-path)
-	;; Sometimes tramp persistence saves an old PATH so best to remove all occurrences.
-	(eshell-set-path (cl-remove dir current-path)))))
+  "Safely remove `dir' from the current Eshell PATH."
+  (let ((current-path (eshell-get-path t))) ;; TODO should this be t or nil?
+    (when (member dir current-path)
+      (eshell-set-path (cl-remove dir current-path)))))
 
-(defun eshell-venv-get-local-file-path (path)
-  "Extract the local file path from PATH."
-  (if (file-remote-p path)
-      (tramp-file-name-localname (tramp-dissect-file-name path))
-    path))
+(defun eshell-venv--activate-venv (venv)
+  "Setup the variables required for using virtual environment `venv' in Eshell."
+  (setq-local python-shell-virtualenv-root venv
+	      python-shell-virtualenv-bin (expand-file-name "bin" venv))
+  (eshell-set-path (cons (tramp-file-local-name python-shell-virtualenv-bin) (eshell-get-path t)))
+  (eshell-reset))
 
 (defun eshell/activate-venv (&optional venv)
   "Activate a Python virtual environment in Eshell.
-Optionally pass the venv root (VENV) or find using `eshell-venv--find-venv'
-at the `default-directory'."
+Optionally pass the venv root `venv', otherwise find using `eshell-venv--find-venv'."
   (interactive)
   (if-let ((venv (or venv (eshell-venv--find-venv default-directory))))
-      (if (not (bound-and-true-p python-shell-virtualenv-root))
-	  (progn
-	    (setq-local python-shell-virtualenv-root venv
-			python-shell-virtualenv-bin (expand-file-name "bin" venv))
-	    (eshell-set-path (cons (eshell-venv-get-local-file-path python-shell-virtualenv-bin) (eshell-get-path t)))
-	    (eshell-reset)
-	    (message "Activated venv %s" python-shell-virtualenv-root)))
-    (message "No venv found.")))
+      (if python-shell-virtualenv-root
+	  (if (string= python-shell-virtualenv-root venv)
+	      (message "venv already activated")
+	    (progn
+	      (eshell/deactivate-venv)
+	      (eshell-venv--activate-venv venv)
+	      (message "venv activated")))
+	(progn
+	  (eshell-venv--activate-venv venv)
+	  (message "venv activated")))
+    (message "venv not found")))
 
 (defun eshell/deactivate-venv ()
   "Deactivate the currently active Python virtual environment in Eshell."
   (interactive)
-  (if (bound-and-true-p python-shell-virtualenv-root)
+  (if python-shell-virtualenv-root
       (progn
-	(eshell-venv--remove-from-PATH (eshell-venv-get-local-file-path python-shell-virtualenv-bin))
+	(eshell-venv--remove-from-PATH (tramp-file-local-name python-shell-virtualenv-bin))
 	(message "Deactivated venv %s" python-shell-virtualenv-root)
 	(setq-local python-shell-virtualenv-root nil
 		    python-shell-virtualenv-bin nil))
     (message "No currently active venv")))
+
 
 (defun eshell-venv--find-venv (dir)
   "Check if a .venv directory exists either at project root of DIR or at DIR.
@@ -70,10 +77,19 @@ If so, return path to .venv."
   "Automatically detect and activate/deactivate Python venv based on Eshell PWD.
 Uses `eshell-venv--find-venv' to determine if venv exits."
   (let ((venv (eshell-venv--find-venv (eshell/pwd))))
-    (if (and venv (not (bound-and-true-p python-shell-virtualenv-root)))
-	(eshell/activate-venv venv)
-      (if (and (not venv) (bound-and-true-p python-shell-virtualenv-root))
-	  (eshell/deactivate-venv)))))
+    (cond
+     ;; venv found and python-shell-virtualenv-root nil -> activate venv
+     ((and venv (not python-shell-virtualenv-root)) 
+      (eshell-venv--activate-venv venv))
+     ;; venv not found and python-shell-virtualenv-root bound -> deactivate venv
+     ((and (not venv) python-shell-virtualenv-root) 
+      (eshell/deactivate-venv))
+     ;; venv found and python-shell-virtualenv-root not equal to venv -> deactivate venv and then activate venv
+     ((and venv (not (string= venv python-shell-virtualenv-root))) 
+      (eshell/deactivate-venv)
+      (eshell-venv--activate-venv venv))
+     ;; venv found and python-shell-virtualenv-root equal to venv -> do nothing
+     (t t))))
 
 (define-minor-mode eshell-venv-mode
   "Minor mode for automatic Python venv detection on Eshell directory change.
