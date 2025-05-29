@@ -1127,11 +1127,13 @@ any directory proferred by `consult-dir'."
   (inferior-python-mode . comint-mime-setup))
 
 ;;;;; eshell-venv
-;; Custom package to allow Eshell venv activation
+;; My package to allow Eshell venv activation
 (use-package eshell-venv
-  :ensure nil
+  :ensure
+  (:repo "https://git.sr.ht/~struanr/eshell-venv")
   :hook
   (eshell-mode . eshell-venv-mode))
+
 
 ;;;;; flymake-ruff
 ;; Allow ruff file checking using flymake
