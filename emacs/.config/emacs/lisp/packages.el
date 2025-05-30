@@ -250,7 +250,14 @@ If so, return path to .venv/bin"
 			    "* TODO %i%?\n %a")
                            ("T" "Ticker" entry
                             (file "~/Sync/Notes/Tasks/ticker.org")
-                            "* TODO %i%?")))
+                            "* TODO %i%?")
+			   ("n" "Note" plain
+			    (file denote-last-path)
+			    #'denote-org-capture
+			    :no-save t
+			    :immediate-finish nil
+			    :kill-buffer t
+			    :jump-to-captured t)))
   
   :hook
   (org-mode . visual-line-mode)
@@ -1585,6 +1592,50 @@ any directory proferred by `consult-dir'."
 	  (shell-command (concat (executable-find "texcount")
 				 " -inc "
 				 (shell-quote-argument (expand-file-name file-name))))))))
+
+;;;; denote
+;; Note management system
+
+(use-package denote
+  :ensure t
+  :hook
+  (dired-mode . denote-dired-mode)
+  :bind
+  ( :map global-map
+    ("C-x M-n n" . denote)
+    ("C-x M-n d" . denote-dired)
+    ("C-x M-n g" . denote-grep)
+    ("C-x M-n r" . denote-rename-file)
+    ("C-x M-n R" . denote-rename-file-using-front-matter)
+    :map org-mode-map
+    ("C-c n l" . denote-link)
+    ("C-c n L" . denote-add-links)
+    ("C-c n b" . denote-backlinks)
+    ("C-c n q c" . denote-query-contents-link) ; create link that triggers a grep
+    ("C-c n q f" . denote-query-filenames-link) ; create link that triggers a dired
+    :map dired-mode-map
+    ("C-c n i" . denote-dired-link-marked-notes)
+    ("C-c n r" . denote-dired-rename-files)
+    ("C-c n k" . denote-dired-rename-marked-files-with-keywords)
+    ("C-c n R" . denote-dired-rename-marked-files-using-front-matter))
+
+  :config
+  ;; Remember to check the doc string of each of those variables.
+  (setq denote-directory (expand-file-name "~/Sync/Notes/Denote/"))
+  (setq denote-save-buffers nil)
+  (setq denote-known-keywords '("emacs" "computing" "mathematics" "programming" "ml" "idea"))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t)
+  (setq denote-prompts '(title keywords))
+  (setq denote-excluded-directories-regexp nil)
+  (setq denote-excluded-keywords-regexp nil)
+  (setq denote-rename-confirmations '(rewrite-front-matter modify-file-name))
+
+  ;; Pick dates, where relevant, with Org's advanced interface:
+  (setq denote-date-prompt-use-org-read-date t)
+
+  ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
+  (denote-rename-buffer-mode 1))
 
 ;;;; citar
 ;; reference management
