@@ -1467,7 +1467,12 @@ any directory proferred by `consult-dir'."
           (:name "Last 7 days" :query "date:7d..now" :key ?w))
 	
 	;; Save attachments to Downloads
-	mu4e-attachment-dir "~/Downloads")
+	mu4e-attachment-dir "~/Downloads"
+
+	;; Set mu4e as default mail client
+	mail-user-agent 'mu4e-user-agent
+	read-mail-command 'mu4e
+	message-mail-user-agent t)
 
   ;; Prefer plaintext in multi-mime emails
   (with-eval-after-load "mm-decode"
