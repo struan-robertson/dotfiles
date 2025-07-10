@@ -1086,7 +1086,7 @@ any directory proferred by `consult-dir'."
   (setq enable-remote-dir-locals t)
   (add-to-list 'eglot-server-programs
 	       '((python-mode python-ts-mode)
-		 "uvx" "ty" "server"))
+		 "pyright-langserver" "--stdio"))
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
