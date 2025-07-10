@@ -998,7 +998,7 @@ any directory proferred by `consult-dir'."
 			       (org-mode . "* ")
 			       (text-mode . "# "))
    gptel-include-reasoning nil
-   gptel-max-tokens 3000)
+   gptel-max-tokens 30000)
 
   (gptel-make-openai "llama-cpp"          ;Any name
     :stream t                             ;Stream responses
