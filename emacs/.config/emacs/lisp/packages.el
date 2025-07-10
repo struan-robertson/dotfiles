@@ -1546,7 +1546,9 @@ any directory proferred by `consult-dir'."
 		     (auto-revert-mode t)
 		     (pdf-view-themed-minor-mode t)))
   :bind
-  (:map pdf-view-mode-map ("C" . pdf-view-center-in-window)))
+  (:map pdf-view-mode-map
+	("C" . pdf-view-center-in-window)
+	("M-g g" . pdf-view-goto-page)))
 
 ;;;; auctex
 ;; AucTeX improved Tex experience
