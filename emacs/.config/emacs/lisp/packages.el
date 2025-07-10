@@ -49,6 +49,7 @@ If so, return path to .venv/bin"
   "Execute SEXP with virtual environment at VENV and set appropriate variables."
   `(let* ((venv-bin (file-name-concat ,venv "bin"))
 	  (remote-host (file-remote-p default-directory))
+	  (local-venv (tramp-file-local-name venv))
 	  (local-venv-bin (tramp-file-local-name venv-bin))
 	  (local-local-bin (tramp-file-local-name
 			    (if remote-host
@@ -66,7 +67,7 @@ If so, return path to .venv/bin"
 						local-local-bin
 						local-cargo-bin
 						(getenv "PATH"))
-					(format "VIRTUAL_ENV=%s" venv))
+					(format "VIRTUAL_ENV=%s" local-venv))
 				       process-environment))
 	  (tramp-remote-path (append local-venv-bin
 				     local-local-bin
