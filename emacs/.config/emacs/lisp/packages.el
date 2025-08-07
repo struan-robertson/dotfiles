@@ -1168,7 +1168,9 @@ any directory proferred by `consult-dir'."
 	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs --ipython-dir=~/.config/ipython --classic"
 	python-indent-offset 4
 	python-indent-def-block-scale 1
-	python-indent-guess-indent-offset-verbose nil)
+	python-indent-guess-indent-offset-verbose nil
+	python-pdbtrack-activate nil ;; Disable until this gets fixed for using with TRAMP
+	)
   (indent-tabs-mode nil)
 
   (defun my/run-python-advice (fn &rest args)
