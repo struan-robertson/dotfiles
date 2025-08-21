@@ -282,6 +282,9 @@ If so, return path to .venv/bin"
   (org-pomodoro-format "Pom: %s")
   (org-pomodoro-long-break-format "Pom LB: %s")
   (org-pomodoro-short-break-format "Pom SB: %s")
+  (org-pomodoro-finished-sound "/home/struan/Sync/Development/Utilities/org-pomodoro/bell.wav")
+  (org-pomodoro-long-break-sound "/home/struan/Sync/Development/Utilities/org-pomodoro/bell.wav")
+  (org-pomodoro-short-break-sound "/home/struan/Sync/Development/Utilities/org-pomodoro/bell.wav")
   :bind (:map org-mode-map ("C-c C-x C-p" . org-pomodoro)
 	      :map org-agenda-mode-map ("C-c C-x C-p" . org-pomodoro)))
 
