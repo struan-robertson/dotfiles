@@ -226,14 +226,14 @@ If so, return path to .venv/bin"
 			      (todo . " %i %-12:c%l")
 			      (tags . " %i %-12:c%l")
 			      (search . " %i %-12:c%l")))
-  (org-agenda-files '("~/Sync/Notes/Tasks/projects.org"
-		      "~/Sync/Notes/Tasks/inbox.org"
-		      "~/Sync/Notes/Tasks/ticker.org"
-		      "~/Sync/Notes/Tasks/ical/university.org"))
-  (org-refile-targets '(("~/Sync/Notes/Tasks/projects.org" :maxlevel 2)
-			("~/Sync/Notes/Tasks/inbox.org" :level 1)
-			("~/Sync/Notes/Tasks/future.org" :maxlevel 2)))
-  (org-archive-location "~/Sync/Notes/Tasks/archive.org::datetree/* Finished Tasks")
+  (org-agenda-files '("~/Documents/Notes/Tasks/projects.org"
+		      "~/Documents/Notes/Tasks/inbox.org"
+		      "~/Documents/Notes/Tasks/ticker.org"
+		      "~/Documents/Notes/Tasks/ical/university.org"))
+  (org-refile-targets '(("~/Documents/Notes/Tasks/projects.org" :maxlevel 2)
+			("~/Documents/Notes/Tasks/inbox.org" :level 1)
+			("~/Documents/Notes/Tasks/future.org" :maxlevel 2)))
+  (org-archive-location "~/Documents/Notes/Tasks/archive.org::datetree/* Finished Tasks")
   (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")))
   (org-todo-keyword-faces '(("WAITING" . org-warning)))
   (org-tag-alist '(("@doctorate" . ?d)
@@ -244,13 +244,13 @@ If so, return path to .venv/bin"
   (org-outline-path-complete-in-steps nil)
 
   (org-capture-templates '(("t" "Todo [inbox]" entry
-                            (file+headline "~/Sync/Notes/Tasks/inbox.org" "Unfiled")
+                            (file+headline "~/Documents/Notes/Tasks/inbox.org" "Unfiled")
                             "* TODO %i%?")
 			   ("l" "Todo [inbox] linked" entry
-			    (file+headline "~/Sync/Notes/Tasks/inbox.org" "Unfiled")
+			    (file+headline "~/Documents/Notes/Tasks/inbox.org" "Unfiled")
 			    "* TODO %i%?\n %a")
                            ("T" "Ticker" entry
-                            (file "~/Sync/Notes/Tasks/ticker.org")
+                            (file "~/Documents/Notes/Tasks/ticker.org")
                             "* TODO %i%?")
 			   ("n" "Note" plain
 			    (file denote-last-path)
@@ -296,7 +296,7 @@ If so, return path to .venv/bin"
   (:repo "https://git.sr.ht/~struanr/org-ics-import.el")
   :custom
   (org-ics-import-update-interval 3600)
-  (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/Sync/Notes/Tasks/ical/university.org")))
+  (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/Documents/Notes/Tasks/ical/university.org")))
   (org-ics-import-exclude-strings '("DRV5" "Datavis" "Cancelled"))
   (org-ics-import-exclude-passed-events t))
 
@@ -1353,7 +1353,7 @@ any directory proferred by `consult-dir'."
   (setq eshell-command-aliases-list '(("ll" "ls -l")
 				      ("la" "ls -al")
 				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")
-				      ("papis_export" "rm ~/Sync/Notes/library.bib; papis export -a -o ~/Sync/Notes/library.bib -f bibtex")))
+				      ("papis_export" "rm ~/Documents/Notes/library.bib; papis export -a -o ~/Documents/Notes/library.bib -f bibtex")))
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
 ;;;; IRC
@@ -1638,7 +1638,7 @@ any directory proferred by `consult-dir'."
 
   :config
   ;; Remember to check the doc string of each of those variables.
-  (setq denote-directory (expand-file-name "~/Sync/Notes/Denote/"))
+  (setq denote-directory (expand-file-name "~/Documents/Notes/Denote/"))
   (setq denote-save-buffers nil)
   (setq denote-known-keywords '("emacs" "computing" "mathematics" "programming" "ml" "idea"))
   (setq denote-infer-keywords t)
@@ -1664,7 +1664,7 @@ any directory proferred by `consult-dir'."
   :after
   bibtex
   :custom
-  (org-cite-global-bibliography '("~/Sync/Notes/library.bib"))
+  (org-cite-global-bibliography '("~/Documents/Notes/library.bib"))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
