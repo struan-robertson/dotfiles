@@ -1530,6 +1530,15 @@ any directory proferred by `consult-dir'."
     (when mu4e-compose-complete-addresses
       (org-msg--mu4e-fun-call "compose-setup-completion"))))
 
+;;;; age
+(use-package age
+  :custom
+  (age-program "rage")
+  (age-default-identity "~/.ssh/id_ed25519")
+  (age-default-recipient "~/.ssh/id_ed25519.pub")
+  :config
+  (age-file-enable))
+
 ;;; Academic
 
 ;;;; pdf-tools
