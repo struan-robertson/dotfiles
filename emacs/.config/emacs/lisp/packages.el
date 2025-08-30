@@ -633,7 +633,6 @@ If so, return path to .venv/bin"
 	  "eshell.*\\*$" ;; eshell-mode
           "eat\\*" ;; eat-mode
 	  "ielm\\*" ielm-mode
-	  "Python\\*" inferior-python-mode
 	  "julia\\*"
 	  "shell\\*" shell-mode
 	  "\\*rsync @")
