@@ -121,6 +121,22 @@ If so, return path to .venv/bin"
 	(setq llama-server-running nil))
     (message "llama server not running")))
 
+(defun my/get-distroboxes (&optional include-stopped)
+  "Get a list of distroboxes. If `include-stopped' is t, include stopped distroboxes."
+  (let* ((command (if include-stopped
+		      "podman ps -a --format '{{.Names}}'"
+		    "podman ps --format '{{.Names}}'"))
+	 (output (shell-command-to-string command))
+	 (options (split-string output "\n" t "\s *")))
+    options))
+
+(defun my/start-distrobox (&optional name)
+  "Start a distrobox `name'. If `name' is not specified, choose from list"
+  (interactive)
+  (let ((name (if name
+		  name
+		(completing-read "Distrobox: " (my/get-distroboxes t) nil t))))
+    (async-shell-command (string-join `("distrobox enter" ,name) " "))))
 
 ;;; Org
 ;;;; org
