@@ -1413,6 +1413,23 @@ any directory proferred by `consult-dir'."
 ;;;;; dired-rsync-transient
 ;; Transient menu for dired-rsync
 (use-package dired-rsync-transient
+  :config
+  (defun dired-rsync--do-run (command details)
+    "Run rsync COMMAND in a unique buffer, passing DETAILS to sentinel."
+    (let* ((buffer-name (format "%s @ %s"
+				dired-rsync-proc-buffer-prefix
+				(current-time-string)))
+           (proc (make-process
+                  :name "*rsync*"
+                  :buffer buffer-name
+                  :command (list shell-file-name
+				 shell-command-switch
+				 command)
+                  :sentinel (lambda (proc desc)
+                              (dired-rsync--sentinel proc desc details))
+                  :filter #'dired-rsync--filter)))
+      (pop-to-buffer buffer-name) ; Added to switch to the buffer
+      (dired-rsync--update-modeline)))
   :bind (:map dired-mode-map
 	      ("C-c C-x" . dired-rsync-transient)))
 
