@@ -590,7 +590,7 @@ If so, return path to .venv/bin"
   :bind
   (("C-c C-j" . 'avy-resume)
    ("C-M-;" . 'avy-goto-char-in-line)
-   ("C-;" . 'avy-goto-char-2)))
+   ("C-;" . 'avy-goto-char)))
 
 ;;;; expand-region
 ;; C-= to expand selection intelligently
