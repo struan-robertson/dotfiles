@@ -90,7 +90,7 @@ If so, return path to .venv/bin"
 
 (defun my/start-llama-server ()
   (interactive)
-  "Start llama-server for use with gptel"
+  "Start Qwen3 llama-server for use with gptel"
   (if (bound-and-true-p llama-server-running)
       (message "llama server already running")
     (progn
@@ -388,8 +388,12 @@ If so, return path to .venv/bin"
     (interactive)
     "Toggle `dired-dwim-target' in dired mode."
     (if dired-dwim-target
-	(setq-local dired-dwim-target nil)
-      (setq-local dired-dwim-target t)))
+	(progn
+	  (setq-local dired-dwim-target nil)
+	  (message "Disabled dired DWIM"))
+      (progn
+	(setq-local dired-dwim-target t)
+	(mesage "Enabled dired DWIM"))))
   :custom
   (dired-dwim-target t)
   :bind
@@ -801,7 +805,6 @@ If so, return path to .venv/bin"
   :init
   (marginalia-mode))
 
-
 ;;;;; consult
 ;; Stupid powerful completion package
 (use-package consult
@@ -954,7 +957,6 @@ any directory proferred by `consult-dir'."
 
 ;; Super powered ability to act on anything the point is over
 ;; https://karthinks.com/software/fifteen-ways-to-use-embark/
-;; TODO add karthinks code when I install avy
 (use-package embark
   :bind
   (("C-." . embark-act)
@@ -1403,11 +1405,13 @@ any directory proferred by `consult-dir'."
 
 ;;;; Files
 ;;;;; dired-rsync
+;; Call rsync from dired
 (use-package dired-rsync
   :bind (:map dired-mode-map
 	      ("C-c C-r" . dired-rsync)))
 
 ;;;;; dired-rsync-transient
+;; Transient menu for dired-rsync
 (use-package dired-rsync-transient
   :bind (:map dired-mode-map
 	      ("C-c C-x" . dired-rsync-transient)))
