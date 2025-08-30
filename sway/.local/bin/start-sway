@@ -16,7 +16,8 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export QT_QPA_PLATFORM=wayland
 export SDL_VIDEODRIVER=wayland
 export LIBSEAT_BACKEND=seatd
-export XDG_VTNR=$(basename "$(tty)" | sed 's/tty//')
+XDG_VTNR=$(basename "$(tty)" | sed 's/tty//')
+export XDG_VTNR
 
 ## Load Sway-specific user environment customizations
 if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/sway/environment" ]; then
