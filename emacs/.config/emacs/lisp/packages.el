@@ -363,7 +363,7 @@ If so, return path to .venv/bin"
   ;; Improve performance by decreasing the number of garbage collections
   ;; This increases memory pressure, but I have plenty RAM
   ;; Do not increase the original value (800000) by a factor of more than 100
-  (gc-cons-threshold (* 800000 50))
+  ;; (gc-cons-threshold (* 800000 50))
 
   ;; Set date style
   (calendar-date-style 'european))
