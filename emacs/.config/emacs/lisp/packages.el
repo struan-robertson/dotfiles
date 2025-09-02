@@ -133,10 +133,11 @@ If so, return path to .venv/bin"
 (defun my/start-distrobox (&optional name)
   "Start a distrobox `name'. If `name' is not specified, choose from list"
   (interactive)
-  (let ((name (if name
-		  name
-		(completing-read "Distrobox: " (my/get-distroboxes t) nil t))))
-    (async-shell-command (string-join `("distrobox enter" ,name) " "))))
+  (my/execute-locally
+   (let ((name (if name
+		   name
+		 (completing-read "Distrobox: " (my/get-distroboxes t) nil t))))
+     (async-shell-command (string-join `("distrobox enter" ,name) " ")))))
 
 ;;; Org
 ;;;; org
