@@ -1585,6 +1585,12 @@ any directory proferred by `consult-dir'."
     (when mu4e-compose-complete-addresses
       (org-msg--mu4e-fun-call "compose-setup-completion"))))
 
+;;;;; message-view-patch
+;; Colorize patch emails in mu4e
+(use-package message-view-patch
+  :hook
+  (gnus-part-display . message-view-patch-highlight))
+
 ;;;; age
 (use-package age
   :custom
