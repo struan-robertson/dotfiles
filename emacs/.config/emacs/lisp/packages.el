@@ -393,7 +393,7 @@ If so, return path to .venv/bin"
 	  (message "Disabled dired DWIM"))
       (progn
 	(setq-local dired-dwim-target t)
-	(mesage "Enabled dired DWIM"))))
+	(message "Enabled dired DWIM"))))
   :custom
   (dired-dwim-target t)
   :bind
