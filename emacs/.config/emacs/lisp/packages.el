@@ -1378,15 +1378,34 @@ any directory proferred by `consult-dir'."
 ;; IRC in Emacs
 (use-package circe
   :custom
+  (circe-reduce-lurker-spam t)
+  (circe-server-buffer-name "{network}")
   (circe-network-options
-   '(("Libera Chat"
+   `(("Sourcehut bouncer"
+      :host "chat.sr.ht"
+      :port 6697
       :tls t
-      :nick "struan"
-      :channels ("#emacs" "#emacs-til"))
-     ("OFTC"
+      :nick "struanr"
+      :sasl-username "struanr@alpine"
+      :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg")))
+     
+     ("OFTC (bounced)"
+      :host "chat.sr.ht"
+      :port 6697
       :tls t
-      :nick "struan"
-      :channels ("#alpine-linux" "#alpine-devel" "#alpine-offtopic")))))
+      :nick "struanr"
+      :sasl-username "struanr/OFTC@alpine"
+      :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))
+      :channels ("#alpine-linux" "#alpine-devel" "#alpine-offtopic"))
+
+     ("Libera (bounced)"
+      :host "chat.sr.ht"
+      :port 6697
+      :tls t
+      :nick "struanr"
+      :sasl-username "struanr/Libera@alpine"
+      :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))
+      :channels ("#emacs" "#org-mode")))))
 
 ;;;; Accounting
 
