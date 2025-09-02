@@ -910,7 +910,7 @@ If so, return path to .venv/bin"
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
 
-  (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'" "\\.gpg\\'"))
+  ;; (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'" "\\.gpg\\'"))
   )
 
 ;;;;; consult-todo
