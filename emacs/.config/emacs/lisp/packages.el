@@ -1381,6 +1381,7 @@ any directory proferred by `consult-dir'."
   :custom
   (circe-reduce-lurker-spam t)
   (circe-server-buffer-name "{network}")
+  (circe-network-defaults '())
   (circe-network-options
    `(("Sourcehut bouncer"
       :host "chat.sr.ht"
