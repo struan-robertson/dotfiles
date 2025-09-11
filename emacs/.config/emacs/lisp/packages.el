@@ -1381,7 +1381,6 @@ any directory proferred by `consult-dir'."
   :custom
   (circe-reduce-lurker-spam t)
   (circe-server-buffer-name "{network}")
-  (circe-network-defaults '())
   (circe-network-options
    `(("Sourcehut bouncer"
       :host "chat.sr.ht"
@@ -1407,7 +1406,9 @@ any directory proferred by `consult-dir'."
       :nick "struanr"
       :sasl-username "struanr/Libera@alpine"
       :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))
-      :channels ("#emacs" "#org-mode")))))
+      :channels ("#emacs" "#org-mode"))))
+  :config
+  (setq circe-network-defaults '()))
 
 ;;;; Accounting
 
