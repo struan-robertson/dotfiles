@@ -1,0 +1,8 @@
+#!/sbin/openrc-run
+
+description="DavMail POP/IMAP/SMTP/Caldav/Carddav/LDAP Exchange and Office 365 Gateway."
+
+command="/usr/bin/davmail"
+
+supervisor=supervise-daemon
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"

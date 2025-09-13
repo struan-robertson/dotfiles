@@ -1,0 +1,8 @@
+# Set this to the latitude of your location.
+LATITUDE=56.5
+
+# Set this to the longitude of your location.
+LONGITUDE=-3.0
+
+# Uncomment to pass extra cmomand_args
+#command_args=""

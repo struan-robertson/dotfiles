@@ -1,0 +1,9 @@
+#!/sbin/openrc-run
+
+description="Open Source Continuous File Synchronization."
+
+command="/usr/bin/syncthing"
+command_args="--no-browser"
+
+supervisor=supervise-daemon
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"

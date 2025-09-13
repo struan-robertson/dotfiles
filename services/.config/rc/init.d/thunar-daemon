@@ -1,0 +1,9 @@
+#!/sbin/openrc-run
+
+description="Thunar Daemon"
+
+command="/usr/bin/thunar"
+command_args="--daemon"
+
+supervisor=supervise-daemon
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"

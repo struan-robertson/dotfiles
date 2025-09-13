@@ -6,6 +6,7 @@ GTK_THEME=Nordic
 ICON_THEME=NovaOS-nord
 XCURSOR_SIZE=24
 
+XDG_CONFIG_HOME=$HOME/.config
 XDG_SCREENSHOTS_DIR=$HOME/Pictures/Screenshots
 
 # SSH agent auth socket
@@ -24,7 +25,7 @@ SVDIR=$HOME/.local/service
 PATH=$HOME/.local/bin:$HOME/.cargo/bin:$PATH
 
 # Flatpak dirs
-# XDG_DATA_DIRS=/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS 
+# XDG_DATA_DIRS=/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:$XDG_DATA_DIRS
 
 # IPython home directory
 IPYTHONDIR="$HOME/.config/ipython"

@@ -1,0 +1,9 @@
+#!/sbin/openrc-run
+
+description="OpenSSH Agent"
+
+command="/usr/bin/ssh-agent"
+command_args="-D -a ${SSH_SOCKET}"
+
+supervisor=supervise-daemon
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"

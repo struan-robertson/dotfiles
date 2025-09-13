@@ -2,9 +2,6 @@
 
 ## Adapted from start-sway script present in Fedora Sway spin
 
-## Internal variables
-readonly _SWAY_COMMAND="/usr/bin/sway"
-
 ## General exports
 export XDG_CURRENT_DESKTOP=sway
 export XDG_SESSION_DESKTOP=sway
@@ -29,6 +26,7 @@ fi
 
 # Start sway with extra arguments and send output to the journal
 # shellcheck disable=SC2086 # quoted expansion of EXTRA_ARGS can produce empty field
-exec dbus-run-session -- $_SWAY_COMMAND "$@" 2>&1 | logger -t "sway"
+exec /usr/bin/sway "$@" 2>&1 | logger -t "sway"
+
 
 

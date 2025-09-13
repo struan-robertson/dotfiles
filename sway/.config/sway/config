@@ -24,21 +24,11 @@ output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.5
 output "Samsung Display Corp. 0x4163 Unknown" color_profile icc ~/.config/sway/color_profiles/xps13.icm
 
 # Update dbus environment
-exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-
-# Pipewire
-exec /usr/libexec/pipewire-launcher
-
-# Desktop Portals
-exec /usr/libexec/xdg-desktop-portal-gtk
-exec /usr/libexec/xdg-desktop-portal-wlr
+exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
 ### Includes
 # Extra configuration
 include ~/.config/sway/config.d/*
-
-# Run user services
-exec runsvdir ~/.local/service/
 
 # Exec KeePassXC as it will need to be unlocked for most things
 exec keepassxc
@@ -47,5 +37,9 @@ exec keepassxc
 exec emacs --daemon
 
 # Pipe fifo to wob bar
+# TODO make a service
 exec mkfifo $XDG_RUNTIME_DIR/wob.sock
 exec wob < $XDG_RUNTIME_DIR/wob.sock  > $XDG_RUNTIME_DIR/wob.sock
+
+# Start OpenRC GUI run level
+exec openrc -U gui
