@@ -1123,8 +1123,7 @@ any directory proferred by `consult-dir'."
 	  (apply fn args))
       (apply fn args)))
   
-  (advice-add 'eglot--connect :around #'my/eglot--connect-advice)
-  )
+  (advice-add 'eglot--connect :around #'my/eglot--connect-advice))
 
 
 ;;;;; eglot-booster
@@ -1388,7 +1387,8 @@ any directory proferred by `consult-dir'."
       :tls t
       :nick "struanr"
       :sasl-username "struanr@alpine"
-      :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg")))
+      :sasl-password ,(lambda (_)
+			(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))))
      
      ("OFTC (bounced)"
       :host "chat.sr.ht"
@@ -1396,7 +1396,8 @@ any directory proferred by `consult-dir'."
       :tls t
       :nick "struanr"
       :sasl-username "struanr/OFTC@alpine"
-      :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))
+      :sasl-password ,(lambda (_)
+			(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg")))
       :channels ("#alpine-linux" "#alpine-devel" "#alpine-offtopic"))
 
      ("Libera (bounced)"
@@ -1405,7 +1406,8 @@ any directory proferred by `consult-dir'."
       :tls t
       :nick "struanr"
       :sasl-username "struanr/Libera@alpine"
-      :sasl-password ,(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))
+      :sasl-password ,(lambda (_)
+			(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg")))
       :channels ("#emacs" "#org-mode"))))
   :config
   (setq circe-network-defaults '()))
