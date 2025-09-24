@@ -191,7 +191,8 @@ If so, return path to .venv/bin"
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((julia . t)
-     (emacs-lisp . t)))
+     (emacs-lisp . t)
+     (python . t)))
 
   :custom
   ;; LaTeX
@@ -206,6 +207,9 @@ If so, return path to .venv/bin"
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . "/usr/bin/firefox %s")
      ("\\.pdf\\'" . default))))
+
+  ;; Babel
+  (org-confirm-babel-evaluate nil)
 
   ;; Layout
   (org-startup-folded t)
