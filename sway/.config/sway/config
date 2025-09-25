@@ -36,10 +36,5 @@ exec keepassxc
 # Emacs daemon is better managed by emacs than sv
 exec emacs --daemon
 
-# Pipe fifo to wob bar
-# TODO make a service
-exec mkfifo $XDG_RUNTIME_DIR/wob.sock
-exec wob < $XDG_RUNTIME_DIR/wob.sock  > $XDG_RUNTIME_DIR/wob.sock
-
 # Start OpenRC GUI run level
 exec openrc -U gui
