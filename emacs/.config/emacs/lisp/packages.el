@@ -399,10 +399,16 @@ If so, return path to .venv/bin"
       (progn
 	(setq-local dired-dwim-target t)
 	(message "Enabled dired DWIM"))))
+  (setq dired-omit-files   ;; hide .dot files when in dired-omit-mode
+	(concat dired-omit-files "\\|^\\..+$"))
   :custom
   (dired-dwim-target t)
+  :hook
+  (dired-mode . (lambda () (setq-local dired-omit-mode t)))
   :bind
-  (:map dired-mode-map ("W" . my/toggle-dired-dwim)))
+  (:map dired-mode-map
+	("W" . my/toggle-dired-dwim)
+	("H" . dired-omit-mode)))
 
 ;;;;;; ibuffer
 ;; Built in ibuffer package
