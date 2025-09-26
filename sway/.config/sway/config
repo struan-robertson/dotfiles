@@ -23,6 +23,12 @@ output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.5
 # Laptop colour profile
 output "Samsung Display Corp. 0x4163 Unknown" color_profile icc ~/.config/sway/color_profiles/xps13.icm
 
+# Headless output for game streaming
+output HEADLESS-1 {
+       pos 3440,0
+       mode 2560x1440@60Hz
+}
+
 # Update dbus environment
 exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
