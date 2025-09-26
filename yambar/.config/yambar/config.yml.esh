@@ -64,7 +64,7 @@ bar:
 
     - label:
         content:
-          string: {text: "┃", margin: 16}
+          string: {text: "/", margin: 16}
 
     - mem:
         poll-interval: 2000
@@ -73,7 +73,7 @@ bar:
 
     - label:
         content:
-          string: {text: "┃", margin: 16}
+          string: {text: "/", margin: 16}
 
     - pipewire:
         anchors:
@@ -93,7 +93,7 @@ bar:
               - map:
                   <<: *volume
 
-              - string: {text: "┃", margin: 16}
+              - string: {text: "/", margin: 16}
 
 <% if [ $(hostname) = "alpinelaptop" ] || [ $(hostname) = "oldlaptop" ]; then -%>
     - battery:
@@ -128,7 +128,7 @@ bar:
                       
     - label:
         content:
-          string: {text: "┃", margin: 8}
+          string: {text: "/", margin: 8}
 <% fi -%>
 
     - network:
