@@ -401,8 +401,13 @@ If so, return path to .venv/bin"
 	(message "Enabled dired DWIM"))))
   :custom
   (dired-dwim-target t)
+  (dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|^\\..+$")
+  :hook
+  (dired-mode . (lambda () (dired-omit-mode)))
   :bind
-  (:map dired-mode-map ("W" . my/toggle-dired-dwim)))
+  (:map dired-mode-map
+	("W" . my/toggle-dired-dwim)
+	("H" . dired-omit-mode)))
 
 ;;;;;; ibuffer
 ;; Built in ibuffer package
