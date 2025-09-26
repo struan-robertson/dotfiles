@@ -1014,23 +1014,30 @@ any directory proferred by `consult-dir'."
   :config
   ;; Together.ai offers an OpenAI compatible API
   (setf (gptel-get-backend "ChatGPT") nil)
+
   (setq
    gptel-model   'deepseek-ai/DeepSeek-R1
    gptel-default-mode 'org-mode
-   gptel-backend (gptel-make-openai "DeepSeek"         ; Any name you want
-		   :host "api.together.xyz"
-		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg"))                   ; Can be a function that returns the key
+   gptel-backend (gptel-make-anthropic "Claude"
+		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg"))
 		   :stream t
-		   :models '(;; has many more, check together.ai
-			     deepseek-ai/DeepSeek-R1
-			     deepseek-ai/DeepSeek-V3))
+		   :models '(claude-sonnet-4-20250514
+			     claude-opus-4-1-20250805))
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
 			       (text-mode . "# "))
    gptel-include-reasoning nil
-   gptel-max-tokens 30000)
+   gptel-max-tokens 20000)
 
+  (gptel-make-openai "DeepSeek"         ; Any name you want
+    :host "api.together.xyz"
+    :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg"))                   ; Can be a function that returns the key
+    :stream t
+    :models '(;; has many more, check together.ai
+	      deepseek-ai/DeepSeek-R1
+	      deepseek-ai/DeepSeek-V3))
+  
   (gptel-make-openai "llama-cpp"          ;Any name
     :stream t                             ;Stream responses
     :protocol "http"
