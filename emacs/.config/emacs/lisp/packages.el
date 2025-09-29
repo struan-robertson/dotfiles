@@ -1021,7 +1021,7 @@ any directory proferred by `consult-dir'."
    gptel-backend (gptel-make-anthropic "Claude"
 		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg"))
 		   :stream t
-		   :models '(claude-sonnet-4-20250514
+		   :models '(claude-sonnet-4-5-20250929
 			     claude-opus-4-1-20250805))
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
