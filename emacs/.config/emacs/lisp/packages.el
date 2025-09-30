@@ -327,6 +327,9 @@ If so, return path to .venv/bin"
 (use-package emacs
   :ensure nil
   :init
+
+  ;; f is useful enough to always keep in scope
+  (require 'f)
   
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
