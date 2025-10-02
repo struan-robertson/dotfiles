@@ -1634,7 +1634,7 @@ any directory proferred by `consult-dir'."
 	TeX-source-correlate-start-server t
 	pdf-view-use-scaling t
 	pdf-view-resize-factor 1.05
-	revert-without-query ".pdf")
+	revert-without-query '(".pdf"))
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
   :hook
   (Tex-after-compilation-finished-function . TeX-revert-document-buffer)
