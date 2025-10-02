@@ -328,9 +328,6 @@ If so, return path to .venv/bin"
   :ensure nil
   :init
 
-  ;; f is useful enough to always keep in scope
-  (require 'f)
-  
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
