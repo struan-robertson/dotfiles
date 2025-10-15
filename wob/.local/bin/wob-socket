@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Make fifo if it doesnt exist
+if [ ! -p "$XDG_RUNTIME_DIR"/wob.sock ]; then
+    mkfifo "$XDG_RUNTIME_DIR"/wob.sock
+fi
+
+exec wob < "$XDG_RUNTIME_DIR"/wob.sock  > "$XDG_RUNTIME_DIR"/wob.sock
+
