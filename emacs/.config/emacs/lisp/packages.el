@@ -1205,13 +1205,9 @@ any directory proferred by `consult-dir'."
 (use-package python
   :ensure nil
   :config
-  (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True --profile=emacs --ipython-dir=~/.config/ipython --classic"
-	python-indent-offset 4
+  (setq python-indent-offset 4
 	python-indent-def-block-scale 1
-	python-indent-guess-indent-offset-verbose nil
-	python-pdbtrack-activate nil ;; Disable until this gets fixed for using with TRAMP
-	)
+	python-indent-guess-indent-offset-verbose nil)
   (indent-tabs-mode nil)
 
   (defun my/run-python-advice (fn &rest args)
@@ -1225,13 +1221,7 @@ any directory proferred by `consult-dir'."
   (advice-add 'python-shell-restart :around #'my/run-python-advice)
   :bind (:map python-ts-mode-map
 	      ("C-c C-c" . python-shell-send-statement)
-	      ("C-c C-b" . python-shell-send-buffer))
-  :hook
-  (inferior-python-mode . (lambda () (setq-local electric-pair-inhibit-predicate (lambda
-										   (char)
-										   (if (char-equal ?\( char)
-										       t
-										     nil))))))
+	      ("C-c C-b" . python-shell-send-buffer)))
 
 ;;;; Julia
 
