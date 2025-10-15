@@ -1323,9 +1323,9 @@ any directory proferred by `consult-dir'."
   (eshell-mode . eat-eshell-mode)
   :custom
   (eshell-visual-commands nil)
-  (eat-tramp-shells '(("docker" . "/bin/sh")
+  (eat-tramp-shells '(("docker" . "/bin/bash")
 		      ("ssh" . "/bin/bash")
-		      ("doas" . "/bin/sh")))
+		      ("doas" . "/bin/bash")))
   :config
   (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
    'eat-semi-char-non-bound-keys
