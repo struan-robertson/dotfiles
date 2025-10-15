@@ -25,8 +25,5 @@ font-size = 13
 <% elif [ $(hostname) = "alpinelaptop" ]; then %>
 height = 22
 font-size = 13
-<% elif [ $(hostname) = "oldlaptop" ]; then %>
-height = 22
-font-size = 13
 <% fi -%>
 
