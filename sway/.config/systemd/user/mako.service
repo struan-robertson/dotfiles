@@ -1,0 +1,13 @@
+[Unit]
+Description=A lightweight notification daemon for Wayland.
+Documentation=man:mako(1)
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mako
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=sway-session.target
