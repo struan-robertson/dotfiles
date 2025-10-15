@@ -1150,11 +1150,11 @@ any directory proferred by `consult-dir'."
 ;;;;; eglot-booster
 ;; Faster processing of LSP JSON
 ;; Requires emacs-lsp-booster executable to be installed
-(use-package eglot-booster
-  :ensure
-  (:host github :repo "jdtsmith/eglot-booster" :branch "main")
-  :after eglot
-  :config (eglot-booster-mode))
+;; (use-package eglot-booster
+;;   :ensure
+;;   (:host github :repo "jdtsmith/eglot-booster" :branch "main")
+;;   :after eglot
+;;   :config (eglot-booster-mode))
 
 
 ;;;;; apheleia
