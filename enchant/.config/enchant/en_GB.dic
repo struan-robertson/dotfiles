@@ -153,3 +153,5 @@ ReLU
 parralelise
 vectorised
 replacer
+hyperparameter
+vectorisation
