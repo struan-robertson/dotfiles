@@ -45,6 +45,10 @@ If so, return path to .venv/bin"
 	venv
       nil)))
 
+;; TODO maybe this should set PATH for the python buffer, so that all commands from it
+;; Use `make-local-variable' for all these vars
+;; Then have a function that calls it once when a python buffer is entered
+;; This would remove the need to advise everything as well
 (defmacro my/execute-with-venv-vars (sexp venv)
   "Execute SEXP with virtual environment at VENV and set appropriate variables."
   `(let* ((venv-bin (file-name-concat ,venv "bin"))
