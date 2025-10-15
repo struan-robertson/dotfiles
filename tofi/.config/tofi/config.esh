@@ -3,7 +3,11 @@ width = 100%
 horizontal = true
 border-width = 0
 outline-width = 0
+<% if [ $(hostname) = "gentoo" ]; then %>
+font = /home/struan/.local/share/fonts/ttf/roboto-mono/RobotoMono-Regular.ttf
+<% elif [ $(hostname) = "alpinelaptop" ]; then %>
 font = /usr/share/fonts/roboto-mono/RobotoMono[wght].ttf
+<% fi -%>
 background-color = #2e3440
 text-color = #bbc6d9
 selection-color = #5e81ac
@@ -15,7 +19,7 @@ padding-right = 0
 result-spacing = 20
 min-input-width = 120
 
-<% if [ $(hostname) = "alpine" ]; then %>
+<% if [ $(hostname) = "gentoo" ]; then %>
 height = 26
 font-size = 13
 <% elif [ $(hostname) = "alpinelaptop" ]; then %>

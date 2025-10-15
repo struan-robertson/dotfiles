@@ -3,20 +3,23 @@
 # Power menu script using tofi
 # Modified from https://github.com/ericmurphyxyz/dotfiles/blob/master/.local/bin/powermenu
 
-<% if [ "$(hostname)" = "alpine" ]; then -%>
-CHOSEN=$(printf "Suspend\nReboot\nPower Off" | tofi)
+<% if [ "$(hostname)" = "gentoo" ]; then -%>
+CHOSEN=$(printf "Suspend\nExit Sway\nReboot\nPower Off" | tofi)
 <% else -%>
 CHOSEN=$(printf "Lock\nSuspend\nReboot\nPower Off" | tofi)
 <%fi -%>
 
 case "$CHOSEN" in
-<% if [ $(hostname) = "alpine" ]; then -%>
-	"Suspend") doas /usr/sbin/zzz ;;
+<% if [ $(hostname) = "gentoo" ]; then -%>
+	"Suspend") systemctl suspend ;;
+ 	"Exit Sway") swaymsg exit ;;	   
+	"Reboot") emacsclient -e '(kill-emacs)' ; reboot ;;
+	"Power Off") emacsclient -e '(kill-emacs)' ; poweroff ;;
 <% else -%>
 	"Lock") swaylock -f -c 000000 ;;
 	"Suspend") swaylock -f -c 000000 && doas /usr/sbin/zzz ;;
-<% fi -%>
 	"Reboot") emacsclient -e '(kill-emacs)' ; doas /sbin/reboot ;;
 	"Power Off") emacsclient -e '(kill-emacs)' ; doas /sbin/poweroff ;;
+<% fi -%>
 	*) exit 1 ;;
 esac
