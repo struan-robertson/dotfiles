@@ -1190,7 +1190,7 @@ any directory proferred by `consult-dir'."
   :ensure
   (:host github :repo "erickgnavar/flymake-ruff"
 	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"
-		   :protocol ssh
+		   :protocol https
 		   :branch "master"))
   :config
   (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
