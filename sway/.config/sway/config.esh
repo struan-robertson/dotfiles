@@ -23,24 +23,26 @@ output 'Sharp Corporation LQ125T1JW02 Unknown' scale 1.5
 # Laptop colour profile
 output "Samsung Display Corp. 0x4163 Unknown" color_profile icc ~/.config/sway/color_profiles/xps13.icm
 
-# Headless output for game streaming
-output HEADLESS-1 {
-       pos 3440,0
-       mode 2560x1440@60Hz
-}
-
-# Update dbus environment
-exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-
 ### Includes
 # Extra configuration
 include ~/.config/sway/config.d/*
 
 # Exec KeePassXC as it will need to be unlocked for most things
+<% if [ $(hostname) = "gentoo" ]; then %>
+exec systemd-cat --identifier=keepassxc -- keepassxc
+
+# Run emacs from here as it is limited as a Systemd service
+exec systemd-cat --identifier=emacs -- emacs --daemon
+
+# Systemd Integration
+exec "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME; systemctl --user start sway-session.target"
+exec swaymsg -t subscribe '["shutdown"]' && systemctl --user stop sway-session.target
+<% elif [ $(hostname) = "alpinelaptop" ]; then %>
 exec keepassxc
 
-# Emacs daemon is better managed by emacs than sv
+# Emacs daemon is better managed by Emacs than OpenRC
 exec emacs --daemon
 
 # Start OpenRC GUI run level
 exec openrc -U gui
+<% fi -%>
