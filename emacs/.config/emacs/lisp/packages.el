@@ -725,8 +725,13 @@ If so, return path to .venv/bin"
   ;; Recommended: Enable Corfu globally. This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customisation variable
   ;; `global-corfu-modes' to exclude certain modes.
+  :after eshell
   :config
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :hook
+  (eshell-mode . (lambda ()
+                   (setq-local corfu-auto nil)
+                   (corfu-mode -1))))
 
 ;;;;; cape
 ;; Extra completion functions for corfu
