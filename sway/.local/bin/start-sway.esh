@@ -12,9 +12,12 @@ export MOZ_ENABLE_WAYLAND=1
 export _JAVA_AWT_WM_NONREPARENTING=1
 export QT_QPA_PLATFORM=wayland
 export SDL_VIDEODRIVER=wayland
-export LIBSEAT_BACKEND=seatd
 XDG_VTNR=$(basename "$(tty)" | sed 's/tty//')
 export XDG_VTNR
+<% if [ $(hostname) = "alpinelaptop" ]; then %>
+export LIBSEAT_BACKEND=seatd
+<% fi -%>
+
 
 ## Load Sway-specific user environment customizations
 if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/sway/environment" ]; then
@@ -24,9 +27,19 @@ if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/sway/environment" ]; then
     set +o allexport
 fi
 
+# SSH agent
+<% if [ $(hostname) = "gentoo" ]; then %>
+eval "$(ssh-agent -s)"
+<% fi -%>
+
+
 # Start sway with extra arguments and send output to the journal
 # shellcheck disable=SC2086 # quoted expansion of EXTRA_ARGS can produce empty field
+<% if [ $(hostname) = "gentoo" ]; then %>
+exec systemd-cat --identifier=sway -- /usr/bin/sway
+<% elif [ $(hostname) = "alpinelaptop"]; then %>
 exec /usr/bin/sway "$@" 2>&1 | logger -t "sway"
+<% fi -%>
 
 
 
