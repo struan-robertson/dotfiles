@@ -615,15 +615,16 @@ If so, return path to .venv/bin"
 	aw-scope 'frame))
 
 ;;;;;; ultra-scroll
-;; Smoother scrolling
-;; (use-package ultra-scroll
-;;   :ensure
-;;   (:host github :repo "jdtsmith/ultra-scroll" :branch "main") 
-;;   :init
-;;   (setq scroll-conservatively 101 ; important!
-;;         scroll-margin 0) 
-;;   :config
-;;   (ultra-scroll-mode 1))
+;; Smoother scrolling (for laptop mostly)
+(use-package ultra-scroll
+  :ensure
+  (:host github :repo "jdtsmith/ultra-scroll" :branch "main") 
+  :init
+  (setq scroll-conservatively 101 ; important!
+        scroll-margin 0) 
+  :config
+  (ultra-scroll-mode 1)
+  (setq make-cursor-line-fully-visible t))
 
 ;;; Help
 
