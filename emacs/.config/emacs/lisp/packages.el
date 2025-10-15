@@ -1389,6 +1389,17 @@ any directory proferred by `consult-dir'."
 				      ("papis_export" "rm ~/Documents/Notes/library.bib; papis export -a -o ~/Documents/Notes/library.bib -f bibtex")))
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
+;;;;;; bash-completion
+;; Bash completion for eshell.
+(use-package bash-completion
+  :ensure t
+  :after eshell
+  :hook
+  (eshell-mode . (lambda ()
+		   (add-hook 'completion-at-point-functions 'bash-completion-capf-nonexclusive nil t))))
+
+
+
 ;;;; IRC
 ;;;;;; circe
 ;; IRC in Emacs
