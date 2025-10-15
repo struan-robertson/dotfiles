@@ -1,0 +1,13 @@
+[Unit]
+Description=Modular status panel for X11 and Wayland
+Documentation=https://codeberg.org/dnkl/yambar
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/yambar
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=sway-session.target
