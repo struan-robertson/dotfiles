@@ -1,0 +1,7 @@
+timeout 360  'swaymsg "output * power off"' resume  'swaymsg "output * power on"'
+<% if [ $(hostname) = "gentoo" ]; then %>
+timeout 500  'systemctl suspend' resume 'swaymsg "output * power on"'
+<% elif [ $(hostname) = "alpinelaptop" ]; then %>
+timeout 300  'swaylock -f' resume  'swaymsg "output * power on"'  
+timeout 500  'doas /usr/sbin/zzz' resume 'swaymsg "output * power on"'
+<% fi -%>

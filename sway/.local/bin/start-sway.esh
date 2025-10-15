@@ -37,7 +37,7 @@ eval "$(ssh-agent -s)"
 # shellcheck disable=SC2086 # quoted expansion of EXTRA_ARGS can produce empty field
 <% if [ $(hostname) = "gentoo" ]; then %>
 exec systemd-cat --identifier=sway -- /usr/bin/sway
-<% elif [ $(hostname) = "alpinelaptop"]; then %>
+<% elif [ $(hostname) = "alpinelaptop" ]; then %>
 exec /usr/bin/sway "$@" 2>&1 | logger -t "sway"
 <% fi -%>
 
