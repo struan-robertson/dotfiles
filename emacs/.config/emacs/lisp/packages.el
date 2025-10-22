@@ -1084,7 +1084,7 @@ any directory proferred by `consult-dir'."
   (setf (gptel-get-backend "ChatGPT") nil)
 
   (setq
-   gptel-model   'deepseek-ai/DeepSeek-R1
+   gptel-model   'claude-sonnet-4-5-20250929
    gptel-default-mode 'org-mode
    gptel-backend (gptel-make-anthropic "Claude"
 		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg"))
