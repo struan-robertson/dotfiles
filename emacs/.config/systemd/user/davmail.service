@@ -1,0 +1,24 @@
+[Unit]
+Description=DavMail POP/IMAP/SMTP/Caldav/Carddav/LDAP Exchange and Office 365 Gateway.
+Documentation=http://davmail.sourceforge.net/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/davmail -notray /home/struan/.config/emacs/mail/davmail.properties
+Restart=on-failure
+RestartSec=10
+StandardError=journal
+
+# Security hardening
+PrivateTmp=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=tmpfs
+BindPaths=/home/struan/.config/emacs/mail/davmail.properties
+BindReadOnlyPaths=/home/struan/.config/emacs/mail/davmail.p12
+
+[Install]
+WantedBy=default.target
+
