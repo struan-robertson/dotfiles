@@ -1374,6 +1374,13 @@ any directory proferred by `consult-dir'."
   ((magit-pre-refresh . diff-hl-magit-pre-refresh)
    (magit-post-refresh . diff-hl-magit-post-refresh)))
 
+;;;; Gentoo
+;;;;;; ebuild-mode
+(use-package ebuild-mode 
+  :ensure nil
+  :if (string-match-p "gentoo" (system-name))
+  :load-path "/usr/share/emacs/site-lisp/ebuild-mode/")
+
 ;;;; Terminal
 
 ;;;;; eat
