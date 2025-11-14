@@ -156,3 +156,5 @@ replacer
 hyperparameter
 vectorisation
 photometric
+jittering
+photometrically
