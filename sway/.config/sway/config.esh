@@ -38,11 +38,14 @@ exec systemd-cat --identifier=emacs -- emacs --daemon
 exec "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME; systemctl --user start sway-session.target"
 exec swaymsg -t subscribe '["shutdown"]' && systemctl --user stop sway-session.target
 <% elif [ $(hostname) = "alpinelaptop" ]; then %>
+
+
 exec keepassxc
 
 # Emacs daemon is better managed by Emacs than OpenRC
 exec emacs --daemon
 
 # Start OpenRC GUI run level
+exec "dbus-update-activation-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME"
 exec openrc -U gui
 <% fi -%>
