@@ -1,0 +1,71 @@
+{
+
+    "position": "top",
+    "height": 22,
+    "modules-left": ["sway/workspaces"],
+    "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "wireplumber#source", "custom/separator", "battery", "custom/separator", "network"],
+    "modules-right": ["clock"],
+
+    "sway/workspaces": {
+        "format": "{name}",
+        "on-click": "swaymsg workspace {name}"
+    },
+
+    "custom/separator": {
+        "format": "/",
+	"tooltip": false
+    },
+
+    "cpu": {
+        "interval": 2,
+        "format": "CPU {usage:03d}",
+        "on-click": "foot htop"
+    },
+
+    "memory": {
+        "interval": 2,
+        "format": "MEM {percentage:03d}",
+        "on-click": "foot htop --sort-key=PERCENT_MEM"
+    },
+
+    "wireplumber#sink": {
+	"format": "VOL {volume:03d}",
+	"format-muted": "VOL ---",
+	"on-click": "pavucontrol -t 3"
+    },
+  
+    "wireplumber#source": {
+	"node-type": "Audio/Source",
+	"format": "MIC {volume:03d}",
+	"format-muted": "MIC ---",
+	"on-click": "pavucontrol -t 4"
+    },
+
+    "battery": {
+        "bat": "BAT0",
+        "interval": 30,
+        "states": {
+            "critical": 10
+        },
+        "format": "BAT {capacity:03d}{icon}",
+        "format-icons": {
+            "charging": "+",
+            "discharging": "-",
+            "full": "=",
+            "not charging": "!",
+            "unknown": "?"
+        },
+        "on-click": "foot watch tlp-stat -s"
+    },
+
+    "network": {
+        "format": "NET {essid} {signalStrength:03d}",
+	"on-click": "iwgtk",
+	"tooltip-format": "{ipaddr}",
+    },
+
+    "clock": {
+        "format": "{:%d-%m-%Y %H:%M}",
+        "tooltip": false
+    }
+}

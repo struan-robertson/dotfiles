@@ -1,0 +1,6 @@
+#!/sbin/openrc-run
+
+command="waybar"
+supervisor=supervise-daemon
+error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"
+
