@@ -1747,7 +1747,7 @@ any directory proferred by `consult-dir'."
 	TeX-engine 'luatex
 	;; Disable warnings
 	LaTeX-flymake-chktex-options '("-n1" "-n24" "-n35"))
-  (setq-default TeX-master "main") 
+  (setq-default TeX-master 'dwim)
   ;; Word count that actually works
   (defun latex-count-words ()
     (interactive)
@@ -1824,7 +1824,7 @@ any directory proferred by `consult-dir'."
   :after
   bibtex
   :custom
-  (org-cite-global-bibliography '("~/Documents/Notes/library.bib"))
+  (org-cite-global-bibliography '("~/Documents/Biliography/library.bib"))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
