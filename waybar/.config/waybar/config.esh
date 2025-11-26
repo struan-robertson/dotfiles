@@ -1,9 +1,14 @@
 {
 
     "position": "top",
-    "height": 22,
     "modules-left": ["sway/workspaces"],
+<% if [ $(hostname) = "gentoo" ]; then -%>
+    "height": 28,
+    "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "network"],
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
+    "height": 22,
     "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "wireplumber#source", "custom/separator", "battery", "custom/separator", "network"],
+<% fi -%>    
     "modules-right": ["clock"],
 
     "sway/workspaces": {

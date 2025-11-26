@@ -1,6 +1,11 @@
 *{
     font-family: "Roboto Mono";
+<% if [ $(hostname) = "gentoo" ]; then -%>
+    font-size: 20px;
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
     font-size: 16px;
+<% fi -%>    
+
     min-height: 0;
 }
 
@@ -10,7 +15,6 @@ window#waybar {
 }
 
 #workspaces button {
-    padding: 0 8px;
     background-color: transparent;
     color: rgba(187, 198, 217, 0.3);
     border: none;
@@ -25,12 +29,21 @@ window#waybar {
 #wireplumber.sink,
 #wireplumber.source,
 #battery,
-#network {
-    padding: 0 8px;
+#network,
+#workspaces button {
+<% if [ $(hostname) = "gentoo" ]; then -%>
+    margin: 0 16px;
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
+    margin: 0 8px;
+<% fi -%>    
 }
 
 #clock {
+<% if [ $(hostname) = "gentoo" ]; then -%>
+    margin: 0 8px;
+<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
     margin: 0 4px;
+<% fi -%>    
 }
 
 #battery.critical:not(.charging) {
