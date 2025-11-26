@@ -151,7 +151,7 @@ If so, return path to .venv/bin"
   :config
   (cond ((string= (shell-command-to-string "hostname") "alpinelaptop\n")
 	 (plist-put org-format-latex-options :scale 0.66))
-	((string= (shell-command-to-string "hostname") "alpine\n")
+	((string= (shell-command-to-string "hostname") "gentoo\n")
 	 (plist-put org-format-latex-options :scale 1.5)))
 
   ;; Org TODOs
@@ -1017,12 +1017,12 @@ any directory proferred by `consult-dir'."
 						   :category file
 						   :face consult-file
 						   :items ,eshell-dirs))
-               (consult-dir-sources (cons consult-dir--source-eshell
+	       (consult-dir-sources (cons consult-dir--source-eshell
                                           consult-dir-sources)))
           (eshell/cd (substring-no-properties
-                      (consult-dir--pick "Switch directory: ")))))
+		      (consult-dir--pick "Switch directory: ")))))
        (t (eshell/cd (if regexp (eshell-find-previous-directory regexp)
-                       (completing-read "cd: " eshell-dirs))))))))
+		       (completing-read "cd: " eshell-dirs))))))))
 
 ;;;;; wgrep
 ;; Allow editing grep buffers
@@ -1349,7 +1349,7 @@ any directory proferred by `consult-dir'."
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-map
-              ("C-c C-e" . markdown-do)))
+	      ("C-c C-e" . markdown-do)))
 
 ;;; External Tools
 
@@ -1541,7 +1541,7 @@ any directory proferred by `consult-dir'."
 				 shell-command-switch
 				 command)
                   :sentinel (lambda (proc desc)
-                              (dired-rsync--sentinel proc desc details))
+			      (dired-rsync--sentinel proc desc details))
                   :filter #'dired-rsync--filter)))
       (pop-to-buffer buffer-name) ; Added to switch to the buffer
       (dired-rsync--update-modeline)))
