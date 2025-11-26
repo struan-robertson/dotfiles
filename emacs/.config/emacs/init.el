@@ -62,7 +62,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
- '(org-ics-import-confirmed-overwrite '("~/Documents/Notes/Tasks/ical/university.org"))
+ '(org-ics-import-confirmed-overwrite
+   '("~/.local/state/ical/dundee.org"
+     "~/Documents/Notes/Tasks/ical/university.org"))
  '(pdf-annot-default-annotation-properties
    '((t (label . "Struan Robertson"))
      (text (color . "#bf616A") (icon . "Note"))

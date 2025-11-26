@@ -254,7 +254,7 @@ If so, return path to .venv/bin"
   (org-agenda-files '("~/Documents/Notes/Tasks/projects.org"
 		      "~/Documents/Notes/Tasks/inbox.org"
 		      "~/Documents/Notes/Tasks/ticker.org"
-		      "~/Documents/Notes/Tasks/ical/university.org"))
+		      "~/.local/state/ical/dundee.org"))
   (org-refile-targets '(("~/Documents/Notes/Tasks/projects.org" :maxlevel 2)
 			("~/Documents/Notes/Tasks/inbox.org" :level 1)
 			("~/Documents/Notes/Tasks/future.org" :maxlevel 2)))
@@ -321,9 +321,7 @@ If so, return path to .venv/bin"
   (:repo "https://git.sr.ht/~struanr/org-ics-import.el")
   :custom
   (org-ics-import-update-interval 3600)
-  (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/Documents/Notes/Tasks/ical/university.org")))
-  (org-ics-import-exclude-strings '("DRV5" "Datavis" "Cancelled"))
-  (org-ics-import-exclude-passed-events t))
+  (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/.local/state/ical/dundee.org")))) ;; Seemed to cause lots of syncthing conflicts if in Notes dir
 
 ;;; Emacs Configuration
 
