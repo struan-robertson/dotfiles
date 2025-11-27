@@ -1455,8 +1455,12 @@ any directory proferred by `consult-dir'."
   ;;Aliases
   (setq eshell-command-aliases-list '(("ll" "ls -l")
 				      ("la" "ls -al")
-				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")
-				      ("papis_export" "rm ~/Documents/Notes/library.bib; papis export -a -o ~/Documents/Notes/library.bib -f bibtex")))
+				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")))
+
+  ;; Remove eshell grep
+  (with-eval-after-load 'em-unix
+    (fmakunbound 'eshell/grep))
+  
   (add-to-list 'eshell-modules-list 'eshell-tramp))
 
 ;;;;;; bash-completion
