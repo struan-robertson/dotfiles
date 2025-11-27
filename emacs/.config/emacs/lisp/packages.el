@@ -152,7 +152,7 @@ If so, return path to .venv/bin"
   (cond ((string= (shell-command-to-string "hostname") "alpinelaptop\n")
 	 (plist-put org-format-latex-options :scale 0.66))
 	((string= (shell-command-to-string "hostname") "gentoo\n")
-	 (plist-put org-format-latex-options :scale 1.5)))
+	 (plist-put org-format-latex-options :scale 1.3)))
 
   ;; Org TODOs
   (defun my/org-agenda-skip-all-siblings-but-first ()
@@ -535,6 +535,11 @@ If so, return path to .venv/bin"
 				  (project-eshell "Eshell")
 				  (eat-project "Shell" ?s))))
 
+;;;;;; xref
+(use-package xref
+  :ensure nil
+  :custom
+  (xref-search-program 'ripgrep))
 ;;;;; External
 
 
@@ -1858,6 +1863,25 @@ any directory proferred by `consult-dir'."
   :config
   (citar-embark-mode)
   :no-require)
+
+;;;; citar-denote
+;; Create and retrieve bibliography notes using citar and denote
+(use-package citar-denote
+  :demand t ;; Ensure minor mode loads
+  :after (:any citar denote)
+  :custom
+  (citar-denote-file-type 'org)
+  (citar-denote-keyword "bib")
+  (citar-denote-signature nil)
+  (citar-denote-subdir nil)
+  (citar-denote-template nil)
+  (citar-denote-title-format "title")
+  (citar-denote-title-format-andstr "and")
+  (citar-denote-use-bib-keywords nil)
+  (citar-denote-title-format-authors 2)
+  (citar-denote-use-bib-keywords t)
+  :init
+  (citar-denote-mode))
 
 ;;;; flymake-vale
 ;; Use vale prose linter with Flymake
