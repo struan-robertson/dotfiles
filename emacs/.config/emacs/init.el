@@ -72,8 +72,9 @@
      (highlight (color . "#81a1c1")) (underline (color . "#b48aed"))
      (squiggly (color . "#d08770")) (strike-out (color . "#bf616A"))))
  '(safe-local-variable-values
-   '((citar-bibliography . "biblio.bib") (eval require 'f)
-     (org-confirm-babel-evaluate) (eshell-toggle-use-git-root . t))))
+   '((LaTeX-using-Biber . t) (citar-bibliography . "biblio.bib")
+     (eval require 'f) (org-confirm-babel-evaluate)
+     (eshell-toggle-use-git-root . t))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
