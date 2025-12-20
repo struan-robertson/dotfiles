@@ -150,7 +150,7 @@ If so, return path to .venv/bin"
 (use-package org
   :config
   (cond ((string= (shell-command-to-string "hostname") "alpinelaptop\n")
-	 (plist-put org-format-latex-options :scale 0.66))
+	 (plist-put org-format-latex-options :scale 1))
 	((string= (shell-command-to-string "hostname") "gentoo\n")
 	 (plist-put org-format-latex-options :scale 1.3)))
 
