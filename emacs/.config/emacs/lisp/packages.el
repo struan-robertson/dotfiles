@@ -1887,6 +1887,15 @@ any directory proferred by `consult-dir'."
   :init
   (citar-denote-mode))
 
+;;;; consult-notes
+;; Use consult to search notes
+(use-package consult-notes
+  :config
+  (consult-notes-denote-mode)
+  :bind
+  (("C-x M-n" . consult-notes)
+   ("C-x M-N" . consult-notes-search-in-all-notes)))
+
 ;;;; flymake-vale
 ;; Use vale prose linter with Flymake
 (use-package flymake-vale
