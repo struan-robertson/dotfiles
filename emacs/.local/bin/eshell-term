@@ -4,10 +4,10 @@ case "${1:-}" in
     --new)
         shift
         path="${1:-$(pwd)}"
-        emacsclient -c -n -e "(let ((eshell-buffer-name \"terminal\") (current-prefix-arg '(4)) (default-directory \"$path\")) (call-interactively 'eshell))"
+        emacsclient -c -n -e "(let ((vterm-buffer-name \"*terminal*\") (current-prefix-arg '(4)) (default-directory \"$path\")) (call-interactively 'vterm))"
         ;;
     ""|*)
         path="${1:-$(pwd)}"
-        emacsclient -c -n -e "(let ((eshell-buffer-name \"terminal\") (default-directory \"$path\")) (eshell))"
+        emacsclient -c -n -e "(let ((vterm-buffer-name \"*terminal*\") (default-directory \"$path\")) (vterm))"
         ;;
 esac

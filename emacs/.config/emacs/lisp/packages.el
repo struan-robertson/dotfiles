@@ -708,6 +708,7 @@ If so, return path to .venv/bin"
           compilation-mode
 	  "eshell.*\\*$" ;; eshell-mode
           "eat\\*" ;; eat-mode
+	  "vterm\\*"
 	  "ielm\\*" ielm-mode
 	  "julia\\*"
 	  "shell\\*" shell-mode
@@ -1410,6 +1411,15 @@ any directory proferred by `consult-dir'."
 	  (vector ?\e ?`))  ;; Popper
     eat-eshell-semi-char-non-bound-keys)))
 
+
+;;;;; vterm
+;; Emacs libvterm integration
+
+(use-package vterm
+  :init
+  (setq vterm-buffer-name "*vterm*")
+  :bind (:map vterm-mode-map
+	      ("C-q" . vterm-send-next-key)))
 
 ;;;;; EShell
 ;;;;;; em-hist
