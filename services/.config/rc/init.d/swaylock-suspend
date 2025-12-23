@@ -1,6 +1,6 @@
 #!/sbin/openrc-run
 
-command="/home/struan/.local/bin/swaylock-suspend"
+command="/usr/bin/listen4sleep /usr/bin/swaylockd"
 supervisor=supervise-daemon
 error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"
 
