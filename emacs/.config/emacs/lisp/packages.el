@@ -1088,13 +1088,12 @@ any directory proferred by `consult-dir'."
   (setf (gptel-get-backend "ChatGPT") nil)
 
   (setq
-   gptel-model   'claude-opus-4-5-20251101
+   gptel-model   'gemini-3-pro-preview
    gptel-default-mode 'org-mode
-   gptel-backend (gptel-make-anthropic "Claude"
-		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg"))
+   gptel-backend (gptel-make-gemini "Gemini"
+		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/gemini_key.gpg"))
 		   :stream t
-		   :models '(claude-sonnet-4-5-20250929
-			     claude-opus-4-5-20251101))
+		   :models '(gemini-3-pro-preview))
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
@@ -1102,6 +1101,12 @@ any directory proferred by `consult-dir'."
    gptel-include-reasoning nil
    gptel-max-tokens 20000)
 
+  (gptel-make-anthropic "Claude"
+    :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg"))
+    :stream t
+    :models '(claude-sonnet-4-5-20250929
+	      claude-opus-4-5-20251101))
+  
   (gptel-make-openai "DeepSeek"         ; Any name you want
     :host "api.together.xyz"
     :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg"))                   ; Can be a function that returns the key
