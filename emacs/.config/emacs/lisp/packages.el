@@ -1421,6 +1421,7 @@ any directory proferred by `consult-dir'."
 ;; Emacs libvterm integration
 
 (use-package vterm
+  :demand t
   :init
   (setq vterm-buffer-name "*vterm*")
   :custom
