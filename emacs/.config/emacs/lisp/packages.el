@@ -1423,6 +1423,8 @@ any directory proferred by `consult-dir'."
 (use-package vterm
   :init
   (setq vterm-buffer-name "*vterm*")
+  :custom
+  (vterm-keymap-exceptions '("C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-y" "M-y" "M-`"))
   :bind (:map vterm-mode-map
 	      ("C-q" . vterm-send-next-key)))
 
