@@ -1863,8 +1863,10 @@ any directory proferred by `consult-dir'."
   :bind (("C-x M-b" . citar-open)
 	 :map org-mode-map
 	 ("C-c c" . org-cite-insert)
+	 ("C-c C" . citar-dwim)
 	 :map TeX-mode-map
-	 ("C-c c" . citar-insert-citation)))
+	 ("C-c c" . citar-insert-citation)
+	 ("C-c C" . citar-dwim)))
 
 ;; LaTeX setup is a bit more complex because LaTeX-mode-map is initialised after
 ;; AucTeX is initialised
@@ -1876,7 +1878,8 @@ any directory proferred by `consult-dir'."
   (LaTeX-mode . citar-capf-setup)
   :bind
   (:map LaTeX-mode-map
-	("C-c c" . citar-insert-citation)))
+	("C-c c" . citar-insert-citation)
+	("C-c C" . citar-dwim)))
 
 ;;;; citar-embark
 ;; embark actions
@@ -1905,7 +1908,17 @@ any directory proferred by `consult-dir'."
   (citar-denote-title-format-authors 2)
   (citar-denote-use-bib-keywords t)
   :init
-  (citar-denote-mode))
+  (citar-denote-mode)
+  :bind ( :map org-mode-map ("C-c d d" . citar-denote-dwim)
+	  ("C-c d e" . citar-denote-open-reference-entry)
+	  ("C-c d a" . citar-denote-add-citekey)
+	  ("C-c d k" . citar-denote-remove-citekey)
+	  ("C-c d r" . citar-denote-find-reference)
+	  ("C-c d l" . citar-denote-link-reference)
+	  ("C-c d f" . citar-denote-find-citation)
+	  ("C-c d x" . citar-denote-nocite)
+	  ("C-c d y" . citar-denote-cite-nocite)
+	  ("C-c d z" . citar-denote-nobib)))
 
 ;;;; consult-notes
 ;; Use consult to search notes
