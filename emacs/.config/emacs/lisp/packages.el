@@ -1734,8 +1734,10 @@ any directory proferred by `consult-dir'."
 	TeX-source-correlate-start-server t
 	pdf-view-use-scaling t
 	pdf-view-resize-factor 1.05
-	revert-without-query '(".pdf"))
+	revert-without-query '(".pdf")
+	pdf-links-read-link-convert-commands ("-font" "Roboto-Mono-Regular" "-pointsize" "%P" "-undercolor" "%f" "-fill" "%b" "-draw" "text %X,%Y '%c'"))
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+
   :hook
   (Tex-after-compilation-finished-function . TeX-revert-document-buffer)
   (pdf-view-mode . (lambda ()
@@ -1744,7 +1746,8 @@ any directory proferred by `consult-dir'."
   :bind
   (:map pdf-view-mode-map
 	("C" . pdf-view-center-in-window)
-	("M-g g" . pdf-view-goto-page)))
+	("M-g g" . pdf-view-goto-page)
+	("M-g o" . pdf-outline)))
 
 ;;;; auctex
 ;; AucTeX improved Tex experience

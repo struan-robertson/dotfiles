@@ -71,6 +71,7 @@
      (text (color . "#bf616A") (icon . "Note"))
      (highlight (color . "#81a1c1")) (underline (color . "#b48aed"))
      (squiggly (color . "#d08770")) (strike-out (color . "#bf616A"))))
+ '(pdf-util-convert-program "/usr/bin/magick")
  '(safe-local-variable-values
    '((LaTeX-using-Biber . t) (citar-bibliography . "biblio.bib")
      (eval require 'f) (org-confirm-babel-evaluate)
@@ -162,6 +163,8 @@
  '(outline-6 ((t (:inherit outline-1))))
  '(outline-7 ((t (:inherit outline-1))))
  '(outline-8 ((t (:inherit outline-1))))
+ '(pdf-isearch-match ((t (:inherit match))))
+ '(pdf-links-read-link ((t (:background "#bf616a" :foreground "#3b4252"))))
  '(pulse-highlight-face ((t (:foreground "#5e81ac"))))
  '(pulse-highlight-start-face ((t (:foreground "#5e81ac"))))
  '(show-paren-match ((t (:inherit nano-strong :foreground "#b48ead"))))
