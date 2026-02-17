@@ -1709,6 +1709,13 @@ any directory proferred by `consult-dir'."
   :config
   (age-file-enable))
 
+;;;; Anki
+;;;;;; anki-editor
+;;Minor mode for making Anki cards with Org Mode
+(use-package anki-editor
+  :ensure
+  (:host github :repo "anki-editor/anki-editor" :branch "master"))
+
 ;;; Academic
 
 ;;;; pdf-tools
