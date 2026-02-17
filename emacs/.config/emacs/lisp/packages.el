@@ -1402,31 +1402,6 @@ any directory proferred by `consult-dir'."
 
 ;;;; Terminal
 
-;;;;; eat
-;; Eat is a full terminal emulator written in elisp
-(use-package eat
-  :hook
-  (eshell-mode . eat-eshell-mode)
-  :custom
-  (eshell-visual-commands nil)
-  (eat-tramp-shells '(("docker" . "/bin/bash")
-		      ("ssh" . "/bin/bash")
-		      ("doas" . "/bin/bash")))
-  :config
-  (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
-   'eat-semi-char-non-bound-keys
-   (append
-    (list (vector meta-prefix-char ?o)   ;; Ace window
-	  (vector ?\e ?`))  ;; Popper
-    eat-semi-char-non-bound-keys))
-  (customize-set-variable ;; has :set code and needs eat-semi-char-non-bound-keys to be bound
-   'eat-eshell-semi-char-non-bound-keys
-   (append
-    (list (vector meta-prefix-char ?o)   ;; Ace window
-	  (vector ?\e ?`))  ;; Popper
-    eat-eshell-semi-char-non-bound-keys)))
-
-
 ;;;;; vterm
 ;; Emacs libvterm integration
 
