@@ -163,9 +163,14 @@ If so, return path to .venv/bin"
       (save-excursion
 	;; If previous sibling exists and is TODO,
 	;; skip this entry
-	(while (and (not should-skip-entry) (org-goto-sibling t))
-          (when (org-current-is-todo)
-            (setq should-skip-entry t))))
+	(let ((current-tags (org-get-tags)))
+          (while (and (not should-skip-entry) (org-goto-sibling t))
+            (when (org-current-is-todo)
+              (let ((sibling-tags (org-get-tags)))
+		;; Skip only if tags overlap or both are untagged
+		(when (or (seq-intersection current-tags sibling-tags)
+                          (and (null current-tags) (null sibling-tags)))
+                  (setq should-skip-entry t)))))))
       (let ((num-ancestors (org-current-level))
             (ancestor-level 1))
 	(while (and (not should-skip-entry) (<= ancestor-level num-ancestors))
@@ -178,9 +183,14 @@ If so, return path to .venv/bin"
 		;; Else if ancestor is TODO, check previous siblings of
 		;; ancestor ("uncles"); if any of them are TODO, skip
 		(when (org-current-is-todo)
-                  (while (and (not should-skip-entry) (org-goto-sibling t))
-                    (when (org-current-is-todo)
-                      (setq should-skip-entry t)))))))
+                  (let ((ancestor-tags (org-get-tags)))
+                    (while (and (not should-skip-entry) (org-goto-sibling t))
+                      (when (org-current-is-todo)
+			(let ((uncle-tags (org-get-tags)))
+                          ;; Skip only if tags overlap or both are untagged
+                          (when (or (seq-intersection ancestor-tags uncle-tags)
+                                    (and (null ancestor-tags) (null uncle-tags)))
+                            (setq should-skip-entry t))))))))))
           (setq ancestor-level (1+ ancestor-level))))
       (when should-skip-entry
 	(or (outline-next-heading)
