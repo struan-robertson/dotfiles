@@ -1374,6 +1374,14 @@ any directory proferred by `consult-dir'."
 
 ;;; External Tools
 
+;;;; Agentic Coding
+;;;;;; agent-shell
+;; A native Emacs buffer to interact with LLM agents powered by ACP
+(use-package agent-shell
+  :config
+  (setq agent-shell-anthropic-authentication
+	(agent-shell-anthropic-make-authentication :login t)))
+
 ;;;; Git
 
 ;;;;; magit
