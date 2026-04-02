@@ -28,9 +28,9 @@ PATH=$HOME/.local/bin:$HOME/.cargo/bin:$PATH
 MANPATH=/usr/local/texlive/2025/texmf-dist/doc/man:$MANPATH
 INFOPATH=/usr/local/texlive/2025/texmf-dist/doc/info:$INFOPATH
 <% if [ $(hostname) = "gentoo" ]; then %>
-PATH=/usr/local/texlive/2025/bin/x86_64-linux:$PATH
+PATH=/usr/local/texlive/2026/bin/x86_64-linux:$PATH
 <% elif [ $(hostname) = "alpinelaptop" ]; then %>
-PATH=/usr/local/texlive/2025/bin/x86_64-linuxmusl:$PATH
+PATH=/usr/local/texlive/2026/bin/x86_64-linuxmusl:$PATH
 <% fi -%> 
 
 # Flatpak dirs
