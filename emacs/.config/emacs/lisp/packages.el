@@ -143,8 +143,17 @@ If so, return path to .venv/bin"
 		 (completing-read "Distrobox: " (my/get-distroboxes t) nil t))))
      (async-shell-command (string-join `("distrobox enter" ,name) " ")))))
 
-;;; Org
-;;;; org
+;;; Updated Built In Packages
+;; Require declaration at the top of the file to load before dependents
+;;;;; transient
+;; Built in version is too low for upstream packages that depend on it
+(use-package transient
+  :init
+  (elpaca-wait)
+  (require 'transient))
+
+;;;;; Org
+;;;;;; org
 ;; Organisational fun
 ;; Has to be declared at the top of the file so as to load before built in org
 (use-package org
@@ -304,10 +313,10 @@ If so, return path to .venv/bin"
   ("C-x M-s" . org-switchb)
   ("C-x M-S" . org-save-all-org-buffers))
 
+
 (elpaca-wait)
 
-
-;;;; org-pomodoro
+;;;;; org-pomodoro
 ;; Work in 25 min blocks
 (use-package org-pomodoro
   :after org
@@ -323,12 +332,12 @@ If so, return path to .venv/bin"
   :bind (:map org-mode-map ("C-c C-x C-p" . org-pomodoro)
 	      :map org-agenda-mode-map ("C-c C-x C-p" . org-pomodoro)))
 
-;;;; org-ics-import
+;;;;; org-ics-import
 ;; My own package to import iCalendars to org
 
 (use-package org-ics-import
   :ensure
-  (:repo "https://git.sr.ht/~struanr/org-ics-import.el")
+  (:repo "~/Development/Emacs/org-ics-import/org-ics-import/")
   :custom
   (org-ics-import-update-interval 3600)
   (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/.local/state/ical/dundee.org")))) ;; Seemed to cause lots of syncthing conflicts if in Notes dir
@@ -452,9 +461,6 @@ If so, return path to .venv/bin"
   :hook
   (elpaca-after-init . recentf-mode))
 
-;;;;;; transient
-;; Built in version is too low for upstream packages that depend on it
-(use-package transient)
 
 ;;;;;; tramp
 ;; Use system ssh settings and search .local paths on remote
@@ -638,7 +644,6 @@ If so, return path to .venv/bin"
   :config
   (ultra-scroll-mode 1)
   (setq make-cursor-line-fully-visible t))
-
 ;;; Help
 
 ;;;; which-key
