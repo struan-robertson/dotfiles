@@ -337,7 +337,7 @@ If so, return path to .venv/bin"
 
 (use-package org-ics-import
   :ensure
-  (:repo "~/Development/Emacs/org-ics-import/org-ics-import/")
+  (:repo "https://github.com/struan-robertson/org-ics-import.el")
   :custom
   (org-ics-import-update-interval 3600)
   (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/.local/state/ical/dundee.org")))) ;; Seemed to cause lots of syncthing conflicts if in Notes dir
@@ -1103,13 +1103,13 @@ any directory proferred by `consult-dir'."
   (setf (gptel-get-backend "ChatGPT") nil)
 
   (setq
-   gptel-model   'claude-opus-4-6
+   gptel-model   'claude-opus-4-7
    gptel-default-mode 'org-mode
    gptel-backend (gptel-make-anthropic "Claude"
 		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg 2>/dev/null"))
 		   :stream t
 		   :models '(claude-sonnet-4-6
-			     claude-opus-4-6))
+			     claude-opus-4-7))
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
@@ -1210,12 +1210,15 @@ any directory proferred by `consult-dir'."
 	("C-c C-e" . eglot-rename)
 	("C-c C-f" . eglot-format-buffer))
   :hook
-  (((python-base-mode c-ts-mode) . eglot-ensure))
+  (((python-base-mode c-ts-mode rust-ts-mode rust-mode) . eglot-ensure))
   :config
   (setq enable-remote-dir-locals t)
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+		 '(python-base-mode . ("ty" "server"))))
   (add-to-list 'eglot-server-programs
-	       '((python-mode python-ts-mode)
-		 "pyright-langserver" "--stdio"))
+               '((rust-ts-mode rust-mode) .
+		 ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
@@ -1254,7 +1257,7 @@ any directory proferred by `consult-dir'."
 	'(ruff-isort ruff))
   (setq apheleia-remote-algorithm 'local)
   :hook
-  (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode))
+  (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode rust-mode rust-ts-mode))
 
 ;;;;; comint-mime
 ;; Display graphics and other MIME attachments in Emacs shells
@@ -1334,7 +1337,9 @@ any directory proferred by `consult-dir'."
 ;; Official Rust mode
 (use-package rust-mode
   :init
-  (setq rust-mode-treesitter-derive t))
+  (setq rust-mode-treesitter-derive t)
+  :hook
+  (rust-mode . eglot-ensure))
 
 ;;;;; ob-rust
 ;; Rust in org-babel
