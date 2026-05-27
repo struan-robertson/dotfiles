@@ -145,6 +145,11 @@ If so, return path to .venv/bin"
 
 ;;; Updated Built In Packages
 ;; Require declaration at the top of the file to load before dependents
+;;;;; compat
+(use-package compat
+  :init
+  (elpaca-wait))
+
 ;;;;; transient
 ;; Built in version is too low for upstream packages that depend on it
 (use-package transient
@@ -1103,13 +1108,12 @@ any directory proferred by `consult-dir'."
   (setf (gptel-get-backend "ChatGPT") nil)
 
   (setq
-   gptel-model   'claude-opus-4-7
+   gptel-model   'gemini-3.1-pro-preview
    gptel-default-mode 'org-mode
-   gptel-backend (gptel-make-anthropic "Claude"
-		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg 2>/dev/null"))
+   gptel-backend (gptel-make-gemini "Gemini"
+		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/gemini_key.gpg 2>/dev/null"))
 		   :stream t
-		   :models '(claude-sonnet-4-6
-			     claude-opus-4-7))
+		   :models '(gemini-3.1-pro-preview))
    pulse-flag t
    gptel-prompt-prefix-alist '((markdown-mode . "# ")
 			       (org-mode . "* ")
@@ -1117,10 +1121,11 @@ any directory proferred by `consult-dir'."
    gptel-include-reasoning nil
    gptel-max-tokens 20000)
 
-  (gptel-make-gemini "Gemini"
-    :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/gemini_key.gpg 2>/dev/null"))
+  (gptel-make-anthropic "Claude"
+    :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg 2>/dev/null"))
     :stream t
-    :models '(gemini-3-pro-preview))
+    :models '(claude-sonnet-4-6
+	      claude-opus-4-7))
   
   (gptel-make-openai "DeepSeek"         ; Any name you want
     :host "api.together.xyz"
@@ -1937,8 +1942,8 @@ any directory proferred by `consult-dir'."
   :config
   (consult-notes-denote-mode)
   :bind
-  (("C-x M-n" . consult-notes)
-   ("C-x M-N" . consult-notes-search-in-all-notes)))
+  (("C-x M-n c" . consult-notes)
+   ("C-x M-n C" . consult-notes-search-in-all-notes)))
 
 ;;;; flymake-vale
 ;; Use vale prose linter with Flymake
