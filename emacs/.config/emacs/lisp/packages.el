@@ -493,8 +493,8 @@ environment, without needing to advise each entry point."
 				  (project-find-regexp "Find regexp")
 				  (project-find-dir "Find directory")
 				  (magit-project-status "Magit" ?m)
-				  (project-eshell "Eshell")
-				  (eat-project "Shell" ?s))))
+				  (ghostel-project "Shell" ?s)
+				  (claude-code-ide-menu "Claude Code" ?c))))
 
 ;;;;;; xref
 (use-package xref
@@ -1413,7 +1413,27 @@ Return non-nil if a revert happened."
 		   (ghostel-color-bright-cyan    "#8FBCBB")  ; nord7
 		   (ghostel-color-bright-white   "#ECEFF4"))) ; nord6
     (face-spec-set face `((t :foreground ,colour))))
-  (ghostel-sync-theme))
+  (ghostel-sync-theme)
+
+  ;; Entry point for the eshell-term script. The default invocation
+  ;; reopens the most recently visited terminal: `buffer-list' is ordered
+  ;; by selection recency, so no bookkeeping is needed. Terminals are
+  ;; recognised by their creation identity, which survives the title
+  ;; renames done by `ghostel-buffer-name-function'.
+  (defun my/eshell-term (path &optional new)
+    "Switch to the most recently visited terminal.
+Create a fresh terminal at PATH when NEW is non-nil or none exists."
+    (let ((default-directory path)
+	  (ghostel-buffer-name "*terminal*"))
+      (if-let ((buf (and (not new)
+			 (seq-find
+			  (lambda (b)
+			    (string-prefix-p
+			     "*terminal*"
+			     (or (buffer-local-value 'ghostel--buffer-identity b) "")))
+			  (buffer-list)))))
+	  (switch-to-buffer buf)
+	(ghostel (and new '(4)))))))
 
 ;;;;; EShell
 ;;;;;; em-hist
