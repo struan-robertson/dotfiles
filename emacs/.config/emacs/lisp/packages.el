@@ -37,7 +37,7 @@
 
 (defun my/detect-venv (dir)
   "Check if a .venv directory exists either at project root of DIR or at DIR.
-If so, return path to .venv/bin"
+If so, return path to .venv"
   (let
       ;; Expands to just $PWD/.venv/bin if not in a git repo
       ((venv (expand-file-name ".venv" (vc-git-root dir))))
@@ -45,103 +45,43 @@ If so, return path to .venv/bin"
 	venv
       nil)))
 
-;; TODO maybe this should set PATH for the python buffer, so that all commands from it
-;; Use `make-local-variable' for all these vars
-;; Then have a function that calls it once when a python buffer is entered
-;; This would remove the need to advise everything as well
-(defmacro my/execute-with-venv-vars (sexp venv)
-  "Execute SEXP with virtual environment at VENV and set appropriate variables."
-  `(let* ((venv-bin (file-name-concat ,venv "bin"))
-	  (remote-host (file-remote-p default-directory))
-	  (local-venv (tramp-file-local-name venv))
-	  (local-venv-bin (tramp-file-local-name venv-bin))
-	  (local-local-bin (tramp-file-local-name
-			    (if remote-host
-				(tramp-handle-expand-file-name (concat remote-host "~/.local/bin"))
-			      (expand-file-name "~/.local/bin"))))
-	  (local-cargo-bin (tramp-file-local-name
-			    (if remote-host
-				(tramp-handle-expand-file-name (concat remote-host "~/.cargo/bin"))
-			      (expand-file-name "~/.cargo/bin"))))
-          (exec-path (cons venv-bin exec-path))
-          (python-shell-virtualenv-root ,venv)
-	  (process-environment (append (list
-					(format "PATH=%s:%s:%s:%s"
-						local-venv-bin
-						local-local-bin
-						local-cargo-bin
-						(getenv "PATH"))
-					(format "VIRTUAL_ENV=%s" local-venv))
-				       process-environment))
-	  (tramp-remote-path (append local-venv-bin
-				     local-local-bin
-				     local-cargo-bin
-				     tramp-remote-path))
-	  (tramp-remote-process-environment (cons (format "VIRTUAL_ENV=%s" venv) tramp-remote-process-environment)))
-     ,sexp))
+(defun my/python-venv-setup ()
+  "Set virtual environment variables buffer-locally if a .venv exists.
+Every process launched from this buffer (LSP servers, inferior Python
+shells, compilations, shell commands) then picks up the virtual
+environment, without needing to advise each entry point."
+  (when-let ((venv (my/detect-venv default-directory)))
+    (let* ((venv-bin (file-name-concat venv "bin"))
+	   (remote-host (file-remote-p default-directory))
+	   (local-venv (tramp-file-local-name venv))
+	   (local-venv-bin (tramp-file-local-name venv-bin))
+	   (local-local-bin (tramp-file-local-name
+			     (if remote-host
+				 (tramp-handle-expand-file-name (concat remote-host "~/.local/bin"))
+			       (expand-file-name "~/.local/bin"))))
+	   (local-cargo-bin (tramp-file-local-name
+			     (if remote-host
+				 (tramp-handle-expand-file-name (concat remote-host "~/.cargo/bin"))
+			       (expand-file-name "~/.cargo/bin")))))
+      (setq-local exec-path (cons venv-bin exec-path)
+		  python-shell-virtualenv-root venv
+		  process-environment
+		  (append (list
+			   (format "PATH=%s:%s:%s:%s"
+				   local-venv-bin
+				   local-local-bin
+				   local-cargo-bin
+				   (getenv "PATH"))
+			   (format "VIRTUAL_ENV=%s" local-venv))
+			  process-environment)
+		  tramp-remote-path (append (list local-venv-bin
+						  local-local-bin
+						  local-cargo-bin)
+					    tramp-remote-path)
+		  tramp-remote-process-environment
+		  (cons (format "VIRTUAL_ENV=%s" local-venv)
+			tramp-remote-process-environment)))))
 
-
-(defun my/toggle-writing-zen ()
-  "Disable language improvement tools to allow for dumping text on the page."
-  (interactive)
-  (if (bound-and-true-p jinx-mode)
-      (progn
-	(jinx-mode -1)
-	(flymake-mode -1))
-    (progn
-      (jinx-mode 1)
-      (flymake-mode 1))))
-
-(defun my/start-llama-server ()
-  (interactive)
-  "Start Qwen3 llama-server for use with gptel"
-  (if (bound-and-true-p llama-server-running)
-      (message "llama server already running")
-    (progn
-      (start-process "llama-server-process"
-		     "*llama-server*"
-		     "llama-server"
-		     "-m" "/home/struan/Development/Distroboxes/rocm/models/Qwen3-30B-A3B-Q4_K_M.gguf"
-		     "--jinja"
-		     "-ngl" "99"
-		     "-fa"
-		     "-sm" "row"
-		     "--temp" "0.6"
-		     "--top-k" "20"
-		     "--top-p" "0.95"
-		     "--min-p" "0"
-		     "-c" "40960"
-		     "-n" "32768"
-		     "--no-context-shift"
-		     "--port" "8989")
-      (setq llama-server-running t))))
-
-(defun my/stop-llama-server ()
-  "Stop all running llama-servers"
-  (interactive)
-  (if (bound-and-true-p llama-server-running)
-      (progn
-	(message (shell-command-to-string "killall -SIGINT llama-server"))
-	(setq llama-server-running nil))
-    (message "llama server not running")))
-
-(defun my/get-distroboxes (&optional include-stopped)
-  "Get a list of distroboxes. If `include-stopped' is t, include stopped distroboxes."
-  (let* ((command (if include-stopped
-		      "podman ps -a --format '{{.Names}}'"
-		    "podman ps --format '{{.Names}}'"))
-	 (output (shell-command-to-string command))
-	 (options (split-string output "\n" t "\s *")))
-    options))
-
-(defun my/start-distrobox (&optional name)
-  "Start a distrobox `name'. If `name' is not specified, choose from list"
-  (interactive)
-  (my/execute-locally
-   (let ((name (if name
-		   name
-		 (completing-read "Distrobox: " (my/get-distroboxes t) nil t))))
-     (async-shell-command (string-join `("distrobox enter" ,name) " ")))))
 
 ;;; Updated Built In Packages
 ;; Require declaration at the top of the file to load before dependents
@@ -700,12 +640,19 @@ If so, return path to .venv/bin"
 (use-package outli
   :ensure
   (:host github :repo "jdtsmith/outli" :branch "main")
+  :init
+  (defun my/disable-outli-for-ediff ()
+    "Disable `outli-mode' in ediff buffers so folded headings don't hide the diff."
+    (when (bound-and-true-p outli-mode)
+      (outli-mode -1)
+      (outline-show-all)))
   :bind
   (:map outli-mode-map
 	("C-c C-p" . (lambda () (interactive) (outline-back-to-heading))))
   :hook
   ((prog-mode text-mode) . outli-mode)
   (outli-mode . (lambda () (outline-hide-sublevels 2)))
+  (ediff-prepare-buffer . my/disable-outli-for-ediff)
   :config
   (setq outli-blend nil))
 
@@ -728,7 +675,7 @@ If so, return path to .venv/bin"
           compilation-mode
 	  "eshell.*\\*$" ;; eshell-mode
           "eat\\*" ;; eat-mode
-	  "vterm\\*"
+	  "ghostel\\*"
 	  "ielm\\*" ielm-mode
 	  "julia\\*"
 	  "shell\\*" shell-mode
@@ -1228,67 +1175,7 @@ any directory proferred by `consult-dir'."
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
 	eldoc-echo-area-use-multiline-p nil
-	eldoc-idle-delay 1.0)
-  
-  (defun my/eglot--connect-advice (fn &rest args)
-    (if (derived-mode-p 'python-base-mode)
-	(if-let ((venv (my/detect-venv default-directory)))
-	    (my/execute-with-venv-vars
-	     (apply fn args)
-	     venv)
-	  (apply fn args))
-      (apply fn args)))
-  
-  (advice-add 'eglot--connect :around #'my/eglot--connect-advice))
-
-
-;;;;; eglot-booster
-;; Faster processing of LSP JSON
-;; Requires emacs-lsp-booster executable to be installed
-;; (use-package eglot-booster
-;;   :ensure
-;;   (:host github :repo "jdtsmith/eglot-booster" :branch "main")
-;;   :after eglot
-;;   :config (eglot-booster-mode))
-
-
-;;;;; apheleia
-;; Auto format files on save
-(use-package apheleia
-  :config
-  (setf (alist-get 'python-mode apheleia-mode-alist)
-	'(ruff-isort ruff))
-  (setf (alist-get 'python-ts-mode apheleia-mode-alist)
-	'(ruff-isort ruff))
-  (setq apheleia-remote-algorithm 'local)
-  :hook
-  (python-base-mode emacs-lisp-mode lisp-mode LaTeX-mode TeX-mode rust-mode rust-ts-mode))
-
-;;;;; comint-mime
-;; Display graphics and other MIME attachments in Emacs shells
-(use-package comint-mime
-  :hook
-  (inferior-python-mode . comint-mime-setup))
-
-;;;;; eshell-venv
-;; My package to allow Eshell venv activation
-(use-package eshell-venv
-  :ensure
-  (:repo "https://git.sr.ht/~struanr/eshell-venv")
-  :hook
-  (eshell-mode . eshell-venv-mode))
-
-
-;;;;; flymake-ruff
-;; Allow ruff file checking using flymake
-(use-package flymake-ruff
-  :ensure
-  (:host github :repo "erickgnavar/flymake-ruff"
-	 :remotes ("fork" :repo "struan-robertson/flymake-ruff"
-		   :protocol https
-		   :branch "master"))
-  :config
-  (add-hook 'eglot-managed-mode-hook #'flymake-ruff-load))
+	eldoc-idle-delay 1.0))
 
 
 ;;;; csv-mode
@@ -1299,21 +1186,13 @@ any directory proferred by `consult-dir'."
 ;; Built in python.el package
 (use-package python
   :ensure nil
+  :hook
+  (((python-base-mode inferior-python-mode) . my/python-venv-setup))
   :config
   (setq python-indent-offset 4
 	python-indent-def-block-scale 1
 	python-indent-guess-indent-offset-verbose nil)
   (indent-tabs-mode nil)
-
-  (defun my/run-python-advice (fn &rest args)
-    (if-let ((venv (my/detect-venv default-directory)))
-	(my/execute-with-venv-vars
-	 (apply fn args)
-	 venv)
-      (apply fn args)))
-
-  (advice-add 'run-python :around #'my/run-python-advice)
-  (advice-add 'python-shell-restart :around #'my/run-python-advice)
   :bind (:map python-ts-mode-map
 	      ("C-c C-c" . python-shell-send-statement)
 	      ("C-c C-b" . python-shell-send-buffer)))
@@ -1389,13 +1268,94 @@ any directory proferred by `consult-dir'."
 
 ;;; External Tools
 
-;;;; Agentic Coding
-;;;;;; agent-shell
-;; A native Emacs buffer to interact with LLM agents powered by ACP
-(use-package agent-shell
+;;;; claude-code-ide
+;;;;;; Direct IDE integration for claude code
+
+(use-package claude-code-ide
+  :ensure
+  (:host github :repo "manzaltu/claude-code-ide.el")
+  :bind ("C-c '" . claude-code-ide-menu)
   :config
-  (setq agent-shell-anthropic-authentication
-	(agent-shell-anthropic-make-authentication :login t)))
+  (setq claude-code-ide-terminal-backend 'ghostel)
+  (claude-code-ide-emacs-tools-setup)
+
+  ;; On diff accept, claude-code-ide leaves the file buffer modified and
+  ;; lets the Claude CLI write the file to disk asynchronously, so the
+  ;; buffer ends up modified and stale and Emacs prompts about discarding
+  ;; edits on the next visit. Sync the buffer with disk at every point
+  ;; the CLI write can land: at diff cleanup if it already has, otherwise
+  ;; from a short lived file watch that catches the write, and as a last
+  ;; resort right before the next diff visits the file.
+  (require 'filenotify)
+
+  (defun my/claude-code-ide--sync-with-disk (buf)
+    "Revert BUF if its file changed on disk underneath it.
+Return non-nil if a revert happened."
+    (when (and (buffer-live-p buf) (buffer-file-name buf))
+      (with-current-buffer buf
+	(when (and (file-exists-p buffer-file-name)
+		   (not (verify-visited-file-modtime (current-buffer))))
+	  (revert-buffer :ignore-auto :noconfirm)
+	  t))))
+
+  (defun my/claude-code-ide--sync-on-write (buf)
+    "Watch BUF's file and sync BUF once claude-code writes it."
+    (let (desc timer)
+      (setq desc (file-notify-add-watch
+		  (buffer-file-name buf) '(change)
+		  (lambda (event)
+		    (when (memq (nth 1 event) '(changed created renamed))
+		      (my/claude-code-ide--sync-with-disk buf)
+		      (when timer (cancel-timer timer))
+		      (when desc
+			(file-notify-rm-watch desc)
+			(setq desc nil))))))
+      ;; A rejected diff is never written; do not watch forever
+      (setq timer (run-with-timer 30 nil
+				  (lambda ()
+				    (when desc
+				      (file-notify-rm-watch desc)
+				      (setq desc nil)))))))
+
+  (defun my/claude-code-ide-sync-after-diff (orig-fun tab-name &optional session)
+    (let* ((active-diffs (claude-code-ide-mcp--get-active-diffs session))
+	   (diff-info (and active-diffs (gethash tab-name active-diffs)))
+	   (buffer-A (alist-get 'buffer-A diff-info)))
+      (funcall orig-fun tab-name session)
+      (when (and (buffer-live-p buffer-A) (buffer-file-name buffer-A))
+	(unless (my/claude-code-ide--sync-with-disk buffer-A)
+	  (my/claude-code-ide--sync-on-write buffer-A)))))
+
+  (advice-add 'claude-code-ide-mcp--cleanup-diff :around #'my/claude-code-ide-sync-after-diff)
+
+  (defun my/claude-code-ide-sync-buffer-before-diff (old-file-path &rest _)
+    (my/claude-code-ide--sync-with-disk (find-buffer-visiting old-file-path)))
+
+  (advice-add 'claude-code-ide-mcp--create-diff-buffers :before #'my/claude-code-ide-sync-buffer-before-diff))
+
+;;;; ediff
+;; Nord-flavoured ediff faces (nano-theme leaves them at their garish
+;; defaults). Ediff needs two strengths of each hue, so the aurora
+;; colours are blended into the nord0 background: 30% for the current
+;; hunk and 55% for the fine (word-level) differences within it.
+;; Inactive even/odd hunks use the neutral polar night shades.
+(use-package ediff
+  :ensure nil
+  :defer t
+  :config
+  (pcase-dolist (`(,buffer ,dim ,bright)
+		 '(("A" "#5A424D" "#7E4D57")	      ; nord11 red
+		   ("B" "#515D57" "#6E806A")	      ; nord14 green
+		   ("C" "#676157" "#968769")	      ; nord13 yellow
+		   ("Ancestor" "#564F61" "#78667C"))) ; nord15 purple
+    (face-spec-set (intern (format "ediff-current-diff-%s" buffer))
+		   `((t :background ,dim :extend t)))
+    (face-spec-set (intern (format "ediff-fine-diff-%s" buffer))
+		   `((t :background ,bright :weight bold)))
+    (face-spec-set (intern (format "ediff-even-diff-%s" buffer))
+		   '((t :background "#3B4252" :extend t))) ; nord1
+    (face-spec-set (intern (format "ediff-odd-diff-%s" buffer))
+		   '((t :background "#434C5E" :extend t))))) ; nord2
 
 ;;;; Git
 
@@ -1425,17 +1385,35 @@ any directory proferred by `consult-dir'."
 
 ;;;; Terminal
 
-;;;;; vterm
-;; Emacs libvterm integration
-
-(use-package vterm
-  :demand t
-  :init
-  (setq vterm-buffer-name "*vterm*")
+;;;;; ghostel
+;; Emacs libghostty integration
+(use-package ghostel
   :custom
-  (vterm-keymap-exceptions '("C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-y" "M-y" "M-`"))
-  :bind (:map vterm-mode-map
-	      ("C-q" . vterm-send-next-key)))
+  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-o"))
+  :config
+  ;; Nord terminal palette. Ghostel builds the terminal's 16 ANSI colours
+  ;; from the :foreground of these faces, and claude-code (theme dark-ansi)
+  ;; renders everything with them, so this is what themes its diffs and
+  ;; dims its prompt history (blackBright).
+  (pcase-dolist (`(,face ,colour)
+		 '((ghostel-color-black          "#3B4252")  ; nord1
+		   (ghostel-color-red            "#BF616A")  ; nord11
+		   (ghostel-color-green          "#A3BE8C")  ; nord14
+		   (ghostel-color-yellow         "#EBCB8B")  ; nord13
+		   (ghostel-color-blue           "#81A1C1")  ; nord9
+		   (ghostel-color-magenta        "#B48EAD")  ; nord15
+		   (ghostel-color-cyan           "#88C0D0")  ; nord8
+		   (ghostel-color-white          "#E5E9F0")  ; nord5
+		   (ghostel-color-bright-black   "#4C566A")  ; nord3
+		   (ghostel-color-bright-red     "#BF616A")
+		   (ghostel-color-bright-green   "#A3BE8C")
+		   (ghostel-color-bright-yellow  "#EBCB8B")
+		   (ghostel-color-bright-blue    "#81A1C1")
+		   (ghostel-color-bright-magenta "#B48EAD")
+		   (ghostel-color-bright-cyan    "#8FBCBB")  ; nord7
+		   (ghostel-color-bright-white   "#ECEFF4"))) ; nord6
+    (face-spec-set face `((t :foreground ,colour))))
+  (ghostel-sync-theme))
 
 ;;;;; EShell
 ;;;;;; em-hist

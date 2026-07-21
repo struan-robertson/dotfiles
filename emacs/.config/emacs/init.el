@@ -62,6 +62,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
+ '(custom-safe-themes
+   '("9cd784dfeea58d9d852d52be9126c1fba2b890ed368245624dec1df165a4f6fd"
+     "1781e8bccbd8869472c09b744899ff4174d23e4f7517b8a6c721100288311fa5"
+     default))
  '(nxml-child-indent 4)
  '(org-ics-import-confirmed-overwrite
    '("~/.local/state/ical/dundee.org"
@@ -73,7 +77,10 @@
      (squiggly (color . "#d08770")) (strike-out (color . "#bf616A"))))
  '(pdf-util-convert-program "/usr/bin/magick")
  '(safe-local-variable-values
-   '((LaTeX-using-Biber . t) (citar-bibliography . "biblio.bib")
+   '((python-shell-process-environment "HSA_OVERRIDE_GFX_VERSION=10.3.0")
+     (python-shell-virtualenv-root
+      . "/home/struan/Development/Doctorate/shoeprint-image-retrieval/.venv/")
+     (LaTeX-using-Biber . t) (citar-bibliography . "biblio.bib")
      (eval require 'f) (org-confirm-babel-evaluate)
      (eshell-toggle-use-git-root . t))))
 
@@ -83,8 +90,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :extend nil :stipple nil :background "#2E3440" :foreground "#bbc6d9" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 128 :width normal :foundry "GOOG" :family "Roboto Mono"))))
+ '(ansi-color-blue ((t (:foreground "#5e81ac"))))
  '(ansi-color-bright-blue ((t (:background "#88c0d0"))))
  '(ansi-color-bright-green ((t (:background "#a3be8c" :foreground "#3b4252"))))
+ '(ansi-color-cyan ((t (:foreground "#88c0d0"))))
+ '(ansi-color-green ((t (:foreground "#a3be8c"))))
+ '(ansi-color-magenta ((t (:foreground "#b48ead"))))
+ '(ansi-color-red ((t (:foreground "#bf616a"))))
+ '(ansi-color-yellow ((t (:foreground "#ebcb8b"))))
  '(avy-lead-face ((t (:background "#bf616a" :foreground "white"))))
  '(avy-lead-face-0 ((t (:background "#5e81ac" :foreground "white"))))
  '(avy-lead-face-1 ((t (:background "#bbc6d9" :foreground "white"))))
