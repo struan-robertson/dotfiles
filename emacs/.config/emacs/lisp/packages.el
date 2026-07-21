@@ -1389,7 +1389,7 @@ Return non-nil if a revert happened."
 ;; Emacs libghostty integration
 (use-package ghostel
   :custom
-  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-o"))
+  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-o" "M-`"))
   :config
   ;; Nord terminal palette. Ghostel builds the terminal's 16 ANSI colours
   ;; from the :foreground of these faces, and claude-code (theme dark-ansi)
