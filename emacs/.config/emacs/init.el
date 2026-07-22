@@ -53,7 +53,25 @@
 
 ;;; Faces
 (set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light :foreground "#bbc6d9")
-(set-face-attribute 'default nil :font "Roboto Mono" :height 130 :foreground "#bbc6d9")
+(set-face-attribute 'default nil :font "RobotoMono Nerd Font Mono" :height 130 :foreground "#bbc6d9")
+;; RobotoMono Nerd Font carries the icon/PUA glyphs, box drawing and
+;; blocks, but not the rest of the symbol script (checks, arrows,
+;; geometric shapes) or braille; without explicit monospace fallbacks
+;; for those Emacs picks random proportional fonts, breaking terminal
+;; alignment.  Script-targeted entries are required — a plain nil-target
+;; fallback loses to the default fontset's per-script entries.  DejaVu
+;; Sans Mono and FreeMono match the cell width exactly.  Fontsets are
+;; display-dependent, so under the daemon this must run once a
+;; graphical frame exists, not at init.
+(defun my/setup-symbol-fonts ()
+	"Route symbol and braille ranges to monospace fonts."
+	(set-fontset-font t 'symbol "DejaVu Sans Mono")
+	(set-fontset-font t 'braille "FreeMono")) ; media-fonts/freefont
+(if (daemonp)
+		(add-hook 'server-after-make-frame-hook #'my/setup-symbol-fonts)
+	(my/setup-symbol-fonts))
+
+
 
 ;;; Custom Variables 
 (custom-set-variables
@@ -89,7 +107,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#2E3440" :foreground "#bbc6d9" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 128 :width normal :foundry "GOOG" :family "Roboto Mono"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#2E3440" :foreground "#bbc6d9" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 128 :width normal :family "RobotoMono Nerd Font Mono"))))
  '(ansi-color-blue ((t (:foreground "#5e81ac"))))
  '(ansi-color-bright-blue ((t (:background "#88c0d0"))))
  '(ansi-color-bright-green ((t (:background "#a3be8c" :foreground "#3b4252"))))
