@@ -1349,9 +1349,9 @@ Return non-nil if a revert happened."
 		   ("C" "#676157" "#968769")	      ; nord13 yellow
 		   ("Ancestor" "#564F61" "#78667C"))) ; nord15 purple
     (face-spec-set (intern (format "ediff-current-diff-%s" buffer))
-		   `((t :background ,dim :extend t)))
+		   `((t :background ,dim :foreground "#D8DEE9" :extend t))) ; nord4
     (face-spec-set (intern (format "ediff-fine-diff-%s" buffer))
-		   `((t :background ,bright :weight bold)))
+		   `((t :background ,bright :foreground "#ECEFF4" :weight bold)))
     (face-spec-set (intern (format "ediff-even-diff-%s" buffer))
 		   '((t :background "#3B4252" :extend t))) ; nord1
     (face-spec-set (intern (format "ediff-odd-diff-%s" buffer))
