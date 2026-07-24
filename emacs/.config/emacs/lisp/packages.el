@@ -716,7 +716,8 @@ environment, without needing to advise each entry point."
   (diminish 'jinx-mode)
   (diminish 'eldoc-mode)
   (diminish 'which-key-mode)
-  (diminish 'outline-minor-mode))
+  (diminish 'outline-minor-mode)
+  (diminish 'apheleia-mode))
 
 ;;;; hl-todo
 ;; Highlight reminders
@@ -1267,6 +1268,12 @@ any directory proferred by `consult-dir'."
 	      ("C-c C-e" . markdown-do)))
 
 ;;; External Tools
+
+;;;; apheleia
+;;;;;; format code on save
+(use-package apheleia
+  :config
+  (apheleia-global-mode +1))
 
 ;;;; claude-code-ide
 ;;;;;; Direct IDE integration for claude code
