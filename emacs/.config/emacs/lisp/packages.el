@@ -594,6 +594,7 @@ environment, without needing to advise each entry point."
 ;;;; which-key
 ;; Which-key shows the available keybindings after a key press	      
 (use-package which-key
+  :diminish
   :config
   (which-key-mode))
 
@@ -640,6 +641,7 @@ environment, without needing to advise each entry point."
 (use-package outli
   :ensure
   (:host github :repo "jdtsmith/outli" :branch "main")
+  :diminish outline-minor-mode
   :init
   (defun my/disable-outli-for-ediff ()
     "Disable `outli-mode' in ediff buffers so folded headings don't hide the diff."
@@ -708,16 +710,16 @@ environment, without needing to advise each entry point."
 		 (ibuffer-do-sort-by-alphabetic)))))
 
 ;;;; diminish
-;; Hide specific minor-modes from the modeline
-(use-package diminish
-  :config
-  (diminish 'treesit-fold-mode)
-  (diminish 'hs-minor-mode)
-  (diminish 'jinx-mode)
-  (diminish 'eldoc-mode)
-  (diminish 'which-key-mode)
-  (diminish 'outline-minor-mode)
-  (diminish 'apheleia-mode))
+;; Hide specific minor-modes from the modeline.
+;; Individual modes are diminished via the `:diminish' keyword in each
+;; owning package; diminish itself just needs to be loaded first.
+(use-package diminish)
+
+;;;; eldoc
+;; Built in; diminished here as it has no dedicated package block
+(use-package eldoc
+  :ensure nil
+  :diminish)
 
 ;;;; hl-todo
 ;; Highlight reminders
@@ -739,6 +741,7 @@ environment, without needing to advise each entry point."
 ;;;; jinx
 ;; Jinx spell checker
 (use-package jinx
+  :diminish
   :hook
   (((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
    (toml-ts-mode . (lambda () (jinx-mode -1))))
@@ -1137,6 +1140,7 @@ any directory proferred by `consult-dir'."
 ;; Built in
 (use-package hideshow
   :ensure nil
+  :diminish hs-minor-mode
   :hook
   (emacs-lisp-mode . hs-minor-mode))
 
@@ -1146,6 +1150,7 @@ any directory proferred by `consult-dir'."
 (use-package treesit-fold
   :ensure
   (:host github :repo "emacs-tree-sitter/treesit-fold" :branch "master")
+  :diminish treesit-fold-mode
   :config
   (global-treesit-fold-mode))
 
@@ -1272,6 +1277,7 @@ any directory proferred by `consult-dir'."
 ;;;; apheleia
 ;;;;;; format code on save
 (use-package apheleia
+  :diminish apheleia-mode
   :config
   (apheleia-global-mode +1))
 
