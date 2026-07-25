@@ -19,6 +19,7 @@ system_dirs:
 	@mkdir -p $$HOME/.local/share/icons
 	@mkdir -p $$HOME/.local/share/themes
 	@mkdir -p $$HOME/.local/share/applications
+	@mkdir -p $$HOME/.config/fish
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
