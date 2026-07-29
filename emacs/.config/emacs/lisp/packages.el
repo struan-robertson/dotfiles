@@ -1289,6 +1289,10 @@ any directory proferred by `consult-dir'."
   (:host github :repo "manzaltu/claude-code-ide.el")
   :bind ("C-c '" . claude-code-ide-menu)
   :config
+  (cond ((string= (shell-command-to-string "hostname") "alpinelaptop\n")
+	 (setq claude-code-ide-window-width 60))
+	((string= (shell-command-to-string "hostname") "gentoo\n")
+	 (setq claude-code-ide-window-width 120)))
   (setq claude-code-ide-terminal-backend 'ghostel)
   (claude-code-ide-emacs-tools-setup)
 
