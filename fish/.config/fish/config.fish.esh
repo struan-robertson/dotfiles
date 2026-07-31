@@ -39,6 +39,14 @@ zoxide init fish | source
 
 <% if [ $(hostname) = "alpinelaptop" ]; then %>
 
+# musl ships no locale files, so a login shell with no LANG leaves every
+# child (sway, and the Emacs daemon it starts) in the C/ASCII locale. Emacs
+# then treats curved quotes as undisplayable and substitutes ASCII homoglyphs
+# in the cyan `homoglyph' face. Emacs picks the coding system by matching
+# "UTF-8" in the locale string, so C.UTF-8 works even without locale data.
+# Guarded so an inherited locale (e.g. over SSH) is never clobbered.
+set -q LANG; or set -gx LANG C.UTF-8
+
 if status is-login
     # Create XDG_RUNTIME_DIR
     set -gx XDG_RUNTIME_DIR (mkrundir-rs)
