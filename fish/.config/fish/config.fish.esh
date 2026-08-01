@@ -1,3 +1,12 @@
+# TRAMP needs a Bourne-compatible shell with a plain prompt; fish's pure
+# prompt never matches TRAMP's prompt regexp, so its parser loops forever
+# (pinning a core) before it can switch to sh. TRAMP connects with a tty
+# but sets TERM=dumb, so hand every dumb-terminal session off to sh. Real
+# terminals keep a proper TERM, so interactive fish is unaffected.
+if test "$TERM" = dumb
+    exec sh
+end
+
 if status is-interactive
     # Commands to run in interactive sessions can go here
 end
