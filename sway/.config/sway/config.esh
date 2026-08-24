@@ -39,6 +39,9 @@ exec "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DE
 exec swaymsg -t subscribe '["shutdown"]' && systemctl --user stop sway-session.target
 <% elif [ $(hostname) = "alpinelaptop" ]; then %>
 
+input type:touchpad accel_profile adaptive
+input type:touchpad pointer_accel 0.5
+input type:touchpad scroll_factor 1.0
 
 exec keepassxc
 
