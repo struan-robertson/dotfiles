@@ -103,9 +103,9 @@ environment, without needing to advise each entry point."
 ;; Has to be declared at the top of the file so as to load before built in org
 (use-package org
   :config
-  (cond ((string= (shell-command-to-string "hostname") "alpinelaptop\n")
+  (cond ((string= (system-name) "alpinelaptop")
 	 (plist-put org-format-latex-options :scale 1))
-	((string= (shell-command-to-string "hostname") "gentoo\n")
+	((string= (system-name) "gentoo")
 	 (plist-put org-format-latex-options :scale 1.3)))
 
   ;; Org TODOs
@@ -294,6 +294,9 @@ environment, without needing to advise each entry point."
   :ensure nil
   :init
 
+  ;; Automatically revert files when they are changed on disk
+  (global-auto-revert-mode t)
+  
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
@@ -329,6 +332,14 @@ environment, without needing to advise each entry point."
 
   ;; Use box cursor
   (setq-default cursor-type 'box)
+
+  ;; `shell-file-name' defaults to $SHELL, which is fish. Emacs generates
+  ;; Bourne syntax for its own subprocesses (`shell-command-to-string',
+  ;; TRAMP, compile), and fish rejects some of it outright -- notably
+  ;; `VAR=value cmd' prefix assignments and `export'. Pin the programmatic
+  ;; shell to sh and keep fish only for the interactive `M-x shell'.
+  (setq shell-file-name "/bin/sh")
+  (setq explicit-shell-file-name "/usr/bin/fish")
 
   :custom
   ;; Improve performance by decreasing the number of garbage collections
@@ -1168,15 +1179,9 @@ any directory proferred by `consult-dir'."
 	("C-c C-e" . eglot-rename)
 	("C-c C-f" . eglot-format-buffer))
   :hook
-  (((python-base-mode c-ts-mode rust-ts-mode rust-mode) . eglot-ensure))
+  (((python-base-mode c-ts-mode rust-ts-mode rust-mode zig-ts-mode) . eglot-ensure))
   :config
   (setq enable-remote-dir-locals t)
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-		 '(python-base-mode . ("ty" "server"))))
-  (add-to-list 'eglot-server-programs
-               '((rust-ts-mode rust-mode) .
-		 ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
 	eldoc-echo-area-display-truncation-message nil
 	eldoc-echo-area-prefer-doc-buffer 'maybe
@@ -1199,6 +1204,9 @@ any directory proferred by `consult-dir'."
 	python-indent-def-block-scale 1
 	python-indent-guess-indent-offset-verbose nil)
   (indent-tabs-mode nil)
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+		 '(python-base-mode . ("ty" "server"))))
   :bind (:map python-ts-mode-map
 	      ("C-c C-c" . python-shell-send-statement)
 	      ("C-c C-b" . python-shell-send-buffer)))
@@ -1228,6 +1236,11 @@ any directory proferred by `consult-dir'."
 (use-package rust-mode
   :init
   (setq rust-mode-treesitter-derive t)
+  :config
+  (eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+		 '((rust-ts-mode rust-mode) .
+		   ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
   :hook
   (rust-mode . eglot-ensure))
 
@@ -1272,6 +1285,15 @@ any directory proferred by `consult-dir'."
   :bind (:map markdown-mode-map
 	      ("C-c C-e" . markdown-do)))
 
+;;;; Zig
+;;;;; zig-ts-mode
+;; Emacs Zig Tree Sitter Mode
+(use-package zig-ts-mode
+  :config
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+		 '(zig-ts-mode . ("zls")))))
+
 ;;; External Tools
 
 ;;;; apheleia
@@ -1289,9 +1311,9 @@ any directory proferred by `consult-dir'."
   (:host github :repo "manzaltu/claude-code-ide.el")
   :bind ("C-c '" . claude-code-ide-menu)
   :config
-  (cond ((string= (shell-command-to-string "hostname") "alpinelaptop\n")
-	 (setq claude-code-ide-window-width 60))
-	((string= (shell-command-to-string "hostname") "gentoo\n")
+  (cond ((string= (system-name) "alpinelaptop")
+	 (setq claude-code-ide-window-width 80))
+	((string= (system-name) "gentoo")
 	 (setq claude-code-ide-window-width 120)))
   (setq claude-code-ide-terminal-backend 'ghostel)
   (claude-code-ide-emacs-tools-setup)
@@ -1445,9 +1467,9 @@ Create a fresh terminal at PATH when NEW is non-nil or none exists."
       (if-let ((buf (and (not new)
 			 (seq-find
 			  (lambda (b)
-			    (string-prefix-p
-			     "*terminal*"
-			     (or (buffer-local-value 'ghostel--buffer-identity b) "")))
+			    (ghostel-identity-match-p
+			     '((kind . term) (name . "*terminal*"))
+			     (buffer-local-value 'ghostel-identity b)))
 			  (buffer-list)))))
 	  (switch-to-buffer buf)
 	(ghostel (and new '(4)))))))
@@ -1786,13 +1808,12 @@ Create a fresh terminal at PATH when NEW is non-nil or none exists."
 ;; AucTeX improved Tex experience
 (use-package tex
   :demand t
-  :ensure
-  (:repo "https://git.savannah.gnu.org/git/auctex.git"
-	 :branch "main"
-	 :pre-build (("make" "elpa"))
-	 :build (:not elpa--compile-info) ;; Make will take care of this step
-	 :files ("*.el" "doc/*.info*" "etc" "images" "latex" "style")
-	 :version (lambda (_) (require 'tex-site) AUCTeX-version))
+  ;; The GNU ELPA menu entry already resolves to git/main on the Savannah repo,
+  ;; so no hand-written recipe is needed. `tex-site.el' is tracked in the repo
+  ;; these days (there are no *.el.in left), so `make elpa' has nothing to do,
+  ;; and `elpaca-build-docs' compiles doc/*.texi itself. Note the id is `auctex'
+  ;; while the feature is `tex'.
+  :ensure (auctex)
   :hook
   ((LaTeX-mode . reftex-mode))
   :config
