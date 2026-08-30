@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (global-set-key (kbd "M-[") 'backward-paragraph)
 (global-set-key (kbd "M-]") 'forward-paragraph)
 

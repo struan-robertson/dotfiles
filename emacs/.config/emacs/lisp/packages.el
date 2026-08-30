@@ -50,7 +50,7 @@ If so, return path to .venv"
 Every process launched from this buffer (LSP servers, inferior Python
 shells, compilations, shell commands) then picks up the virtual
 environment, without needing to advise each entry point."
-  (when-let ((venv (my/detect-venv default-directory)))
+  (when-let* ((venv (my/detect-venv default-directory)))
     (let* ((venv-bin (file-name-concat venv "bin"))
 	   (remote-host (file-remote-p default-directory))
 	   (local-venv (tramp-file-local-name venv))
@@ -444,7 +444,7 @@ environment, without needing to advise each entry point."
     "Memoize a value if the key is a remote path."
     (if (and key
              (file-remote-p key))
-	(if-let ((current (assoc key (symbol-value cache))))
+	(if-let* ((current (assoc key (symbol-value cache))))
             (cdr current)
           (let ((current (apply orig-fn args)))
             (set cache (cons (cons key current) (symbol-value cache)))
@@ -1464,13 +1464,13 @@ Return non-nil if a revert happened."
 Create a fresh terminal at PATH when NEW is non-nil or none exists."
     (let ((default-directory path)
 	  (ghostel-buffer-name "*terminal*"))
-      (if-let ((buf (and (not new)
-			 (seq-find
-			  (lambda (b)
-			    (ghostel-identity-match-p
-			     '((kind . term) (name . "*terminal*"))
-			     (buffer-local-value 'ghostel-identity b)))
-			  (buffer-list)))))
+      (if-let* ((buf (and (not new)
+			  (seq-find
+			   (lambda (b)
+			     (ghostel-identity-match-p
+			      '((kind . term) (name . "*terminal*"))
+			      (buffer-local-value 'ghostel-identity b)))
+			   (buffer-list)))))
 	  (switch-to-buffer buf)
 	(ghostel (and new '(4)))))))
 
