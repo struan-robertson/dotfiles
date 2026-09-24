@@ -1061,73 +1061,6 @@ any directory proferred by `consult-dir'."
   :hook
   (embark-collect . consult-preview-at-point-mode))
 
-;;;; gptel
-;; LLM support in emacs
-
-(use-package gptel
-  :config
-  ;; Together.ai offers an OpenAI compatible API
-  (setf (gptel-get-backend "ChatGPT") nil)
-
-  (setq
-   gptel-model   'gemini-3.1-pro-preview
-   gptel-default-mode 'org-mode
-   gptel-backend (gptel-make-gemini "Gemini"
-		   :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/gemini_key.gpg 2>/dev/null"))
-		   :stream t
-		   :models '(gemini-3.1-pro-preview))
-   pulse-flag t
-   gptel-prompt-prefix-alist '((markdown-mode . "# ")
-			       (org-mode . "* ")
-			       (text-mode . "# "))
-   gptel-include-reasoning nil
-   gptel-max-tokens 20000)
-
-  (gptel-make-anthropic "Claude"
-    :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/anthropic_key.gpg 2>/dev/null"))
-    :stream t
-    :models '(claude-sonnet-4-6
-	      claude-opus-4-7))
-  
-  (gptel-make-openai "DeepSeek"         ; Any name you want
-    :host "api.together.xyz"
-    :key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg 2>/dev/null"))                   ; Can be a function that returns the key
-    :stream t
-    :models '(;; has many more, check together.ai
-	      deepseek-ai/DeepSeek-R1
-	      deepseek-ai/DeepSeek-V3))
-  
-  (gptel-make-openai "llama-cpp"          ;Any name
-    :stream t                             ;Stream responses
-    :protocol "http"
-    :host "localhost:8989"                ;Llama.cpp server location
-    :models '(main))
-  
-  ;; Org latex previews get messed up if `default-directory' of a buffer is on a remote machine
-  (defun my/local-gptel ()
-    (interactive)
-    "Run `gptel' command on local machine."
-    (my/execute-locally (call-interactively 'gptel)))
-
-  (defun my/local-gptel-menu ()
-    (interactive)
-    "run `gptel-menu' command on local machine"
-    (my/execute-locally (call-interactively 'gptel-menu)))
-
-  (defun my/local-gptel-add ()
-    (interactive)
-    "run `gptel-add' command on local machine"
-    (my/execute-locally (call-interactively 'gptel-add)))
-
-  (setq gptel-api-key (my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/together_api_key.gpg")))
-
-  (define-prefix-command 'my/gptel-map)
-  :bind-keymap ("C-x c" . my/gptel-map)
-  :bind (:map my/gptel-map
-	      ("c" . 'my/local-gptel)
-	      ("m" . 'my/local-gptel-menu)
-	      ("a" . 'my/local-gptel-add)))
-
 ;;;; move-text
 ;; Move text or region up or down using M-<up> or M-<down>
 (use-package move-text
@@ -1303,74 +1236,22 @@ any directory proferred by `consult-dir'."
   :config
   (apheleia-global-mode +1))
 
-;;;; claude-code-ide
-;;;;;; Direct IDE integration for claude code
+;;;; LLM
+;; Tools for interacting with LLMs
 
-(use-package claude-code-ide
-  :ensure
-  (:host github :repo "manzaltu/claude-code-ide.el")
-  :bind ("C-c '" . claude-code-ide-menu)
-  :config
-  (cond ((string= (system-name) "alpinelaptop")
-	 (setq claude-code-ide-window-width 80))
-	((string= (system-name) "gentoo")
-	 (setq claude-code-ide-window-width 120)))
-  (setq claude-code-ide-terminal-backend 'ghostel)
-  (claude-code-ide-emacs-tools-setup)
+;;;;;; agent-shell
+;; A native Emacs buffer to interact with LLM agents powered by ACP
+(use-package agent-shell
+  :custom
+  (agent-shell-anthropic-authentication
+   (agent-shell-anthropic-make-authentication :login t))
+  (agent-shell-agent-configs '(agent-shell-anthropic-make-claude-code-config
+			       agent-shell-opencode-make-agent-config)))
 
-  ;; On diff accept, claude-code-ide leaves the file buffer modified and
-  ;; lets the Claude CLI write the file to disk asynchronously, so the
-  ;; buffer ends up modified and stale and Emacs prompts about discarding
-  ;; edits on the next visit. Sync the buffer with disk at every point
-  ;; the CLI write can land: at diff cleanup if it already has, otherwise
-  ;; from a short lived file watch that catches the write, and as a last
-  ;; resort right before the next diff visits the file.
-  (require 'filenotify)
-
-  (defun my/claude-code-ide--sync-with-disk (buf)
-    "Revert BUF if its file changed on disk underneath it.
-Return non-nil if a revert happened."
-    (when (and (buffer-live-p buf) (buffer-file-name buf))
-      (with-current-buffer buf
-	(when (and (file-exists-p buffer-file-name)
-		   (not (verify-visited-file-modtime (current-buffer))))
-	  (revert-buffer :ignore-auto :noconfirm)
-	  t))))
-
-  (defun my/claude-code-ide--sync-on-write (buf)
-    "Watch BUF's file and sync BUF once claude-code writes it."
-    (let (desc timer)
-      (setq desc (file-notify-add-watch
-		  (buffer-file-name buf) '(change)
-		  (lambda (event)
-		    (when (memq (nth 1 event) '(changed created renamed))
-		      (my/claude-code-ide--sync-with-disk buf)
-		      (when timer (cancel-timer timer))
-		      (when desc
-			(file-notify-rm-watch desc)
-			(setq desc nil))))))
-      ;; A rejected diff is never written; do not watch forever
-      (setq timer (run-with-timer 30 nil
-				  (lambda ()
-				    (when desc
-				      (file-notify-rm-watch desc)
-				      (setq desc nil)))))))
-
-  (defun my/claude-code-ide-sync-after-diff (orig-fun tab-name &optional session)
-    (let* ((active-diffs (claude-code-ide-mcp--get-active-diffs session))
-	   (diff-info (and active-diffs (gethash tab-name active-diffs)))
-	   (buffer-A (alist-get 'buffer-A diff-info)))
-      (funcall orig-fun tab-name session)
-      (when (and (buffer-live-p buffer-A) (buffer-file-name buffer-A))
-	(unless (my/claude-code-ide--sync-with-disk buffer-A)
-	  (my/claude-code-ide--sync-on-write buffer-A)))))
-
-  (advice-add 'claude-code-ide-mcp--cleanup-diff :around #'my/claude-code-ide-sync-after-diff)
-
-  (defun my/claude-code-ide-sync-buffer-before-diff (old-file-path &rest _)
-    (my/claude-code-ide--sync-with-disk (find-buffer-visiting old-file-path)))
-
-  (advice-add 'claude-code-ide-mcp--create-diff-buffers :before #'my/claude-code-ide-sync-buffer-before-diff))
+;;;;;; agent-shell-math-renderer
+;; An extension for Emacs Agent Shell to render math equations
+(use-package agent-shell-math-renderer
+  :hook (agent-shell-mode . agent-shell-math-renderer-mode))
 
 ;;;; ediff
 ;; Nord-flavoured ediff faces (nano-theme leaves them at their garish
