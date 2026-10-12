@@ -17,12 +17,12 @@ system_dirs:
 	@mkdir -p $$HOME/.local/share
 	@mkdir -p $$HOME/.var/
 	@mkdir -p $$HOME/.config/emacs
-	@mkdir -p $$HOME/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux # Stop trying to stow all flatpak stuff
 	@mkdir -p $$HOME/.local/share/flatpak/overrides
 	@mkdir -p $$HOME/.local/share/icons
 	@mkdir -p $$HOME/.local/share/themes
 	@mkdir -p $$HOME/.local/share/applications
 	@mkdir -p $$HOME/.config/fish/conf.d
+	@mkdir -p $$HOME/.config/containers/systemd
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
