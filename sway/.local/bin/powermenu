@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Modified from https://github.com/ericmurphyxyz/dotfiles/blob/master/.local/bin/powermenu
+
+CHOSEN=$(printf "Lock\nSuspend\nSign Out\nReboot\nPower Off" | rofi -dmenu -i -p "Power")
+
+case "$CHOSEN" in
+	"Lock") swaylock -f -c 000000 ;;
+	"Suspend") systemctl suspend ;;
+ 	"Sign Out") swaymsg exit ;;	   
+	"Reboot") toolbox run --container dev emacsclient -e '(kill-emacs)' ; reboot ;;
+	"Power Off") toolbox run --container dev emacsclient -e '(kill-emacs)' ; poweroff ;;
+	*) exit 1 ;;
+esac
