@@ -1,0 +1,39 @@
+[global]
+# layer=top
+layer = top
+# anchor=top-right, margin=20
+origin = top-right
+offset = (20, 20)
+
+# max-visible=10
+notification_limit = 10
+
+# font=Roboto Mono 12
+font = Roboto Mono 12
+
+# icons=0
+enable_recursive_icon_lookup = false
+icon_theme = ""
+max_icon_size = 0
+
+# progress-color=over #5e81ac
+highlight = "#5e81ac"
+
+# border-color=#4c566a  (mako has no width setting; default is 1px)
+frame_width = 1
+frame_color = "#4c566a"
+
+[urgency_low]
+background = "#434c5e"
+foreground = "#eceff4"
+timeout = 10
+
+[urgency_normal]
+background = "#434c5e"
+foreground = "#eceff4"
+timeout = 10
+
+[urgency_critical]
+background = "#434c5e"
+foreground = "#eceff4"
+timeout = 0
