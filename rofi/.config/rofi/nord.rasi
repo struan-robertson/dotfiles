@@ -1,0 +1,13 @@
+@theme "default"
+
+* {
+    background: #2e3440;
+    lightbg:    #434c5e;
+    foreground: #eceff4;
+    lightfg:    #4c566a;
+    blue:       #88c0d0;
+    red:        #bf616a;
+    font:       "Roboto Mono 12";
+    selected-normal-foreground: var(foreground);
+}
+
