@@ -10,3 +10,12 @@ Requires [[https://github.com/jirutka/esh][esh]], [[https://www.gnu.org/software
 =esh= first parses =.esh= template files, then =stow= symlinks files and folders to =$HOME=.
 
 System dirs which should be created rather than symlinked are handled in the =system_dirs= command in the makefile.
+
+* Automatic updates
+
+The machine keeps itself up to date; the moving parts are:
+
+- *rpm-ostree* (base OS + layered packages): =rpm-ostreed-automatic.timer= stages updates ~1h after boot and daily, applied on reboot.
+- *Flatpak*: =flatpak-update.timer= runs =flatpak update --noninteractive= daily.
+- *Podman quadlets*: =podman-auto-update.timer= runs daily; =syncthing= follows the registry, =davmail= restarts when its local image is rebuilt.
+- *Toolbx*: =toolbox-gui-update.timer= runs =toolbox run -c gui sudo dnf upgrade --refresh -y= daily; =dev= is updated by hand.
