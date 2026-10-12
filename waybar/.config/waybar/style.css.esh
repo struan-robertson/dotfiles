@@ -1,8 +1,8 @@
 *{
     font-family: "Roboto Mono";
-<% if [ $(hostname) = "gentoo" ]; then -%>
+<% if [ $HOST = "fedora" ]; then -%>
     font-size: 20px;
-<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
+<% elif [ $HOST = "fedoralaptop" ]; then -%>
     font-size: 16px;
 <% fi -%>    
 
@@ -31,17 +31,17 @@ window#waybar {
 #battery,
 #network,
 #workspaces button {
-<% if [ $(hostname) = "gentoo" ]; then -%>
+<% if [ $HOST = "fedora" ]; then -%>
     margin: 0 16px;
-<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
+<% elif [ $HOST = "fedoralaptop" ]; then -%>
     margin: 0 8px;
 <% fi -%>    
 }
 
 #clock {
-<% if [ $(hostname) = "gentoo" ]; then -%>
+<% if [ $HOST = "fedora" ]; then -%>
     margin: 0 8px;
-<% elif [ $(hostname) = "alpinelaptop" ]; then -%>
+<% elif [ $HOST = "fedoralaptop" ]; then -%>
     margin: 0 4px;
 <% fi -%>    
 }
