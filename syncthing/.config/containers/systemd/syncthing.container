@@ -1,0 +1,31 @@
+[Unit]
+Description=Syncthing (rootless Podman)
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=docker.io/syncthing/syncthing:latest
+AutoUpdate=registry
+ContainerName=syncthing
+Network=host
+
+# Container root == your host UID under rootless Podman, so run syncthing
+# as root inside and files on the mounted folders stay owned by you.
+Environment=PUID=0
+Environment=PGID=0
+Environment=HOME=%h
+
+# Config, keys and index copied from the old install.
+Volume=%h/.local/state/syncthing:/var/syncthing/config:Z
+
+# Synced folders, mounted at the SAME paths as on the host so config.xml
+# needs no edits. Add one line per folder root.
+Volume=%h/Sync:%h/Sync:Z
+Volume=%h/Documents:%h/Documents:Z
+
+[Service]
+Restart=on-failure
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target
