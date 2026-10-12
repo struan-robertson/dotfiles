@@ -114,11 +114,6 @@ environment, without needing to advise each entry point."
 ;; Has to be declared at the top of the file so as to load before built in org
 (use-package org
   :config
-  (cond ((string= (system-name) "alpinelaptop")
-	 (plist-put org-format-latex-options :scale 1))
-	((string= (system-name) "gentoo")
-	 (plist-put org-format-latex-options :scale 1.3)))
-
   ;; Org TODOs
   (defun my/org-agenda-skip-all-siblings-but-first ()
     "Skip all but the first non-done entry."

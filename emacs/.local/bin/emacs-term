@@ -1,0 +1,15 @@
+#!/bin/sh
+
+case "${1:-}" in
+    --new)
+        shift
+        path="${1:-$(pwd)}"
+        toolbox run --container dev emacsclient -c -n -e "(my/eshell-term \"$path\" t)"
+        ;;
+    ""|*)
+        path="${1:-$(pwd)}"
+        toolbox run --container dev emacsclient -c -n -e "(my/eshell-term \"$path\")"
+        ;;
+esac
+				 
+

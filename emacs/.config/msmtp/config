@@ -3,7 +3,7 @@ defaults
 auth on
 tls on
 tls_trust_file /etc/ssl/certs/ca-certificates.crt
-logfile ~/.local/share/log/msmtp.log
+logfile ~/.local/state/msmtp.log
 
 account purelymail
 host smtp.purelymail.com
