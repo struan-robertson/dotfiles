@@ -63,3 +63,14 @@ delete-%:
 	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --delete $*
 	rm -rf .out/$*
 
+.PHONY: toolboxes rebuild-toolboxes
+# Ensure dev/gui toolboxes exist with their packages installed
+toolboxes: 
+	./toolbox/.local/share/toolbox/create_toolbox.sh dev
+	./toolbox/.local/share/toolbox/create_toolbox.sh gui
+
+ # Recreate dev/gui toolboxes (refresh list, rm, create)
+rebuild-toolboxes:
+	./toolbox/.local/share/toolbox/create_toolbox.sh --rebuild dev
+	./toolbox/.local/share/toolbox/create_toolbox.sh --rebuild gui
+

@@ -1,5 +1,5 @@
 [Unit]
-Description=Weekly gui toolbox update
+Description=Daily gui toolbox update
 
 [Timer]
 OnCalendar=daily

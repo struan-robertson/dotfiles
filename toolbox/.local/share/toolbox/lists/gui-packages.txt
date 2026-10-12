@@ -1,0 +1,4 @@
+keepassxc
+kvantum
+qt5ct
+qt6ct
