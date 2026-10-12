@@ -1,0 +1,6 @@
+[Unit]
+Description=Update gui toolbox
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/toolbox run --container gui sudo dnf upgrade --refresh -y

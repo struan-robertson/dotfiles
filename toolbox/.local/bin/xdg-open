@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ -f /run/.containerenv ]; then
+  exec flatpak-spawn --host xdg-open "$@"
+fi
+exec /usr/bin/xdg-open "$@"
