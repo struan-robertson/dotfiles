@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ -f /run/.toolboxenv ]; then
+    exec /usr/bin/keepassxc-proxy "$@"
+fi
+exec toolbox run --container gui /usr/bin/keepassxc-proxy "$@"

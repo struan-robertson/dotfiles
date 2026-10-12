@@ -1,0 +1,6 @@
+#!/bin/sh
+# ~/.local/bin/keepassxc
+if [ -f /run/.toolboxenv ]; then
+    exec /usr/bin/keepassxc "$@"
+fi
+exec toolbox run --container gui env QT_QPA_PLATFORMTHEME=qt5ct /usr/bin/keepassxc "$@"
