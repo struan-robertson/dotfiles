@@ -8,6 +8,9 @@ PACKAGES := $(shell find . -maxdepth 1 -type d ! -name '.*')
 all: process_packages system_dirs
 	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --restow */
 
+HOST := $(shell cat /run/host/etc/hostname 2>/dev/null || hostname)
+export HOST
+
 # Directories I do not want to be symlinked as they will be populated with other data which I do not wish to share
 system_dirs:
 	@mkdir -p $$HOME/.local/bin
@@ -19,7 +22,7 @@ system_dirs:
 	@mkdir -p $$HOME/.local/share/icons
 	@mkdir -p $$HOME/.local/share/themes
 	@mkdir -p $$HOME/.local/share/applications
-	@mkdir -p $$HOME/.config/fish
+	@mkdir -p $$HOME/.config/fish/conf.d
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
