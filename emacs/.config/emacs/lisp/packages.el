@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-;; ;;; Package Manmagement Configuration
+;;; Package Management
 (setopt use-package-always-ensure t)
 
 (elpaca elpaca-use-package
@@ -83,22 +83,33 @@ environment, without needing to advise each entry point."
 			tramp-remote-process-environment)))))
 
 
-;;; Updated Built In Packages
+;;; Core Packages
 ;; Require declaration at the top of the file to load before dependents
-;;;;; compat
+;;;; compat
 (use-package compat
   :init
   (elpaca-wait))
 
-;;;;; transient
+;;;; transient
 ;; Built in version is too low for upstream packages that depend on it
 (use-package transient
   :init
   (elpaca-wait)
   (require 'transient))
 
-;;;;; Org
-;;;;;; org
+;;;; jsonrpc
+;; Built in version is too low for upstream packages that depend on it
+(use-package jsonrpc)
+
+;;;; diminish
+;; Hide specific minor-modes from the modeline.
+;; Individual modes are diminished via the `:diminish' use-package keyword
+(use-package diminish)
+
+(elpaca-wait)
+
+;;; Org
+;;;; org
 ;; Organisational fun
 ;; Has to be declared at the top of the file so as to load before built in org
 (use-package org
@@ -261,7 +272,7 @@ environment, without needing to advise each entry point."
 
 (elpaca-wait)
 
-;;;;; org-pomodoro
+;;;; org-pomodoro
 ;; Work in 25 min blocks
 (use-package org-pomodoro
   :after org
@@ -277,19 +288,20 @@ environment, without needing to advise each entry point."
   :bind (:map org-mode-map ("C-c C-x C-p" . org-pomodoro)
 	      :map org-agenda-mode-map ("C-c C-x C-p" . org-pomodoro)))
 
-;;;;; org-ics-import
+;;;; org-ics-import
 ;; My own package to import iCalendars to org
 
-(use-package org-ics-import
-  :ensure
-  (:repo "https://github.com/struan-robertson/org-ics-import.el")
-  :custom
-  (org-ics-import-update-interval 3600)
-  (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/.local/state/ical/dundee.org")))) ;; Seemed to cause lots of syncthing conflicts if in Notes dir
+;; (use-package org-ics-import
+;;   :ensure
+;;   (:repo "https://github.com/struan-robertson/org-ics-import.el")
+;;   :custom
+;;   (org-ics-import-update-interval 3600)
+;;   (org-ics-import-calendars-alist '(("https://outlook.office365.com/owa/calendar/087d3aec0dbb4be39b4d2c99d7fe16b6@dundee.ac.uk/0f98ef311a914a11b0a79aad920f12d811212160432743911565/calendar.ics" . "~/.local/state/ical/dundee.org"))))
+;; Seemed to cause lots of syncthing conflicts if in Notes dir
 
 ;;; Emacs Configuration
 
-;;;;; emacs
+;;;; emacs
 (use-package emacs
   :ensure nil
   :init
@@ -351,9 +363,9 @@ environment, without needing to advise each entry point."
   (calendar-date-style 'european))
 
 
-;;;;; Built In
+;;;; Built-In Packages
 
-;;;;;; bookmark
+;;;;; bookmark
 ;; Built in bookmark package
 (use-package bookmark
   :ensure nil
@@ -362,7 +374,7 @@ environment, without needing to advise each entry point."
   :hook
   (bookmark-bmenu-mode . hl-line-mode))
 
-;;;;;; dired
+;;;;; dired
 (use-package dired
   :ensure nil
   :config
@@ -386,7 +398,40 @@ environment, without needing to advise each entry point."
 	("W" . my/toggle-dired-dwim)
 	("H" . dired-omit-mode)))
 
-;;;;;; ibuffer
+;;;;; ediff
+;; Make the colours better with nord theme
+(use-package ediff
+  :ensure nil
+  :defer t
+  :config
+  (pcase-dolist (`(,buffer ,dim ,bright)
+		 '(("A" "#5A424D" "#7E4D57")	      ; nord11 red
+		   ("B" "#515D57" "#6E806A")	      ; nord14 green
+		   ("C" "#676157" "#968769")	      ; nord13 yellow
+		   ("Ancestor" "#564F61" "#78667C"))) ; nord15 purple
+    (face-spec-set (intern (format "ediff-current-diff-%s" buffer))
+		   `((t :background ,dim :foreground "#D8DEE9" :extend t))) ; nord4
+    (face-spec-set (intern (format "ediff-fine-diff-%s" buffer))
+		   `((t :background ,bright :foreground "#ECEFF4" :weight bold)))
+    (face-spec-set (intern (format "ediff-even-diff-%s" buffer))
+		   '((t :background "#3B4252" :extend t))) ; nord1
+    (face-spec-set (intern (format "ediff-odd-diff-%s" buffer))
+		   '((t :background "#434C5E" :extend t))))) ; nord2
+
+;;;; eldoc
+;; Built in; diminished here as it has no dedicated package block
+(use-package eldoc
+  :ensure nil
+  :diminish)
+
+;;;;; flymake
+;; Flymake error checking
+(use-package flymake
+  :ensure nil
+  :hook
+  ((LaTeX-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode))
+
+;;;;; ibuffer
 ;; Built in ibuffer package
 (use-package ibuffer
   :ensure nil
@@ -396,14 +441,21 @@ environment, without needing to advise each entry point."
   :bind
   ("C-x C-b" . ibuffer))
 
-;;;;;; savehist
-;; Built in
-(use-package savehist
+;;;;; project
+(use-package project
   :ensure nil
-  :config
-  (savehist-mode))
+  :custom
+  (project-switch-commands '((project-find-file "Find file")
+			     (project-find-regexp "Find regexp")
+			     (project-find-dir "Find directory")
+			     (magit-project-status "Magit" ?m)
+			     (ghostel-project "Terminal" ?t)))
+  :bind
+  (:map project-prefix-map
+	("m" . magit-project-status)
+	("t" . ghostel-project)))
 
-;;;;;; recentf
+;;;;; recentf
 ;; Built in
 (use-package recentf
   :ensure nil
@@ -418,7 +470,14 @@ environment, without needing to advise each entry point."
   (elpaca-after-init . recentf-mode))
 
 
-;;;;;; tramp
+;;;;; savehist
+;; Built in
+(use-package savehist
+  :ensure nil
+  :config
+  (savehist-mode))
+
+;;;;; tramp
 ;; Use system ssh settings and search .local paths on remote
 ;; Optimisations from https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
 (use-package tramp-sh
@@ -485,58 +544,26 @@ environment, without needing to advise each entry point."
   (advice-add 'counsel-git-cands :around #'$memoize-counsel-git-cands)
   )
 
-;;;;;; flymake 
-;; Flymake error checking
-(use-package flymake
-  :ensure nil
-  :hook
-  ((LaTeX-mode markdown-mode shell-mode bash-ts-mode) . flymake-mode))
-
-;;;;;; jsonrpc
-;; Built in version is too low for upstream packages that depend on it
-(use-package jsonrpc)
-
-;;;;;; project
-(use-package project
-  :ensure nil
-  :config
-  (setq project-switch-commands '((project-find-file "Find file")
-				  (project-find-regexp "Find regexp")
-				  (project-find-dir "Find directory")
-				  (magit-project-status "Magit" ?m)
-				  (ghostel-project "Shell" ?s)
-				  (claude-code-ide-menu "Claude Code" ?c))))
-
-;;;;;; xref
+;;;;; xref
 (use-package xref
   :ensure nil
   :custom
   (xref-search-program 'ripgrep))
-;;;;; External
 
 
-;;;;;; no-littering
-;; Dont litter folders with autosave or backup files
-(use-package no-littering
-  :init
-  (setq user-emacs-directory "~/.config/emacs")
+;;;; External Packages
+
+
+;;;;; ace-window
+;; More efficient window selection
+(use-package ace-window
+  :bind
+  ("M-o" . ace-window)
   :config
-  (setq auto-save-file-name-transforms
-	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
-	backup-directory-alist
-	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+	aw-scope 'frame))
 
-;;;;;; nano-theme
-;; Nano theme 
-(use-package nano-theme
-  :ensure
-  (:host github :repo "rougier/nano-theme" :branch "master")
-  :config
-  (nano-dark)
-  :custom
-  (nano-dark-foreground "#bbc6d9"))
-
-;;;;;; eros
+;;;;; eros
 ;; Display eval result (including for debug) in popup instead of echo area.
 ;; https://xenodium.com/inline-previous-result-and-why-you-should-edebug/
 (use-package eros
@@ -572,7 +599,28 @@ environment, without needing to advise each entry point."
   (eros-mode))
 
 
-;;;;;; persistent-scratch
+;;;;; nano-theme
+;; Nano theme 
+(use-package nano-theme
+  :ensure
+  (:host github :repo "rougier/nano-theme" :branch "master")
+  :config
+  (nano-dark)
+  :custom
+  (nano-dark-foreground "#bbc6d9"))
+
+;;;;; no-littering
+;; Dont litter folders with autosave or backup files
+(use-package no-littering
+  :init
+  (setq user-emacs-directory "~/.config/emacs")
+  :config
+  (setq auto-save-file-name-transforms
+	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
+	backup-directory-alist
+	`((".*" . ,(no-littering-expand-var-file-name "backup/")))))
+
+;;;;; persistent-scratch
 ;; Auto save scratch buffer
 (use-package persistent-scratch
   :demand t
@@ -580,16 +628,7 @@ environment, without needing to advise each entry point."
   (persistent-scratch-setup-default))
 
 
-;;;;;; ace-window
-;; More efficient window selection
-(use-package ace-window
-  :bind
-  ("M-o" . ace-window)
-  :config
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
-	aw-scope 'frame))
-
-;;;;;; ultra-scroll
+;;;;; ultra-scroll
 ;; Smoother scrolling (for laptop mostly)
 (use-package ultra-scroll
   :ensure
@@ -600,14 +639,8 @@ environment, without needing to advise each entry point."
   :config
   (ultra-scroll-mode 1)
   (setq make-cursor-line-fully-visible t))
-;;; Help
 
-;;;; which-key
-;; Which-key shows the available keybindings after a key press	      
-(use-package which-key
-  :diminish
-  :config
-  (which-key-mode))
+;;; Help
 
 ;;;; helpful
 ;; More helpful help buffers
@@ -622,6 +655,13 @@ environment, without needing to advise each entry point."
    ("C-c C-d" . helpful-at-point))
   :hook
   (helpful-mode . hl-line-mode))
+
+;;;; which-key
+;; Which-key shows the available keybindings after a key press	      
+(use-package which-key
+  :diminish
+  :config
+  (which-key-mode))
 
 ;;; Editor
 
@@ -646,6 +686,63 @@ environment, without needing to advise each entry point."
   :bind
   ("C-=" . 'er/expand-region))
 
+;;;; hl-todo
+;; Highlight reminders
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode))
+
+;;;; ibuffer-vc
+;; Group buffers in ibuffer by project
+(use-package ibuffer-vc
+  :config
+  (setq ibuffer-vc-skip-if-remote t) ;; Takes too long
+  (defun my/ibuffer-vc--include-file-p-advice (orig-fun file)
+    (or (string-equal "podman" (tramp-handle-file-remote-p file 'method))
+	(funcall orig-fun file)))
+
+  (advice-add 'ibuffer-vc--include-file-p :around #'my/ibuffer-vc--include-file-p-advice)
+  :hook
+  (ibuffer . (lambda ()
+	       (ibuffer-vc-set-filter-groups-by-vc-root)
+	       (unless (eq ibuffer-sorting-mode 'alphabetic)
+		 (ibuffer-do-sort-by-alphabetic)))))
+
+
+;;;; jinx
+;; Jinx spell checker
+(use-package jinx
+  :diminish
+  :hook
+  (((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
+   (toml-ts-mode . (lambda () (jinx-mode -1))))
+  :bind
+  ("M-$" . jinx-correct)
+  :config
+  (add-to-list 'jinx-exclude-faces
+	       '(LaTeX-mode font-lock-constant-face))
+  (add-to-list 'jinx-exclude-faces
+	       '(prog-mode font-lock-string-face))
+  :custom
+  (jinx-languages "en_GB"))
+
+;;;; mixed-pitch
+;; Allow mixing of variable pitch and monospaced fonts
+(use-package mixed-pitch
+  :config
+  (setq mixed-pitch-set-height t
+	mixed-pitch-fixed-pitch-faces (delete 'font-latex-sectioning-5-face mixed-pitch-fixed-pitch-faces)
+	mixed-pitch-variable-pitch-cursor nil)
+  :hook
+  ((text-mode . mixed-pitch-mode)
+   (toml-ts-mode . (lambda () (mixed-pitch-mode -1)))))
+
+;;;; move-text
+;; Move text or region up or down using M-<up> or M-<down>
+(use-package move-text
+  :config
+  (move-text-default-bindings))
+
 ;;;; outli
 ;; Better keybindings for outline-minor-mode
 ;; ? for speed command help
@@ -668,10 +765,6 @@ environment, without needing to advise each entry point."
   (ediff-prepare-buffer . my/disable-outli-for-ediff)
   :config
   (setq outli-blend nil))
-
-;;;; vundo
-;; Visualise undo tree and step between
-(use-package vundo)
 
 ;;;; popper
 ;; Make specific buffers pop up
@@ -704,67 +797,9 @@ environment, without needing to advise each entry point."
   (popper-mode)
   (popper-echo-mode))
 
-;;;; ibuffer-vc
-;; Group buffers in ibuffer by project
-(use-package ibuffer-vc
-  :config
-  (setq ibuffer-vc-skip-if-remote t) ;; Takes too long
-  (defun my/ibuffer-vc--include-file-p-advice (orig-fun file)
-    (or (string-equal "podman" (tramp-handle-file-remote-p file 'method))
-	(funcall orig-fun file)))
-
-  (advice-add 'ibuffer-vc--include-file-p :around #'my/ibuffer-vc--include-file-p-advice)
-  :hook
-  (ibuffer . (lambda ()
-	       (ibuffer-vc-set-filter-groups-by-vc-root)
-	       (unless (eq ibuffer-sorting-mode 'alphabetic)
-		 (ibuffer-do-sort-by-alphabetic)))))
-
-;;;; diminish
-;; Hide specific minor-modes from the modeline.
-;; Individual modes are diminished via the `:diminish' keyword in each
-;; owning package; diminish itself just needs to be loaded first.
-(use-package diminish)
-
-;;;; eldoc
-;; Built in; diminished here as it has no dedicated package block
-(use-package eldoc
-  :ensure nil
-  :diminish)
-
-;;;; hl-todo
-;; Highlight reminders
-(use-package hl-todo
-  :config
-  (global-hl-todo-mode))
-
-;;;; mixed-pitch
-;; Allow mixing of variable pitch and monospaced fonts
-(use-package mixed-pitch
-  :config
-  (setq mixed-pitch-set-height t
-	mixed-pitch-fixed-pitch-faces (delete 'font-latex-sectioning-5-face mixed-pitch-fixed-pitch-faces)
-	mixed-pitch-variable-pitch-cursor nil)
-  :hook
-  ((text-mode . mixed-pitch-mode)
-   (toml-ts-mode . (lambda () (mixed-pitch-mode -1)))))
-
-;;;; jinx
-;; Jinx spell checker
-(use-package jinx
-  :diminish
-  :hook
-  (((text-mode LaTeX-mode org-mode prog-mode conf-mode) . jinx-mode)
-   (toml-ts-mode . (lambda () (jinx-mode -1))))
-  :bind
-  ("M-$" . jinx-correct)
-  :config
-  (add-to-list 'jinx-exclude-faces
-	       '(LaTeX-mode font-lock-constant-face))
-  (add-to-list 'jinx-exclude-faces
-	       '(prog-mode font-lock-string-face))
-  :custom
-  (jinx-languages "en_GB"))
+;;;; vundo
+;; Visualise undo tree and step between
+(use-package vundo)
 
 ;;;; Monad Stack
 
@@ -774,13 +809,8 @@ environment, without needing to advise each entry point."
   ;; Recommended: Enable Corfu globally. This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customisation variable
   ;; `global-corfu-modes' to exclude certain modes.
-  :after eshell
   :config
-  (global-corfu-mode)
-  :hook
-  (eshell-mode . (lambda ()
-                   (setq-local corfu-auto nil)
-                   (corfu-mode -1))))
+  (global-corfu-mode))
 
 ;;;;; cape
 ;; Extra completion functions for corfu
@@ -976,42 +1006,6 @@ environment, without needing to advise each entry point."
   ;; (setq consult-preview-excluded-files '("\\`/[^/|:]+:" "\\.pdf\\'" "\\.gpg\\'"))
   )
 
-;;;;; consult-todo
-;; Show todos in consult
-(use-package consult-todo
-  :bind
-  ("M-g t" . consult-todo))
-
-;;;;; consult-dir
-;; Allow inserting recently visited directories into the minibuffer
-(use-package consult-dir
-  :ensure t
-  :demand t
-  :bind (("C-x C-d" . consult-dir)
-	 :map vertico-map
-	 ("C-x C-d" . consult-dir)
-	 ("C-x C-j" . consult-dir-jump-file))
-  :config
-  (defun eshell/z (&optional regexp)
-    "Navigate to a previously visited directory in eshell, or to
-any directory proferred by `consult-dir'."
-    (let ((eshell-dirs (delete-dups
-                        (mapcar 'abbreviate-file-name
-                                (ring-elements eshell-last-dir-ring)))))
-      (cond
-       ((and (not regexp) (featurep 'consult-dir))
-        (let* ((consult-dir--source-eshell `(:name "Eshell"
-						   :narrow ?e
-						   :category file
-						   :face consult-file
-						   :items ,eshell-dirs))
-	       (consult-dir-sources (cons consult-dir--source-eshell
-                                          consult-dir-sources)))
-          (eshell/cd (substring-no-properties
-		      (consult-dir--pick "Switch directory: ")))))
-       (t (eshell/cd (if regexp (eshell-find-previous-directory regexp)
-		       (completing-read "cd: " eshell-dirs))))))))
-
 ;;;;; wgrep
 ;; Allow editing grep buffers
 (use-package wgrep)
@@ -1060,12 +1054,6 @@ any directory proferred by `consult-dir'."
 (use-package embark-consult
   :hook
   (embark-collect . consult-preview-at-point-mode))
-
-;;;; move-text
-;; Move text or region up or down using M-<up> or M-<down>
-(use-package move-text
-  :config
-  (move-text-default-bindings))
 
 ;;; Languages
 ;;;; Meta
@@ -1122,65 +1110,6 @@ any directory proferred by `consult-dir'."
 	eldoc-idle-delay 1.0))
 
 
-;;;; csv-mode
-;; Easier viewing of CSV files in Emacs
-(use-package csv-mode)
-
-;;;; python
-;; Built in python.el package
-(use-package python
-  :ensure nil
-  :hook
-  (((python-base-mode inferior-python-mode) . my/python-venv-setup))
-  :config
-  (setq python-indent-offset 4
-	python-indent-def-block-scale 1
-	python-indent-guess-indent-offset-verbose nil)
-  (indent-tabs-mode nil)
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-		 '(python-base-mode . ("ty" "server"))))
-  :bind (:map python-ts-mode-map
-	      ("C-c C-c" . python-shell-send-statement)
-	      ("C-c C-b" . python-shell-send-buffer)))
-
-;;;; Julia
-
-;;;;; julia-mode
-;; Official mode for Julia language
-(use-package julia-ts-mode
-  :ensure t
-  :mode "\\.jl$")
-
-;;;;; julia-snail
-;; An Emacs development environment for Julia 
-(use-package julia-snail
-  :ensure t
-  :custom
-  (julia-snail-terminal-type :eat)
-  (julia-snail-use-emoji-mode-lighter nil)
-  (julia-snail-extra-args "--threads=auto")
-  :hook
-  (julia-mode . julia-snail-mode))
-
-;;;; Rust
-;;;;; rust-mode
-;; Official Rust mode
-(use-package rust-mode
-  :init
-  (setq rust-mode-treesitter-derive t)
-  :config
-  (eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-		 '((rust-ts-mode rust-mode) .
-		   ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
-  :hook
-  (rust-mode . eglot-ensure))
-
-;;;;; ob-rust
-;; Rust in org-babel
-(use-package ob-rust)
-
 ;;;; C
 ;;;;; c-ts-mode
 ;; Built-in C ts-mode
@@ -1202,13 +1131,16 @@ any directory proferred by `consult-dir'."
   :config
   (add-to-list 'org-src-lang-modes '("C" . c-ts)))
 
-;;;; Toml
-;;;;; toml-ts-mode
-;; Treesitter for TOML
-(use-package toml-ts-mode
-  :ensure nil
-  :custom
-  (toml-ts-mode-indent-offset 4))
+;;;; csv-mode
+;; Easier viewing of CSV files in Emacs
+(use-package csv-mode)
+
+;;;; julia-ts-mode
+;; Official mode for Julia language
+(use-package julia-ts-mode
+  :ensure t
+  :mode "\\.jl$")
+
 
 ;;;; markdown-mode
 ;; Mode for markdown files
@@ -1217,6 +1149,50 @@ any directory proferred by `consult-dir'."
   :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-map
 	      ("C-c C-e" . markdown-do)))
+
+;;;; python
+;; Built in python.el package
+(use-package python
+  :ensure nil
+  :hook
+  (((python-base-mode inferior-python-mode) . my/python-venv-setup))
+  :config
+  (setq python-indent-offset 4
+	python-indent-def-block-scale 1
+	python-indent-guess-indent-offset-verbose nil)
+  (indent-tabs-mode nil)
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+		 '(python-base-mode . ("ty" "server"))))
+  :bind (:map python-ts-mode-map
+	      ("C-c C-c" . python-shell-send-statement)
+	      ("C-c C-b" . python-shell-send-buffer)))
+
+;;;; Rust
+;;;;; rust-mode
+;; Official Rust mode
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t)
+  :config
+  (eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+		 '((rust-ts-mode rust-mode) .
+		   ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
+  :hook
+  (rust-mode . eglot-ensure))
+
+;;;;; ob-rust
+;; Rust in org-babel
+(use-package ob-rust)
+
+;;;; Toml
+;;;;; toml-ts-mode
+;; Treesitter for TOML
+(use-package toml-ts-mode
+  :ensure nil
+  :custom
+  (toml-ts-mode-indent-offset 4))
 
 ;;;; Zig
 ;;;;; zig-ts-mode
@@ -1230,276 +1206,10 @@ any directory proferred by `consult-dir'."
 ;;; External Tools
 
 ;;;; apheleia
-;;;;;; format code on save
 (use-package apheleia
   :diminish apheleia-mode
   :config
   (apheleia-global-mode +1))
-
-;;;; LLM
-;; Tools for interacting with LLMs
-
-;;;;;; agent-shell
-;; A native Emacs buffer to interact with LLM agents powered by ACP
-(use-package agent-shell
-  :custom
-  (agent-shell-anthropic-authentication
-   (agent-shell-anthropic-make-authentication :login t))
-  (agent-shell-agent-configs '(agent-shell-anthropic-make-claude-code-config
-			       agent-shell-opencode-make-agent-config)))
-
-;;;;;; agent-shell-math-renderer
-;; An extension for Emacs Agent Shell to render math equations
-(use-package agent-shell-math-renderer
-  :hook (agent-shell-mode . agent-shell-math-renderer-mode))
-
-;;;; ediff
-;; Nord-flavoured ediff faces (nano-theme leaves them at their garish
-;; defaults). Ediff needs two strengths of each hue, so the aurora
-;; colours are blended into the nord0 background: 30% for the current
-;; hunk and 55% for the fine (word-level) differences within it.
-;; Inactive even/odd hunks use the neutral polar night shades.
-(use-package ediff
-  :ensure nil
-  :defer t
-  :config
-  (pcase-dolist (`(,buffer ,dim ,bright)
-		 '(("A" "#5A424D" "#7E4D57")	      ; nord11 red
-		   ("B" "#515D57" "#6E806A")	      ; nord14 green
-		   ("C" "#676157" "#968769")	      ; nord13 yellow
-		   ("Ancestor" "#564F61" "#78667C"))) ; nord15 purple
-    (face-spec-set (intern (format "ediff-current-diff-%s" buffer))
-		   `((t :background ,dim :foreground "#D8DEE9" :extend t))) ; nord4
-    (face-spec-set (intern (format "ediff-fine-diff-%s" buffer))
-		   `((t :background ,bright :foreground "#ECEFF4" :weight bold)))
-    (face-spec-set (intern (format "ediff-even-diff-%s" buffer))
-		   '((t :background "#3B4252" :extend t))) ; nord1
-    (face-spec-set (intern (format "ediff-odd-diff-%s" buffer))
-		   '((t :background "#434C5E" :extend t))))) ; nord2
-
-;;;; Git
-
-;;;;; magit
-;; The best git porcelain
-(use-package magit
-  :config
-  (setq magit-tramp-pipe-stty-settings 'pty))
-
-;;;;; orgit
-;; Link to magit buffers from org
-(use-package orgit)
-
-;;;;; diff-hl
-;; Highlight git diff in gutter
-(use-package diff-hl
-  :hook
-  ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-   (magit-post-refresh . diff-hl-magit-post-refresh)))
-
-;;;; Gentoo
-;;;;;; ebuild-mode
-(use-package ebuild-mode 
-  :ensure nil
-  :if (string-match-p "gentoo" (system-name))
-  :load-path "/usr/share/emacs/site-lisp/ebuild-mode/")
-
-;;;; Terminal
-
-;;;;; ghostel
-;; Emacs libghostty integration
-(use-package ghostel
-  :custom
-  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-o" "M-`"))
-  :config
-  ;; Nord terminal palette. Ghostel builds the terminal's 16 ANSI colours
-  ;; from the :foreground of these faces, and claude-code (theme dark-ansi)
-  ;; renders everything with them, so this is what themes its diffs and
-  ;; dims its prompt history (blackBright).
-  (pcase-dolist (`(,face ,colour)
-		 '((ghostel-color-black          "#3B4252")  ; nord1
-		   (ghostel-color-red            "#BF616A")  ; nord11
-		   (ghostel-color-green          "#A3BE8C")  ; nord14
-		   (ghostel-color-yellow         "#EBCB8B")  ; nord13
-		   (ghostel-color-blue           "#81A1C1")  ; nord9
-		   (ghostel-color-magenta        "#B48EAD")  ; nord15
-		   (ghostel-color-cyan           "#88C0D0")  ; nord8
-		   (ghostel-color-white          "#E5E9F0")  ; nord5
-		   (ghostel-color-bright-black   "#4C566A")  ; nord3
-		   (ghostel-color-bright-red     "#BF616A")
-		   (ghostel-color-bright-green   "#A3BE8C")
-		   (ghostel-color-bright-yellow  "#EBCB8B")
-		   (ghostel-color-bright-blue    "#81A1C1")
-		   (ghostel-color-bright-magenta "#B48EAD")
-		   (ghostel-color-bright-cyan    "#8FBCBB")  ; nord7
-		   (ghostel-color-bright-white   "#ECEFF4"))) ; nord6
-    (face-spec-set face `((t :foreground ,colour))))
-  (ghostel-sync-theme)
-
-  ;; Entry point for the eshell-term script. The default invocation
-  ;; reopens the most recently visited terminal: `buffer-list' is ordered
-  ;; by selection recency, so no bookkeeping is needed. Terminals are
-  ;; recognised by their creation identity, which survives the title
-  ;; renames done by `ghostel-buffer-name-function'.
-  (defun my/eshell-term (path &optional new)
-    "Switch to the most recently visited terminal.
-Create a fresh terminal at PATH when NEW is non-nil or none exists."
-    (let ((default-directory path)
-	  (ghostel-buffer-name "*terminal*"))
-      (if-let* ((buf (and (not new)
-			  (seq-find
-			   (lambda (b)
-			     (ghostel-identity-match-p
-			      '((kind . term) (name . "*terminal*"))
-			      (buffer-local-value 'ghostel-identity b)))
-			   (buffer-list)))))
-	  (switch-to-buffer buf)
-	(ghostel (and new '(4)))))))
-
-;;;;; EShell
-;;;;;; em-hist
-;; EShell history
-(use-package em-hist
-  :demand t
-  :ensure nil
-  :after eshell
-  :hook
-  (kill-emacs . eshell-save-some-history))
-
-;;;;;; eshell
-;; Elisp based emacs shell
-(use-package eshell
-  :demand t
-  :ensure nil
-  :config
-  (defun my/eshell-prompt-function ()
-    (concat
-     "\n"
-     (propertize (replace-regexp-in-string
-		  (getenv "HOME")
-		  "~"
-		  (eshell/pwd))
-		 'face `(:foreground "#5e81ac"))
-     "\n"
-     (propertize (if (bound-and-true-p python-shell-virtualenv-root)
-		     ".venv"
-		   "")
-		 'face `(:foreground "#b48ead"))
-     (propertize " λ " 'face 'default)))
-  (setq eshell-prompt-function #'my/eshell-prompt-function
-	eshell-prompt-regexp ".* λ ")
-
-  (defun eshell/enter (&rest args)
-    "Enter a distrobox"
-    (eshell/cd (format "/podman:%s@%s:%s" (user-real-login-name) (car args) (eshell/pwd))))
-
-  (defun eshell/leave (&rest args)
-    "Leave a distrobox"
-    (eshell/cd (tramp-file-local-name (eshell/pwd))))
-
-  ;;Aliases
-  (setq eshell-command-aliases-list '(("ll" "ls -l")
-				      ("la" "ls -al")
-				      ("usb_remaining" "watch grep -e Dirty: -e Writeback: /proc/meminfo")))
-
-  ;; Remove eshell grep
-  (with-eval-after-load 'em-unix
-    (fmakunbound 'eshell/grep))
-  
-  (add-to-list 'eshell-modules-list 'eshell-tramp))
-
-;;;;;; bash-completion
-;; Bash completion for eshell.
-(use-package bash-completion
-  :ensure t
-  :after eshell
-  :hook
-  (eshell-mode . (lambda ()
-		   (add-hook 'completion-at-point-functions 'bash-completion-capf-nonexclusive nil t))))
-
-
-
-;;;; IRC
-;;;;;; circe
-;; IRC in Emacs
-(use-package circe
-  :custom
-  (circe-reduce-lurker-spam t)
-  (circe-server-buffer-name "{network}")
-  (circe-network-options
-   `(("Sourcehut bouncer"
-      :host "chat.sr.ht"
-      :port 6697
-      :tls t
-      :nick "struanr"
-      :sasl-username "struanr@alpine"
-      :sasl-password ,(lambda (_)
-			(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg"))))
-     
-     ("OFTC (bounced)"
-      :host "chat.sr.ht"
-      :port 6697
-      :tls t
-      :nick "struanr"
-      :sasl-username "struanr/OFTC@alpine"
-      :sasl-password ,(lambda (_)
-			(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg")))
-      :channels ("#alpine-linux" "#alpine-devel" "#alpine-offtopic"))
-
-     ("Libera (bounced)"
-      :host "chat.sr.ht"
-      :port 6697
-      :tls t
-      :nick "struanr"
-      :sasl-username "struanr/Libera@alpine"
-      :sasl-password ,(lambda (_)
-			(my/execute-locally (shell-command-to-string "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/sourcehut_irc_key.gpg")))
-      :channels ("#emacs" "#org-mode"))))
-  :config
-  (setq circe-network-defaults '()))
-
-;;;; Accounting
-
-;;;;;; ledger-mode
-;; Emacs more for ledger plain text accounting
-(use-package ledger-mode
-  :config
-  (defun insert-pound-sterling ()
-    "Insert a pound sterling symbol (£) at the current cursor position."
-    (interactive)
-    (insert "£"))
-  :bind
-  (:map ledger-mode-map
-	("C-c C-4" . insert-pound-sterling)))
-
-;;;; Files
-;;;;; dired-rsync
-;; Call rsync from dired
-(use-package dired-rsync
-  :bind (:map dired-mode-map
-	      ("C-c C-r" . dired-rsync)))
-
-;;;;; dired-rsync-transient
-;; Transient menu for dired-rsync
-(use-package dired-rsync-transient
-  :config
-  (defun dired-rsync--do-run (command details)
-    "Run rsync COMMAND in a unique buffer, passing DETAILS to sentinel."
-    (let* ((buffer-name (format "%s @ %s"
-				dired-rsync-proc-buffer-prefix
-				(current-time-string)))
-           (proc (make-process
-                  :name "*rsync*"
-                  :buffer buffer-name
-                  :command (list shell-file-name
-				 shell-command-switch
-				 command)
-                  :sentinel (lambda (proc desc)
-			      (dired-rsync--sentinel proc desc details))
-                  :filter #'dired-rsync--filter)))
-      (pop-to-buffer buffer-name) ; Added to switch to the buffer
-      (dired-rsync--update-modeline)))
-  :bind (:map dired-mode-map
-	      ("C-c C-x" . dired-rsync-transient)))
 
 ;;;; Email
 ;;;;; mu4e
@@ -1604,14 +1314,6 @@ Create a fresh terminal at PATH when NEW is non-nil or none exists."
 	      ("m" . mu4e)
 	      ("c" . mu4e-compose-new)))
 
-;;;;; mu4e-icalendar
-;; Accept icalendar invites with mu4e
-(use-package mu4e-icalendar
-  :ensure nil
-  :config
-  (gnus-icalendar-setup)
-  (setq mu4e-icalendar-trash-after-reply t))
-
 ;;;;; org-msg
 ;; Use org-mode to compose HTML emails
 (use-package org-msg
@@ -1635,27 +1337,149 @@ Create a fresh terminal at PATH when NEW is non-nil or none exists."
     (when mu4e-compose-complete-addresses
       (org-msg--mu4e-fun-call "compose-setup-completion"))))
 
-;;;;; message-view-patch
-;; Colorize patch emails in mu4e
-(use-package message-view-patch
-  :hook
-  (gnus-part-display . message-view-patch-highlight))
+;;;; Files
+;;;;; dired-rsync
+;; Call rsync from dired
+(use-package dired-rsync
+  :bind (:map dired-mode-map
+	      ("C-c C-r" . dired-rsync)))
 
-;;;; age
-(use-package age
-  :custom
-  (age-program "rage")
-  (age-default-identity "~/.ssh/id_ed25519")
-  (age-default-recipient "~/.ssh/id_ed25519.pub")
+;;;;; dired-rsync-transient
+;; Transient menu for dired-rsync
+(use-package dired-rsync-transient
   :config
-  (age-file-enable))
+  (defun dired-rsync--do-run (command details)
+    "Run rsync COMMAND in a unique buffer, passing DETAILS to sentinel."
+    (let* ((buffer-name (format "%s @ %s"
+				dired-rsync-proc-buffer-prefix
+				(current-time-string)))
+           (proc (make-process
+                  :name "*rsync*"
+                  :buffer buffer-name
+                  :command (list shell-file-name
+				 shell-command-switch
+				 command)
+                  :sentinel (lambda (proc desc)
+			      (dired-rsync--sentinel proc desc details))
+                  :filter #'dired-rsync--filter)))
+      (pop-to-buffer buffer-name) ; Added to switch to the buffer
+      (dired-rsync--update-modeline)))
+  :bind (:map dired-mode-map
+	      ("C-c C-x" . dired-rsync-transient)))
 
-;;;; Anki
-;;;;;; anki-editor
-;;Minor mode for making Anki cards with Org Mode
-(use-package anki-editor
-  :ensure
-  (:host github :repo "anki-editor/anki-editor" :branch "master"))
+;;;;; zoxide
+;; Zoxide for finding file and open directory.
+
+(use-package zoxide
+  :hook ((find-file dired-mode) . zoxide-add)
+  :bind ("C-c C-z" . zoxide-travel))
+
+;;;; Git
+
+;;;;; diff-hl
+;; Highlight git diff in gutter
+(use-package diff-hl
+  :hook
+  ((magit-pre-refresh . diff-hl-magit-pre-refresh)
+   (magit-post-refresh . diff-hl-magit-post-refresh)))
+
+;;;;; magit
+;; The best git porcelain
+(use-package magit
+  :config
+  (setq magit-tramp-pipe-stty-settings 'pty))
+
+;;;;; orgit
+;; Link to magit buffers from org
+(use-package orgit)
+
+;;;; LLM
+;; Tools for interacting with LLMs
+
+;;;;;; agent-shell
+;; A native Emacs buffer to interact with LLM agents powered by ACP
+(use-package agent-shell
+  :config
+  ;; pi stores sessions keyed by the canonical (symlink-resolved) directory,
+  ;; while Emacs keeps the /home prefix (/home -> /var/home on this machine).
+  ;; Resolve symlinks so session/list can find pi's previous sessions.
+  (defun my/agent-shell-canonical-cwd ()
+    "Return the shell CWD with symlinks resolved for local paths."
+    (let ((dir (or (when (fboundp 'project-root)
+                     (when-let* ((proj (project-current)))
+                       (project-root proj)))
+                   default-directory)))
+      (if (file-remote-p dir)
+          dir
+        (file-truename dir))))
+  (setopt agent-shell-cwd-function #'my/agent-shell-canonical-cwd)
+  :custom
+  (agent-shell-session-restore-verbosity 'last)
+  (agent-shell-anthropic-authentication
+   (agent-shell-anthropic-make-authentication :login t))
+  (agent-shell-agent-configs '(agent-shell-pi-make-agent-config
+			       agent-shell-anthropic-make-claude-code-config)))
+
+;;;;;; agent-shell-math-renderer
+;; An extension for Emacs Agent Shell to render math equations
+(use-package agent-shell-math-renderer
+  :hook (agent-shell-mode . agent-shell-math-renderer-mode))
+
+
+;;;; Terminal
+
+;;;;; ghostel
+;; Emacs libghostty integration
+(use-package ghostel
+  :custom
+  (ghostel-keymap-exceptions '("C-c" "C-x" "C-u" "C-h" "M-x" "M-:" "C-\\" "M-o" "M-`"))
+  :config
+  ;; Nord terminal palette. Ghostel builds the terminal's 16 ANSI colours
+  ;; from the :foreground of these faces, and claude-code (theme dark-ansi)
+  ;; renders everything with them, so this is what themes its diffs and
+  ;; dims its prompt history (blackBright).
+  (pcase-dolist (`(,face ,colour)
+		 '((ghostel-color-black          "#3B4252")  ; nord1
+		   (ghostel-color-red            "#BF616A")  ; nord11
+		   (ghostel-color-green          "#A3BE8C")  ; nord14
+		   (ghostel-color-yellow         "#EBCB8B")  ; nord13
+		   (ghostel-color-blue           "#81A1C1")  ; nord9
+		   (ghostel-color-magenta        "#B48EAD")  ; nord15
+		   (ghostel-color-cyan           "#88C0D0")  ; nord8
+		   (ghostel-color-white          "#E5E9F0")  ; nord5
+		   (ghostel-color-bright-black   "#4C566A")  ; nord3
+		   (ghostel-color-bright-red     "#BF616A")
+		   (ghostel-color-bright-green   "#A3BE8C")
+		   (ghostel-color-bright-yellow  "#EBCB8B")
+		   (ghostel-color-bright-blue    "#81A1C1")
+		   (ghostel-color-bright-magenta "#B48EAD")
+		   (ghostel-color-bright-cyan    "#8FBCBB")  ; nord7
+		   (ghostel-color-bright-white   "#ECEFF4"))) ; nord6
+    (face-spec-set face `((t :foreground ,colour))))
+  (ghostel-sync-theme)
+
+  (when-let ((fish (executable-find "fish")))
+    (setq ghostel-shell fish))
+
+  ;; Entry point for the eshell-term script. The default invocation
+  ;; reopens the most recently visited terminal: `buffer-list' is ordered
+  ;; by selection recency, so no bookkeeping is needed. Terminals are
+  ;; recognised by their creation identity, which survives the title
+  ;; renames done by `ghostel-buffer-name-function'.
+  (defun my/eshell-term (path &optional new)
+    "Switch to the most recently visited terminal.
+Create a fresh terminal at PATH when NEW is non-nil or none exists."
+    (let ((default-directory path)
+	  (ghostel-buffer-name "*terminal*"))
+      (if-let* ((buf (and (not new)
+			  (seq-find
+			   (lambda (b)
+			     (ghostel-identity-match-p
+			      '((kind . term) (name . "*terminal*"))
+			      (buffer-local-value 'ghostel-identity b)))
+			   (buffer-list)))))
+	  (switch-to-buffer buf)
+	(ghostel (and new '(4)))))))
 
 ;;; Academic
 

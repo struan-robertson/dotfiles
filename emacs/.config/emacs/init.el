@@ -54,22 +54,13 @@
 ;;; Faces
 (set-face-attribute 'variable-pitch nil :family "Roboto" :height 140 :weight 'light :foreground "#bbc6d9")
 (set-face-attribute 'default nil :font "RobotoMono Nerd Font Mono" :height 130 :foreground "#bbc6d9")
-;; RobotoMono Nerd Font carries the icon/PUA glyphs, box drawing and
-;; blocks, but not the rest of the symbol script (checks, arrows,
-;; geometric shapes) or braille; without explicit monospace fallbacks
-;; for those Emacs picks random proportional fonts, breaking terminal
-;; alignment.  Script-targeted entries are required — a plain nil-target
-;; fallback loses to the default fontset's per-script entries.  DejaVu
-;; Sans Mono and FreeMono match the cell width exactly.  Fontsets are
-;; display-dependent, so under the daemon this must run once a
-;; graphical frame exists, not at init.
 (defun my/setup-symbol-fonts ()
-	"Route symbol and braille ranges to monospace fonts."
-	(set-fontset-font t 'symbol "DejaVu Sans Mono")
-	(set-fontset-font t 'braille "FreeMono")) ; media-fonts/freefont
+  "Route symbol and braille ranges to monospace fonts."
+  (set-fontset-font t 'symbol "DejaVu Sans Mono")
+  (set-fontset-font t 'braille "FreeMono")) ; media-fonts/freefont
 (if (daemonp)
-		(add-hook 'server-after-make-frame-hook #'my/setup-symbol-fonts)
-	(my/setup-symbol-fonts))
+    (add-hook 'server-after-make-frame-hook #'my/setup-symbol-fonts)
+  (my/setup-symbol-fonts))
 
 
 

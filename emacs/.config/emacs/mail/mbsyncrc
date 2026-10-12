@@ -20,7 +20,7 @@ Expunge Both
 SyncState *
 
 IMAPStore dundee-remote
-Host localhost
+Host 127.0.0.1
 Port 1143
 User sjyrobertson@dundee.ac.uk
 PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.config/emacs/mail/dundee.gpg"
