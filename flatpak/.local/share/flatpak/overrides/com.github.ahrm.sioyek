@@ -1,3 +1,0 @@
-[Context]
-sockets=!x11
-filesystems=!xdg-music;xdg-data/icons:ro;xdg-data/themes:ro;~/.config/sioyek:rw
