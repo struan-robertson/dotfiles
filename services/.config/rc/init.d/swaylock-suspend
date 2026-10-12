@@ -1,6 +1,0 @@
-#!/sbin/openrc-run
-
-command="/usr/bin/listen4sleep /usr/bin/swaylockd"
-supervisor=supervise-daemon
-error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"
-

@@ -1,8 +1,0 @@
-#!/sbin/openrc-run
-
-description="Wayland progress bar"
-
-command="~/.local/bin/wob-socket"
-
-supervisor=supervise-daemon
-error_logger="logger -t '${RC_SVCNAME}' -p daemon.error"

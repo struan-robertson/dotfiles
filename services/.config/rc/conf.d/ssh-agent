@@ -1,1 +1,0 @@
-SSH_SOCKET=$XDG_RUNTIME_DIR/ssh-agent.socket
