@@ -7,7 +7,7 @@
     "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "network"],
 <% elif [ $HOST = "fedoralaptop" ]; then -%>
     "height": 22,
-    "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "wireplumber#source", "custom/separator", "battery", "custom/separator", "network"],
+    "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "wireplumber#source", "custom/separator", "battery", "custom/separator", "power-profiles-daemon", "custom/separator", "network"],
 <% fi -%>    
     "modules-right": ["idle_inhibitor", "clock"],
 
@@ -59,8 +59,19 @@
             "full": "=",
             "not charging": "!",
             "unknown": "?"
+        }
+    },
+
+    "power-profiles-daemon": {
+        "format": "PWR {icon}",
+        "format-icons": {
+            "power-saver": "eco",
+            "balanced": "bal",
+            "performance": "max",
+            "default": "bal"
         },
-        "on-click": "foot watch tlp-stat -s"
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "tooltip": true
     },
 
     "network": {

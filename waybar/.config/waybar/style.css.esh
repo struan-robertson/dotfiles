@@ -29,6 +29,7 @@ window#waybar {
 #wireplumber.sink,
 #wireplumber.source,
 #battery,
+#power-profiles-daemon,
 #network,
 #workspaces button {
 <% if [ $HOST = "fedora" ]; then -%>
