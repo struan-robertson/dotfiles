@@ -46,6 +46,16 @@ window#waybar {
 <% fi -%>    
 }
 
+#idle_inhibitor {
+<% if [ $HOST = "fedora" ]; then -%>
+    font-size: 16px;
+    margin: 0 2px;
+<% elif [ $HOST = "fedoralaptop" ]; then -%>
+    font-size: 13px;
+    margin: 0 1px;
+<% fi -%>    
+}
+
 #battery.critical:not(.charging) {
     color: #bf616a;
 }

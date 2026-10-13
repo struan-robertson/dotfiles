@@ -9,7 +9,7 @@
     "height": 22,
     "modules-center": ["cpu", "custom/separator", "memory", "custom/separator", "wireplumber#sink", "custom/separator", "wireplumber#source", "custom/separator", "battery", "custom/separator", "network"],
 <% fi -%>    
-    "modules-right": ["clock"],
+    "modules-right": ["idle_inhibitor", "clock"],
 
     "sway/workspaces": {
         "format": "{name}",
@@ -67,6 +67,16 @@
         "format": "NET {essid} {signalStrength:03d}",
 	"on-click": "nm-connection-editor",
 	"tooltip-format": "{ipaddr}",
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "\uf06e",
+            "deactivated": "\uf070"
+        },
+        "tooltip-format-activated": "Idle inhibited",
+        "tooltip-format-deactivated": "Idle not inhibited"
     },
 
     "clock": {
