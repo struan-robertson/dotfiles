@@ -20,8 +20,9 @@ Volume=%h/.local/state/syncthing:/var/syncthing/config:Z
 
 # Synced folders, mounted at the SAME paths as on the host so config.xml
 # needs no edits. Add one line per folder root.
-Volume=%h/Sync:%h/Sync:Z
-Volume=%h/Documents:%h/Documents:Z
+Volume=%h/Sync:%h/Sync
+Volume=%h/Documents:%h/Documents
+SecurityLabelDisable=true
 
 [Service]
 Restart=on-failure
