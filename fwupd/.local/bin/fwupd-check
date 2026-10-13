@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Refresh LVFS metadata and notify on pending firmware updates.
+
+# Plain refresh (cached) — never --force in a timer.
+fwupdmgr refresh >/dev/null 2>&1
+
+updates="$(fwupdmgr get-updates 2>&1)"
+rc=$?
+
+# 0 = updates available; 2 = nothing to do; 1/3 = error / not found
+[ "$rc" -eq 0 ] || exit 0
+
+grep -qi 'no updates available' <<<"$updates" && exit 0
+
+notify-send -u normal -a fwupd \
+  "Firmware updates available" 

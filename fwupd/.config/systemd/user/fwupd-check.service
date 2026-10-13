@@ -1,0 +1,8 @@
+[Unit]
+Description=Check for firmware updates
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/fwupd-check
+# Only if notifications ever come up empty:
+#Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
