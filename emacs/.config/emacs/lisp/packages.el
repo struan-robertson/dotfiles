@@ -556,7 +556,10 @@ environment, without needing to advise each entry point."
   ("M-o" . ace-window)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
-	aw-scope 'frame))
+	aw-scope 'global)
+  ;; Restrict candidates to frames on the current sway workspace and
+  ;; focus their sway containers before switching (see ace-window-sway.el).
+  (require 'ace-window-sway))
 
 ;;;;; eros
 ;; Display eval result (including for debug) in popup instead of echo area.
