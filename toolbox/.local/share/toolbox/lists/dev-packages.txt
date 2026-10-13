@@ -1,6 +1,7 @@
 age
 autoconf
 automake
+butane
 du-dust
 emacs-pgtk
 enchant2-aspell
