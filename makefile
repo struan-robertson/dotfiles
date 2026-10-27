@@ -23,6 +23,7 @@ system_dirs:
 	@mkdir -p $$HOME/.local/share/applications
 	@mkdir -p $$HOME/.config/fish/conf.d
 	@mkdir -p $$HOME/.config/containers/systemd
+	@mkdir -p $$HOME/.pi/agent
 
 
 # Process `.esh` template files and store in corresponding dir in OUTPUT_DIR
