@@ -173,6 +173,7 @@ environment, without needing to advise each entry point."
   (org-preview-latex-default-process 'dvisvgm)
   (org-startup-with-latex-preview t)
   (org-preview-latex-image-directory ".ltximg/")
+  (org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 
   ;; Export
   (org-file-apps
