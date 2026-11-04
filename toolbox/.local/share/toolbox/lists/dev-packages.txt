@@ -33,7 +33,7 @@ ruff
 ShellCheck
 sqlite
 stow
-tealdeer
+tldr
 texlive-capt-of
 texlive-scheme-medium
 texlive-sourcesanspro
