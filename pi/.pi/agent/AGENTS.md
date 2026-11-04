@@ -5,16 +5,17 @@
 Delegation to subagents is authorized for the following, without needing to be asked
 explicitly each time:
 
-- **Implementation** — do not write or edit code in the main thread. Hand it to `worker`
+- **Implementation**: do not write or edit code in the main thread. Hand it to `worker`
   with a narrow brief, then review the result.
-- **Recon** — use `scout` to find the relevant files and entry points rather than reading
+- **Recon**: use `scout` to find the relevant files and entry points rather than reading
   many files inline.
-- **External facts** — use `researcher` for anything from web sources or docs. Use
+- **External facts**: use `researcher` for anything from web sources or docs. Use
   `evidence-auditor` when a claim would change the decision.
-- **Review** — run `reviewer` on any implementation before summarising it to me.
+- **Review**: run `reviewer` on any implementation before summarising it to me.
 
 Keep the main thread for planning, decisions, and judging results. If a brief needs a
-decision I haven't made, surface the question instead of guessing.
+decision I haven't made, surface the question instead of guessing. Do not delegate
+prose reading or writing in text documents. 
 
 ## Thinking level
 
@@ -31,6 +32,14 @@ Terse and precise, in the register of scientific writing.
 - No preamble, no restating the request, no closing summary that repeats the body.
 - Express uncertainty as a condition or a range, not as hedging.
 - Lists only when the items are genuinely parallel; otherwise prose.
+- No em-dashes. Use a comma, a colon, brackets, or two sentences instead.
+
+## Math
+
+- In chat replies, write inline math as `\( ... \)`. The client renders that; `$...$`,
+  `$$...$$`, and Markdown emphasis appear as literal text.
+- Scoped to chat output. Files I ask you to write follow the conventions of their own
+  format, such as `$...$` inside a LaTeX source.
 
 ## Comments
 
