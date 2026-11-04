@@ -1057,14 +1057,6 @@ environment, without needing to advise each entry point."
 ;;; Languages
 ;;;; Meta
 
-;;;;; treesit-auto
-;; Automatically install treesitter languages if available
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
 
 ;;;;; hideshow
 ;; Code folding for non treesitter languages (elisp etc)
