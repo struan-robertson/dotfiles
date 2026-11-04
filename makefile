@@ -64,11 +64,18 @@ delete-%:
 	stow --verbose --target=$$HOME --dir=$(OUTPUT_DIR) --delete $*
 	rm -rf .out/$*
 
-.PHONY: toolboxes rebuild-toolboxes
+.PHONY: toolboxes reset-toolboxes rebuild-toolboxes
 # Ensure dev/gui toolboxes exist with their packages installed
 toolboxes: 
 	./toolbox/.local/share/toolbox/create_toolbox.sh dev
 	./toolbox/.local/share/toolbox/create_toolbox.sh gui
+
+# Recreate dev/gui toolboxes from their committed package lists, without
+# refreshing the lists. Use after editing a list when dnf reported a missing
+# package.
+reset-toolboxes:
+	./toolbox/.local/share/toolbox/create_toolbox.sh --reset dev
+	./toolbox/.local/share/toolbox/create_toolbox.sh --reset gui
 
  # Recreate dev/gui toolboxes (refresh list, rm, create)
 rebuild-toolboxes:
