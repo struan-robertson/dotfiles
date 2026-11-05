@@ -75,9 +75,11 @@
     },
 
     "network": {
-        "format": "NET {essid} {signalStrength:03d}",
+        "format-wifi": "NET {essid} {signalStrength:03d}",
+        "format-ethernet": "NET ETH",
+        "format-disconnected": "NET ---",
 	"on-click": "nm-connection-editor",
-	"tooltip-format": "{ipaddr}",
+	"tooltip-format": "{ifname} {ipaddr}"
     },
 
     "idle_inhibitor": {
