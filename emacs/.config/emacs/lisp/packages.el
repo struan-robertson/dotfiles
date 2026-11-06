@@ -302,6 +302,9 @@ environment, without needing to advise each entry point."
   :ensure nil
   :init
 
+  ;; Trust directories
+  (add-to-list 'trusted-content "/var/home/struan/Development/")
+  
   ;; Automatically revert files when they are changed on disk
   (global-auto-revert-mode t)
   
